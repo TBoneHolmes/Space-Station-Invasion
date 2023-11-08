@@ -1,11 +1,16 @@
 #include "GameObject.h"
 #include <iostream>
+#include <string>
 using namespace std;
 
 //Constructor
-GameObject::GameObject(int c)
+GameObject::GameObject()
 {
-	GameObject::character = c;
+	GameObject::name = "Game Object";
+}
+GameObject::GameObject(string NAME)
+{
+	GameObject::name = NAME;
 }
 
 
@@ -13,5 +18,5 @@ GameObject::GameObject(int c)
 
 void GameObject::Update()
 {
-	
+	cout << name << endl;
 }

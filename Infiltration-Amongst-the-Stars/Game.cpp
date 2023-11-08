@@ -11,9 +11,9 @@ Game::Game()
 	
 
 	//Create objects
-	objects.push_back(new GameObject(9)); //Create object
+	objects.push_back(new Player()); //Create object
 
-	objects.push_back(new GameObject(8)); //Create object
+	objects.push_back(new GameObject("Thomas")); //Create object
 	
 }
 

@@ -1,17 +1,21 @@
+#include <string>
+using namespace std;
+
 #pragma once
 class GameObject
 {
 
 public:
 	//Constructor
-	GameObject(int);
+	GameObject();
+	GameObject(string);
 
 	//Variables
 	//string name;
-	int character;
+	string name;
 
 	//Functions
-	void Update();
+	void virtual Update();
 
 };
 
