@@ -21,14 +21,14 @@ int main()
 {
 	// Initialization
 	Game* game = Game::GetInstance();
-	game->Start();
 	//--------------------------------------------------------------------------------------
 	int screenWidth = 800;
 	int screenHeight = 450;
 
-	InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+	InitWindow(screenWidth, screenHeight, "Infiltration Amongst the Stars");
 
 	SetTargetFPS(60);
+	game->Start();
 	//--------------------------------------------------------------------------------------
 
 	// Main game loop
@@ -42,8 +42,6 @@ int main()
 		BeginDrawing();
 
 		ClearBackground(RAYWHITE);
-
-		DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
 
 		EndDrawing();
 		//----------------------------------------------------------------------------------

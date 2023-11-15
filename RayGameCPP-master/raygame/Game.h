@@ -22,11 +22,17 @@ public:
 	//Variables
 	vector<GameObject*> scene;
 	int test;
+	//Textures
+	Texture2D spr_player;
+	Rectangle rect_player;
 
 	//Functions
 	void Start();
+	void Draw();
 	void Update();
+	void InstanceObject(GameObject*);
 
+	//Singleton operator override
 	void operator = (const Game&) = delete;
 	Game(const Game& other) = delete;
 

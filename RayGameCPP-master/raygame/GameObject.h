@@ -28,6 +28,8 @@ public:
 	void virtual Start();
 	void virtual Draw();
 	void virtual Update();
+	void virtual InstanceObject(GameObject*);
+
 
 };
 

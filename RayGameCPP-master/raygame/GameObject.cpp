@@ -55,6 +55,7 @@ GameObject::~GameObject()
 
 void GameObject::Start()
 {
+
 }
 
 void GameObject::Draw()
@@ -64,7 +65,51 @@ void GameObject::Draw()
 
 void GameObject::Update()
 {
+	//Update position and rotation
+	if (parent == nullptr) //Object is a root object
+	{
+		globalPosition = localPosition;
+		globalRotation = localRotation;
+	}
+	else { //Object is child of another object
+		globalPosition.x = parent->globalPosition.x + localPosition.x; globalPosition.y = parent->globalPosition.y + localPosition.y;
+		globalRotation = parent->globalRotation + localRotation;
+	}
+
+
+	//Draw
 	Draw();
 
-	cout << name << endl;
+
+	//Update child obejcts
+	for (GameObject* obj : children)
+	{
+		obj->Update();
+	}
+
+	//DEBUG
+	//string testStr = name;
+	//if (parent != nullptr)
+	//{ testStr += " : Parent-" + parent->name; }
+	//if (children.size() > 0)
+	//{
+	//	testStr += " : Children-[";
+	//	for (int i = 0; i < children.size(); i++)
+	//	{
+	//		testStr += children[i]->name + ", ";
+	//	}
+	//	testStr += "]";
+	//}
+	//cout << testStr << endl;
+}
+
+
+//Create an object as a child of this
+void GameObject::InstanceObject(GameObject* newObj)
+{
+	GameObject* ptr = this;
+	children.push_back(newObj);
+	newObj->parent = ptr; //Set parent
+	//Call the new object's start function
+	newObj->Start();
 }
