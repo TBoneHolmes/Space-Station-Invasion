@@ -10,10 +10,17 @@ Player::Player()
 }
 
 
+void Player::Start()
+{
+	GameObject::Start();
+}
+
+void Player::Draw()
+{
+	GameObject::Draw();
+}
 
 void Player::Update()
 {
-	GameObject go;
-	go.Update();
-	//cout << name << endl;
+	GameObject::Update();
 }

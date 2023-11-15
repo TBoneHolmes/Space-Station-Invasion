@@ -13,6 +13,8 @@ public:
 	//Variables
 
 	//Functions
+	void Start();
+	void Draw();
 	void Update();
 
 };

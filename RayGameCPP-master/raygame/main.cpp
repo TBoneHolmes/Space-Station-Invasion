@@ -11,8 +11,8 @@
 
 #include "raylib.h"
 #include "Game.h"
-
-Game game; //Initialize the game
+#include <iostream>
+using namespace std;
 
 
 
@@ -20,7 +20,8 @@ Game game; //Initialize the game
 int main()
 {
 	// Initialization
-	game.Start();
+	Game* game = Game::GetInstance();
+	game->Start();
 	//--------------------------------------------------------------------------------------
 	int screenWidth = 800;
 	int screenHeight = 450;
@@ -34,7 +35,7 @@ int main()
 	while (!WindowShouldClose())    // Detect window close button or ESC key
 	{
 		// Update
-		game.Update();
+		game->Update();
 
 		// Draw
 		//----------------------------------------------------------------------------------

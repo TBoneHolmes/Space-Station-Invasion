@@ -3,30 +3,44 @@
 #include <iostream>
 using namespace std;
 
+
+Game* Game::instance = NULL;
+
 //Constructor
-Game::Game()
+Game::Game() { }
+
+Game* Game::GetInstance()
 {
-	//Assign variables
-	Game::objects;
+	if (instance == NULL)
+	{
+		instance = new Game();
+	}
+	return instance;
 }
 
 
 void Game::Start()
 {
 	//Create objects
-	//Player player;
-	//Player* playerPtr = &player;
-	objects.push_back(new Player()); //Create object
+	scene.push_back(new Player());
 
-	objects.push_back(new GameObject("Thomas")); //Create object
+	scene.push_back(new GameObject("Thomas"));
 }
 
 
 void Game::Update()
 {
-	cout << objects.size() << endl;
-	for (GameObject* obj : objects)
+
+	cout << scene.size() << endl;
+	for (GameObject* obj : scene)
 	{
 		obj -> Update();
 	}
+}
+
+//Deconstructor
+Game::~Game()
+{
+	scene.clear();
+	instance = NULL;
 }
