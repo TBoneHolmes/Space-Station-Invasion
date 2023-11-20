@@ -55,7 +55,7 @@ GameObject::~GameObject()
 
 void GameObject::Start()
 {
-
+	Vector2Right.x = 1.0f; Vector2Right.y = 0.0f;
 }
 
 void GameObject::Draw()
@@ -75,6 +75,9 @@ void GameObject::Update()
 		globalPosition.x = parent->globalPosition.x + localPosition.x; globalPosition.y = parent->globalPosition.y + localPosition.y;
 		globalRotation = parent->globalRotation + localRotation;
 	}
+	//Clamp rotation
+	if (localRotation >= 360) { localRotation -= 360; }
+	else if (localRotation < 0) { localRotation += 360; }
 
 
 	//Draw

@@ -4,12 +4,12 @@
 using namespace std;
 
 #pragma once
-class Player : public GameObject
+class Bullet : public GameObject
 {
 
 public:
 	//-CONSTRUCTOR-
-	Player();
+	Bullet(Vector2, Vector2);
 
 	//-VARIABLES-
 	//Sprite
@@ -17,23 +17,15 @@ public:
 	Rectangle* spriteSize;
 	Rectangle destination;
 	Vector2 spriteOffset;
-	//Input
-	int key_boost;
-	int key_shoot;
 	//Movement
 	Vector2 velocity;
-	float maxSpeed;
-	float acceleration;
-	float decceleration;
+	Vector2 moveDirection;
+	float speed;
 
 	//-FUNCTIONS-
 	void Start();
 	void Draw();
 	void Update();
+	//Movement
 	void ApplyVelocity();
-	//Inputs
-	void Input_Rotate();
-	void Input_Booster();
-	void Input_Shoot();
-
 };

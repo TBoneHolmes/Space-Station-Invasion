@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Player.h"
+#include "Bullet.h"
 #include <vector>
 #include <string>
 using namespace std;
@@ -25,6 +26,8 @@ public:
 	//Textures
 	Texture2D spr_player;
 	Rectangle rect_player;
+	Texture2D spr_bullet;
+	Rectangle rect_bullet;
 
 	//Functions
 	void Start();

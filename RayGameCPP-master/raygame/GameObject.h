@@ -23,6 +23,7 @@ public:
 	float globalRotation;
 	GameObject* parent;
 	vector<GameObject*> children;
+	Vector2 Vector2Right;
 
 	//Functions
 	void virtual Start();
