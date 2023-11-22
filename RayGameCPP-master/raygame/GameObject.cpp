@@ -24,6 +24,20 @@ GameObject::~GameObject()
 	}
 
 	GameObject* ptr = this;
+	//Remove self from game's collisionShapes list
+	if (name == "CollisionShape")
+	{
+		auto iter = Game::GetInstance()->collisionShapes.begin();
+		for (int i = 0; i < Game::GetInstance()->collisionShapes.size(); i++)
+		{
+			if (Game::GetInstance()->collisionShapes[i] == ptr)
+			{
+				Game::GetInstance()->collisionShapes.erase(iter);
+				break;
+			}
+			iter++;
+		}
+	}
 	//Remove self from the game's 'scene' list
 	if (parent == nullptr)
 	{
@@ -72,7 +86,7 @@ void GameObject::Update()
 		globalRotation = localRotation;
 	}
 	else { //Object is child of another object
-		globalPosition.x = parent->globalPosition.x + localPosition.x; globalPosition.y = parent->globalPosition.y + localPosition.y;
+		globalPosition = Vector2Add(parent->globalPosition, Vector2Rotate(localPosition, parent->globalRotation));//parent->globalPosition.x + localPosition.x; globalPosition.y = parent->globalPosition.y + localPosition.y;
 		globalRotation = parent->globalRotation + localRotation;
 	}
 	//Clamp rotation

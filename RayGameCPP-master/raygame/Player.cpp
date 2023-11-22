@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Player.h"
 #include "Bullet.h"
+#include "CollisionShape.h"
 #include "raylib.h"
 #include "raymath.h"
 #include <iostream>
@@ -37,10 +38,9 @@ void Player::Start()
 	key_shoot = MOUSE_LEFT_BUTTON;
 
 
-	//CREATE CHILD OBJECT
-	//GameObject::Start();
-	//InstanceObject(new GameObject("Child0"));
-	//InstanceObject(new GameObject("Child1"));
+	//Create collision shape
+	Vector2 csOffset; csOffset.x = -4.0f; csOffset.y = 0;
+	InstanceObject(new CollisionShape(12, csOffset, 1, 2));
 
 	//DESTROY SELF
 	//GameObject* ptr = this;

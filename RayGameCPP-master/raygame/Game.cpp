@@ -22,6 +22,9 @@ Game* Game::GetInstance()
 
 void Game::Start()
 {
+	//Set game variables
+	drawCollisions = true;
+	
 	//Load textures
 	spr_player = LoadTexture("..//Assets//player.png");
 	rect_player = Rectangle(); rect_player.x = 0; rect_player.y = 0; rect_player.width = spr_player.width; rect_player.height = spr_player.height;
@@ -30,7 +33,10 @@ void Game::Start()
 
 	//Create objects
 	InstanceObject(new Player());
-	InstanceObject(new GameObject("Test Obj"));
+	Vector2 spawnPos; spawnPos.x = 400; spawnPos.y = 300;
+	InstanceObject(new EnemyDefault(spawnPos));
+
+
 }
 
 void Game::Draw()
@@ -43,7 +49,8 @@ void Game::Update()
 {
 	Draw();
 
-	cout << scene.size() << endl;
+	//cout << scene.size() << endl;
+	//cout << collisionShapes.size() << endl;
 	for (int i = 0; i < scene.size(); i++)
 	{
 		scene[i]->Update();
