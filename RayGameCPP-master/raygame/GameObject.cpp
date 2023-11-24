@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "CollisionShape.h"
 #include "Game.h"
 #include <iostream>
 #include <string>
@@ -120,13 +121,24 @@ void GameObject::Update()
 	//cout << testStr << endl;
 }
 
+//This object collided with another object
+void GameObject::OnCollision(GameObject* collider)
+{
+	
+}
+
 
 //Create an object as a child of this
-void GameObject::InstanceObject(GameObject* newObj)
+void GameObject::InstanceObject(GameObject* newObj, int posX, int posY)
 {
 	GameObject* ptr = this;
+	//Add object to children list
 	children.push_back(newObj);
-	newObj->parent = ptr; //Set parent
+	//Set object parent
+	newObj->parent = ptr;
+	//Set object position
+	newObj->localPosition.x = posX;
+	newObj->localPosition.y = posY;
 	//Call the new object's start function
 	newObj->Start();
 }

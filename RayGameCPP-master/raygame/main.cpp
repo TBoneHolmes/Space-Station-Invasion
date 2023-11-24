@@ -22,8 +22,8 @@ int main()
 	// Initialization
 	Game* game = Game::GetInstance();
 	//--------------------------------------------------------------------------------------
-	int screenWidth = 1280;
-	int screenHeight = 720;
+	int screenWidth = game->cameraSize.x;
+	int screenHeight = game->cameraSize.y;
 
 	InitWindow(screenWidth, screenHeight, "Infiltration Amongst the Stars");
 

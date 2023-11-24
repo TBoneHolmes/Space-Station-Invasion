@@ -18,7 +18,6 @@ class CollisionShape : public GameObject
 public:
 	//-CONSTRUCTOR-
 	CollisionShape(float, unsigned char, unsigned char);
-	CollisionShape(float, Vector2, unsigned char, unsigned char);
 
 	//-VARIABLES-
 	float radius;
@@ -30,6 +29,6 @@ public:
 	void Start();
 	void Draw();
 	void Update();
-	void Collide(CollisionShape*);
 	bool CheckMask(int, int);
+	vector<CollisionShape*> GetOverlappingColliders();
 };

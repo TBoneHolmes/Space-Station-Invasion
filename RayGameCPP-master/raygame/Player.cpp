@@ -25,9 +25,6 @@ void Player::Start()
 	destination = Game::GetInstance()->rect_player;
 	spriteOffset = Vector2(); spriteOffset.x = sprite->height/2; spriteOffset.y = sprite->width/2;
 
-	//Set start position
-	localPosition.x = 300; localPosition.y = 200;
-
 	//Set movement values
 	maxSpeed = 6;
 	acceleration = 0.4;
@@ -39,8 +36,10 @@ void Player::Start()
 
 
 	//Create collision shape
-	Vector2 csOffset; csOffset.x = -4.0f; csOffset.y = 0;
-	InstanceObject(new CollisionShape(12, csOffset, 1, 2));
+	InstanceObject(new CollisionShape(12, 1, 2), -4.0, 0);
+
+	//Set camera
+	Game::GetInstance()->cameraOwner = this;
 
 	//DESTROY SELF
 	//GameObject* ptr = this;
@@ -51,7 +50,7 @@ void Player::Draw()
 {
 	GameObject::Draw();
 	//Draw at position
-	destination.x = globalPosition.x; destination.y = globalPosition.y;
+	destination.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; destination.y = globalPosition.y - Game::GetInstance()->cameraPosition.y;
 	//Draw player
 	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, WHITE);
 }
@@ -71,13 +70,16 @@ void Player::Update()
 void Player::ApplyVelocity()
 {
 	localPosition = Vector2Add(localPosition, velocity);
+	//Clamp position
+	localPosition.x = Clamp(localPosition.x, -32, Game::GetInstance()->worldSize.x + 32);
+	localPosition.y = Clamp(localPosition.y, -32, Game::GetInstance()->worldSize.y + 32);
 }
 
 
 void Player::Input_Rotate()
 {
 	//Get direction of mouse from player
-	float mouseDirection = Vector2Angle(globalPosition, GetMousePosition());
+	float mouseDirection = Vector2Angle(Vector2Subtract(globalPosition, Game::GetInstance()->cameraPosition), GetMousePosition());
 	//Set player's rotation
 	localRotation = mouseDirection;
 }
@@ -102,6 +104,7 @@ void Player::Input_Shoot()
 {
 	if (IsMouseButtonPressed(key_shoot))
 	{
-		Game::GetInstance()->InstanceObject(new Bullet(Vector2Add(globalPosition, Vector2Rotate(Vector2Scale(Vector2Right, sprite->width / 2), globalRotation)), Vector2Rotate(Vector2Right, globalRotation)));
+		Vector2 bulletSpawnPos = Vector2Add(globalPosition, Vector2Rotate(Vector2Scale(Vector2Right, sprite->width / 2), globalRotation));
+		Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, globalRotation)), bulletSpawnPos.x, bulletSpawnPos.y);
 	}
 }

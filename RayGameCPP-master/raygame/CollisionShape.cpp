@@ -16,17 +16,6 @@ CollisionShape::CollisionShape(float rad, unsigned char layer, unsigned char mas
 	collisionLayer = layer;
 	collisionMask = mask;
 }
-CollisionShape::CollisionShape(float rad, Vector2 position, unsigned char layer, unsigned char mask)
-{
-	CollisionShape::name = "CollisionShape";
-	//Set radius
-	radius = rad;
-	//Set position
-	localPosition = position;
-	//Set collision layer and mask
-	collisionLayer = layer;
-	collisionMask = mask;
-}
 
 
 void CollisionShape::Start()
@@ -52,7 +41,7 @@ void CollisionShape::Draw()
 		else
 		{ csColor.r = 255; csColor.g = 94; csColor.b = 94; csColor.a = 180; }
 		//Draw collision shape
-		DrawCircle(globalPosition.x, globalPosition.y, radius, csColor);
+		DrawCircle(globalPosition.x - Game::GetInstance()->cameraPosition.x, globalPosition.y - Game::GetInstance()->cameraPosition.y, radius, csColor);
 
 		//DEBUG - Print collisionLayer and collisionMask bits
 		//cout << parent->name << endl
@@ -75,6 +64,21 @@ void CollisionShape::Update()
 {
 	GameObject::Update();
 
+	if (GetOverlappingColliders().size() > 0)
+	{
+		cout << parent->name << " collided with: ";
+		for (int i = 0; i < GetOverlappingColliders().size(); i++)
+		{
+			cout << GetOverlappingColliders()[i]->parent->name << endl;
+		}
+	}
+}
+
+//Returns a vector with all colliders that are overlapping with this one
+vector<CollisionShape*> CollisionShape::GetOverlappingColliders()
+{
+	//The list that will return at the end
+	vector<CollisionShape*> returnVector;
 	//Check for collisions
 	if (enabled)
 	{
@@ -85,19 +89,14 @@ void CollisionShape::Update()
 				//Check collision
 				&& CheckCollisionCircles(globalPosition, radius, checkPtr->globalPosition, checkPtr->radius)
 				//Check mask
-				&& CheckMask(collisionLayer, checkPtr->collisionMask) == true)
+				&& CheckMask(checkPtr->collisionLayer, collisionMask) == true)
 			{
-				Collide(checkPtr);
+				returnVector.push_back(checkPtr);
 			}
 		}
 	}
-}
 
-//CollisionShape has collided with another CollisionShape
-void CollisionShape::Collide(CollisionShape* collider)
-{
-	cout << parent->name << " collided with: " << collider->parent->name << endl;
-	//cout << collisionLayer << " layer collided with: " << collider->collisionMask << endl;
+	return returnVector;
 }
 
 //Returns true if this collision shape contains the given mask int

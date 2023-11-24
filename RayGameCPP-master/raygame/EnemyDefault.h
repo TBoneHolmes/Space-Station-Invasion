@@ -4,7 +4,7 @@ class EnemyDefault : public GameObject
 {
 public:
 	//-CONSTRUCTOR-
-	EnemyDefault(Vector2);
+	EnemyDefault();
 
 	//-VARIABLES-
 	//Sprite

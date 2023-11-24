@@ -26,7 +26,15 @@ public:
 	vector<GameObject*> scene;
 	vector<CollisionShape*> collisionShapes;
 	int test;
+	//Game
+	Vector2 worldSize;
+	//Camera
+	Vector2 cameraPosition;
+	Vector2 cameraSize;
+	GameObject* cameraOwner;
 	//Textures
+	Texture2D spr_background;
+	Rectangle rect_background;
 	Texture2D spr_player;
 	Rectangle rect_player;
 	Texture2D spr_bullet;
@@ -38,7 +46,7 @@ public:
 	void Start();
 	void Draw();
 	void Update();
-	void InstanceObject(GameObject*);
+	void InstanceObject(GameObject*, int, int);
 
 	//Singleton operator override
 	void operator = (const Game&) = delete;

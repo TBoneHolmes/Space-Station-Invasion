@@ -7,11 +7,9 @@
 using namespace std;
 
 //Constructor
-Bullet::Bullet(Vector2 position, Vector2 direction)
+Bullet::Bullet(Vector2 direction)
 {
 	GameObject::name = "Bullet";
-	//Set position
-	localPosition = position;
 	//Set direction
 	moveDirection = direction;
 }
@@ -29,13 +27,16 @@ void Bullet::Start()
 
 	//Set movement values
 	speed = 10;
+
+	//Create collision shape
+	InstanceObject(new CollisionShape(6, 4, 0), 0, 0);
 }
 
 void Bullet::Draw()
 {
 	GameObject::Draw();
 	//Draw at position
-	destination.x = globalPosition.x; destination.y = globalPosition.y;
+	destination.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; destination.y = globalPosition.y - Game::GetInstance()->cameraPosition.y;
 	//Draw bullet
 	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, WHITE);
 }
@@ -45,6 +46,7 @@ void Bullet::Update()
 	GameObject::Update();
 
 	ApplyVelocity();
+	DestroyCheck();
 }
 
 
@@ -54,4 +56,18 @@ void Bullet::ApplyVelocity()
 	velocity = Vector2Scale(moveDirection, speed);
 	//Apply velocity
 	localPosition = Vector2Add(localPosition, velocity);
+}
+
+void Bullet::DestroyCheck()
+{
+	//Destroy when outside of camera range
+	if (globalPosition.x < Game::GetInstance()->cameraPosition.x
+		|| globalPosition.x > Game::GetInstance()->cameraPosition.x + Game::GetInstance()->cameraSize.x
+		|| globalPosition.y < Game::GetInstance()->cameraPosition.y
+		|| globalPosition.y > Game::GetInstance()->cameraPosition.y + Game::GetInstance()->cameraSize.y)
+	{
+		//Destroy self
+		GameObject* ptr = this;
+		ptr->~GameObject();
+	}
 }

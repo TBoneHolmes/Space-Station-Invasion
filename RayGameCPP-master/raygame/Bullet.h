@@ -9,7 +9,7 @@ class Bullet : public GameObject
 
 public:
 	//-CONSTRUCTOR-
-	Bullet(Vector2, Vector2);
+	Bullet(Vector2);
 
 	//-VARIABLES-
 	//Sprite
@@ -26,6 +26,7 @@ public:
 	void Start();
 	void Draw();
 	void Update();
+	void DestroyCheck();
 	//Movement
 	void ApplyVelocity();
 };
