@@ -34,6 +34,11 @@ void Game::Start()
 	rect_player = Rectangle(); rect_player.x = 0; rect_player.y = 0; rect_player.width = spr_player.width; rect_player.height = spr_player.height;
 	spr_bullet = LoadTexture("..//Assets//bullet.png");
 	rect_bullet = Rectangle(); rect_bullet.x = 0; rect_bullet.y = 0; rect_bullet.width = spr_bullet.width; rect_bullet.height = spr_bullet.height;
+	spr_enemyDefault = LoadTexture("..//Assets//enemyDefault.png");
+	rect_enemyDefault = Rectangle(); rect_enemyDefault.x = 0; rect_enemyDefault.y = 0; rect_enemyDefault.width = spr_enemyDefault.width; rect_enemyDefault.height = spr_enemyDefault.height;
+	spr_explosion = LoadTexture("..//Assets//explosion_spritesheet.png");
+	frames_explosion = 3; //The number of frames in this spritesheet
+	rect_explosion = Rectangle(); rect_explosion.x = 0; rect_explosion.y = 0; rect_explosion.width = spr_explosion.width / frames_explosion; rect_explosion.height = spr_explosion.height;
 
 	//Set game variables
 	worldSize.x = 16 * spr_background.width; worldSize.y = 16 * spr_background.height;
@@ -43,7 +48,7 @@ void Game::Start()
 
 	//Create objects
 	InstanceObject(new Player(), worldSize.x / 2, worldSize.y / 2);
-	InstanceObject(new EnemyDefault(), 400, 300);
+	InstanceObject(new EnemyDefault(), worldSize.x / 2 - 200, worldSize.y / 2 - 100);
 
 
 	//ToggleFullscreen();

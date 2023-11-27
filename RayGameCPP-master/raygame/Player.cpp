@@ -26,7 +26,7 @@ void Player::Start()
 	spriteOffset = Vector2(); spriteOffset.x = sprite->height/2; spriteOffset.y = sprite->width/2;
 
 	//Set movement values
-	maxSpeed = 6;
+	maxSpeed = 8;
 	acceleration = 0.4;
 	decceleration = 1;
 

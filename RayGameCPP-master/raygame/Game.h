@@ -39,6 +39,11 @@ public:
 	Rectangle rect_player;
 	Texture2D spr_bullet;
 	Rectangle rect_bullet;
+	Texture2D spr_enemyDefault;
+	Rectangle rect_enemyDefault;
+	Texture2D spr_explosion;
+	Rectangle rect_explosion;
+	int frames_explosion;
 	//For debugging
 	bool drawCollisions;
 

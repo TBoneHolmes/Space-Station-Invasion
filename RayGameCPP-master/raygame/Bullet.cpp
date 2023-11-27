@@ -26,7 +26,7 @@ void Bullet::Start()
 	spriteOffset = Vector2(); spriteOffset.x = sprite->height / 2; spriteOffset.y = sprite->width / 2;
 
 	//Set movement values
-	speed = 10;
+	speed = 14;
 
 	//Create collision shape
 	InstanceObject(new CollisionShape(6, 4, 0), 0, 0);

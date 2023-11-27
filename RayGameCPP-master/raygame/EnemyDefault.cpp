@@ -18,14 +18,14 @@ void EnemyDefault::Start()
 	GameObject::Start();
 
 	//Set sprite
-	sprite = &Game::GetInstance()->spr_player;
-	spriteSize = &Game::GetInstance()->rect_player;
-	destination = Game::GetInstance()->rect_player;
+	sprite = &Game::GetInstance()->spr_enemyDefault;
+	spriteSize = &Game::GetInstance()->rect_enemyDefault;
+	destination = Game::GetInstance()->rect_enemyDefault;
 	spriteOffset = Vector2(); spriteOffset.x = sprite->height / 2; spriteOffset.y = sprite->width / 2;
 
 	//Create collision shape
 	//CollisionShape* cs = new CollisionShape(12, 2, 4);
-	InstanceObject(new CollisionShape(12, 2, 4), -4.0f, 0);
+	InstanceObject(new CollisionShape(12, 2, 4), 2.0f, 0);
 }
 
 void EnemyDefault::Draw()
