@@ -25,6 +25,17 @@ void Player::Start()
 	destination = Game::GetInstance()->rect_player;
 	spriteOffset = Vector2(); spriteOffset.x = sprite->height/2; spriteOffset.y = sprite->width/2;
 
+
+	//Create collision shape
+	InstanceObject(new CollisionShape(12, 1, 2 + 8), -4.0, 0);
+	//Cache collision shape
+	cs = (CollisionShape*)children.back();
+
+	//Set player reference
+	Game::GetInstance()->player = this;
+	//Set camera
+	Game::GetInstance()->cameraOwner = this;
+
 	//Set movement values
 	maxSpeed = 8;
 	acceleration = 0.4;
@@ -34,12 +45,9 @@ void Player::Start()
 	key_boost = MOUSE_RIGHT_BUTTON;
 	key_shoot = MOUSE_LEFT_BUTTON;
 
-
-	//Create collision shape
-	InstanceObject(new CollisionShape(12, 1, 2), -4.0, 0);
-
-	//Set camera
-	Game::GetInstance()->cameraOwner = this;
+	//Set HP
+	hp = 3;
+	damageRest = 0.1;
 
 	//DESTROY SELF
 	//GameObject* ptr = this;
@@ -51,8 +59,14 @@ void Player::Draw()
 	GameObject::Draw();
 	//Draw at position
 	destination.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; destination.y = globalPosition.y - Game::GetInstance()->cameraPosition.y;
+	//Set draw color
+	Color drawCol = WHITE;
+	if (damageRestTimer > 0)
+	{
+		drawCol = RED;
+	}
 	//Draw player
-	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, WHITE);
+	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, drawCol);
 }
 
 void Player::Update()
@@ -63,9 +77,11 @@ void Player::Update()
 	Input_Booster();
 	Input_Shoot();
 	ApplyVelocity();
-	
+	CollisionCheck();
 }
 
+
+//MOVEMENT AND INPUTS
 
 void Player::ApplyVelocity()
 {
@@ -105,6 +121,47 @@ void Player::Input_Shoot()
 	if (IsMouseButtonPressed(key_shoot))
 	{
 		Vector2 bulletSpawnPos = Vector2Add(globalPosition, Vector2Rotate(Vector2Scale(Vector2Right, sprite->width / 2), globalRotation));
-		Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, globalRotation)), bulletSpawnPos.x, bulletSpawnPos.y);
+		Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, globalRotation), 4), bulletSpawnPos.x, bulletSpawnPos.y);
 	}
+}
+
+
+//DAMAGE
+
+void Player::CollisionCheck()
+{
+	//Tick down damage rest timer
+	if (damageRestTimer > 0)
+	{
+		damageRestTimer -= GetFrameTime();
+	} //Clamp damageRestTimer to 0
+	else { damageRestTimer = 0; }
+
+	//Check for bullet
+	if (damageRestTimer == 0 && cs->GetOverlappingColliders().size() > 0)
+	{
+		cs->GetOverlappingColliders()[0]->parent->~GameObject();
+		Damage(1);
+	}
+}
+
+void Player::Damage(int dmg)
+{
+	hp -= dmg;
+	//Set invulnerability timer
+	damageRestTimer = damageRest;
+	//Die when hp reaches 0
+	if (hp <= 0)
+	{
+		Die();
+	}
+}
+
+void Player::Die()
+{
+	//Create explosion
+	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x + 2.0f, globalPosition.y);
+	//Destroy self
+	GameObject* ptr = this;
+	ptr->~GameObject();
 }

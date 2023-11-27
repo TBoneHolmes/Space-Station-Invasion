@@ -1,3 +1,4 @@
+
 #include "GameObject.h"
 #include "CollisionShape.h"
 #include "Game.h"
@@ -34,6 +35,20 @@ GameObject::~GameObject()
 			if (Game::GetInstance()->collisionShapes[i] == ptr)
 			{
 				Game::GetInstance()->collisionShapes.erase(iter);
+				break;
+			}
+			iter++;
+		}
+	}
+	//Remove self from game's enemies list
+	else if (name == "EnemyDefault")
+	{
+		auto iter = Game::GetInstance()->enemies.begin();
+		for (int i = 0; i < Game::GetInstance()->enemies.size(); i++)
+		{
+			if (Game::GetInstance()->enemies[i] == ptr)
+			{
+				Game::GetInstance()->enemies.erase(iter);
 				break;
 			}
 			iter++;

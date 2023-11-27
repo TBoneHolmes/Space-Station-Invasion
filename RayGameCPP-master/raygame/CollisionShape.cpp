@@ -9,7 +9,7 @@ using namespace std;
 //Constructor
 CollisionShape::CollisionShape(float rad, unsigned char layer, unsigned char mask)
 {
-	CollisionShape::name = "CollisionShape";
+	GameObject::name = "CollisionShape";
 	//Set radius
 	radius = rad;
 	//Set collision layer and mask
@@ -63,15 +63,16 @@ void CollisionShape::Draw()
 void CollisionShape::Update()
 {
 	GameObject::Update();
-
-	if (GetOverlappingColliders().size() > 0)
-	{
-		cout << parent->name << " collided with: ";
-		for (int i = 0; i < GetOverlappingColliders().size(); i++)
-		{
-			cout << GetOverlappingColliders()[i]->parent->name << endl;
-		}
-	}
+	
+	//DEBUG Print collisions
+	//if (GetOverlappingColliders().size() > 0)
+	//{
+	//	cout << parent->name << " collided with: ";
+	//	for (int i = 0; i < GetOverlappingColliders().size(); i++)
+	//	{
+	//		cout << GetOverlappingColliders()[i]->parent->name << endl;
+	//	}
+	//}
 }
 
 //Returns a vector with all colliders that are overlapping with this one

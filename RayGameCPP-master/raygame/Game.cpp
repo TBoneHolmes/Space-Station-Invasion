@@ -41,14 +41,19 @@ void Game::Start()
 	rect_explosion = Rectangle(); rect_explosion.x = 0; rect_explosion.y = 0; rect_explosion.width = spr_explosion.width / frames_explosion; rect_explosion.height = spr_explosion.height;
 
 	//Set game variables
-	worldSize.x = 16 * spr_background.width; worldSize.y = 16 * spr_background.height;
-	drawCollisions = true;
+	worldTileSize.x = 128; worldTileSize.y = 128;
+	worldSize.x = worldTileSize.x * 32; worldSize.y = worldTileSize.y * 32;
+	center.x = worldSize.x / 2; center.y = worldSize.y / 2;
+	drawCollisions = false;
 	//Set camera variables
 	cameraPosition.x = 0; cameraPosition.y = 0;
 
 	//Create objects
-	InstanceObject(new Player(), worldSize.x / 2, worldSize.y / 2);
-	InstanceObject(new EnemyDefault(), worldSize.x / 2 - 200, worldSize.y / 2 - 100);
+	InstanceObject(new Minimap(), 0, 0);
+	InstanceObject(new Player(), center.x, center.y);
+	InstanceObject(new EnemyDefault(), center.x - 1000, center.y - 1100);
+	InstanceObject(new EnemyDefault(), center.x + 1400, center.y - 800);
+	InstanceObject(new EnemyDefault(), center.x - 800, center.y + 1600);
 
 
 	//ToggleFullscreen();
@@ -74,9 +79,11 @@ void Game::Draw()
 void Game::Update()
 {
 	Draw();
+	CameraPosition();
 
 	//DEBUG
-	cout << scene.size() << endl;
+	//cout << scene.size() << endl;
+	cout << enemies.size() << endl;
 
 	//Update scene objects
 	for (int i = 0; i < scene.size(); i++)
@@ -84,6 +91,10 @@ void Game::Update()
 		scene[i]->Update();
 	}
 
+}
+
+void Game::CameraPosition()
+{
 	//Update camera position
 	if (cameraOwner != nullptr)
 	{
@@ -91,33 +102,14 @@ void Game::Update()
 		cameraPosition.y = cameraOwner->globalPosition.y - (cameraSize.y / 2);
 	}
 	//Clamp camera position
-	cameraPosition.x = Clamp(cameraPosition.x, 0, worldSize.x);
-	cameraPosition.y = Clamp(cameraPosition.y, 0, worldSize.y);
-
-	//DEBUG CAMERA MOVEMENT
-	if (IsKeyDown(KEY_D))
-	{
-		cameraPosition.x += 1;
-	}
-	if (IsKeyDown(KEY_A))
-	{
-		cameraPosition.x -= 1;
-	}
-	if (IsKeyDown(KEY_W))
-	{
-		cameraPosition.y -= 1;
-	}
-	if (IsKeyDown(KEY_S))
-	{
-		cameraPosition.y += 1;
-	}
-
+	cameraPosition.x = Clamp(cameraPosition.x, 0, worldSize.x - (cameraSize.x));
+	cameraPosition.y = Clamp(cameraPosition.y, 0, worldSize.y - (cameraSize.y));
 }
 
 //Create a root object
 void Game::InstanceObject(GameObject* newObj, int posX, int posY)
 {
-	cout << newObj << endl; //DEBUG
+	//cout << newObj << endl; //DEBUG
 	//Add object to scene list
 	scene.push_back(newObj);
 	//Set object position

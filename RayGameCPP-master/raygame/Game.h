@@ -3,6 +3,8 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "EnemyDefault.h"
+#include "Explosion.h"
+#include "Minimap.h"
 #include <vector>
 #include <string>
 using namespace std;
@@ -25,9 +27,13 @@ public:
 	//Variables
 	vector<GameObject*> scene;
 	vector<CollisionShape*> collisionShapes;
-	int test;
+	vector<GameObject*> enemies;
+	Player* player;
+	Minimap* minimap;
 	//Game
 	Vector2 worldSize;
+	Vector2 worldTileSize;
+	Vector2 center; //Center of the world
 	//Camera
 	Vector2 cameraPosition;
 	Vector2 cameraSize;
@@ -51,6 +57,7 @@ public:
 	void Start();
 	void Draw();
 	void Update();
+	void CameraPosition();
 	void InstanceObject(GameObject*, int, int);
 
 	//Singleton operator override

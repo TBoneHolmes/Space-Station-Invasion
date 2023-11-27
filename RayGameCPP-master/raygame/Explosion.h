@@ -20,7 +20,7 @@ public:
 	//-VARIABLES-
 	//Sprite
 	Texture2D* sprite;
-	Rectangle* spriteSize;
+	Rectangle spriteSize;
 	Rectangle destination;
 	Vector2 spriteOffset;
 	int spriteFrames;
@@ -33,4 +33,6 @@ public:
 	void Start();
 	void Draw();
 	void Update();
+	//Animation
+	void ManageAnimation();
 };

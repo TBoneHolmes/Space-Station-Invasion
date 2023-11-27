@@ -17,6 +17,8 @@ public:
 	Rectangle* spriteSize;
 	Rectangle destination;
 	Vector2 spriteOffset;
+	//Collision Shape
+	CollisionShape* cs;
 	//Input
 	int key_boost;
 	int key_shoot;
@@ -25,6 +27,10 @@ public:
 	float maxSpeed;
 	float acceleration;
 	float decceleration;
+	//Damage
+	int hp;
+	float damageRest;
+	float damageRestTimer;
 
 	//-FUNCTIONS-
 	void Start();
@@ -35,5 +41,9 @@ public:
 	void Input_Rotate();
 	void Input_Booster();
 	void Input_Shoot();
+	//Damage
+	void Damage(int);
+	void Die();
+	void CollisionCheck();
 
 };

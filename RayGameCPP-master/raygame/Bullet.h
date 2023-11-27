@@ -9,7 +9,7 @@ class Bullet : public GameObject
 
 public:
 	//-CONSTRUCTOR-
-	Bullet(Vector2);
+	Bullet(Vector2, int);
 
 	//-VARIABLES-
 	//Sprite
@@ -21,6 +21,8 @@ public:
 	Vector2 velocity;
 	Vector2 moveDirection;
 	float speed;
+	//Collision
+	int colLayer;
 
 	//-FUNCTIONS-
 	void Start();

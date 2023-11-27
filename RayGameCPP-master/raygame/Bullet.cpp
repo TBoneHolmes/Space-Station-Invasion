@@ -7,11 +7,13 @@
 using namespace std;
 
 //Constructor
-Bullet::Bullet(Vector2 direction)
+Bullet::Bullet(Vector2 direction, int layer)
 {
 	GameObject::name = "Bullet";
 	//Set direction
 	moveDirection = direction;
+	//Set collisionLayer
+	colLayer = layer;
 }
 
 
@@ -29,7 +31,7 @@ void Bullet::Start()
 	speed = 14;
 
 	//Create collision shape
-	InstanceObject(new CollisionShape(6, 4, 0), 0, 0);
+	InstanceObject(new CollisionShape(6, colLayer, 0), 0, 0);
 }
 
 void Bullet::Draw()

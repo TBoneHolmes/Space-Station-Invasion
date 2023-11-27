@@ -1,14 +1,13 @@
 #include "raylib.h"
 #include "GameObject.h"
 #include <string>
-#include <cstddef>
-#include <cstdint>
 using namespace std;
 
 //LAYERS
 //1 = player
 //2 = enemy
-//4 = bullet
+//4 = player bullet
+//8 = enemy bullet
 
 
 #pragma once
