@@ -10,11 +10,9 @@ using namespace std;
 GameObject::GameObject()
 {
 	GameObject::name = "Game Object";
+	drawOrder = 0;
 }
-GameObject::GameObject(string NAME)
-{
-	GameObject::name = NAME;
-}
+
 //Deconstructor
 GameObject::~GameObject()
 {
@@ -95,11 +93,22 @@ void GameObject::Start()
 
 void GameObject::Draw()
 {
-
+	//Draw child objects
+	for (GameObject* obj : children)
+	{
+		obj->Draw();
+	}
 }
 
 void GameObject::Update()
 {
+	//Destroy on gameover
+	if (Game::GetInstance()->gameover && name != "Button")
+	{
+		GameObject* ptr = this;
+		ptr->~GameObject();
+	}
+	
 	//Update position and rotation
 	if (parent == nullptr) //Object is a root object
 	{
@@ -116,7 +125,7 @@ void GameObject::Update()
 
 
 	//Draw
-	Draw();
+	//Draw();
 
 
 	//Update child obejcts
@@ -124,21 +133,6 @@ void GameObject::Update()
 	{
 		obj->Update();
 	}
-
-	//DEBUG
-	//string testStr = name;
-	//if (parent != nullptr)
-	//{ testStr += " : Parent-" + parent->name; }
-	//if (children.size() > 0)
-	//{
-	//	testStr += " : Children-[";
-	//	for (int i = 0; i < children.size(); i++)
-	//	{
-	//		testStr += children[i]->name + ", ";
-	//	}
-	//	testStr += "]";
-	//}
-	//cout << testStr << endl;
 }
 
 //This object collided with another object

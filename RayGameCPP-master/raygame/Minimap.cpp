@@ -17,7 +17,8 @@ void Minimap::Start()
 {
 	GameObject::Start();
 
-	Game::GetInstance()->minimap = this;
+	//Set draw order
+	drawOrder = 4;
 
 	//Set offset
 	offset.x = 8; offset.y = 8;
@@ -30,21 +31,46 @@ void Minimap::Start()
 
 void Minimap::Draw()
 {
-	GameObject::Draw();
 
+	//DRAW MINIMAP
 	//Draw background
 	Color backColor; backColor.r = 255; backColor.g = 255; backColor.b = 255; backColor.a = 60;
 	DrawRectangle(offset.x, offset.y, mapSize.x * mapScale, mapSize.y * mapScale, backColor);
-	//Draw player
-	Color playerColor; playerColor.r = 0; playerColor.g = 255; playerColor.b = 0; playerColor.a = 180;
-	if (Game::GetInstance()->player != nullptr)
-	{ DrawRectangle((Game::GetInstance()->player->globalPosition.x / 32) + offset.x, (Game::GetInstance()->player->globalPosition.y / 32) + offset.y, mapScale * 2, mapScale * 2, playerColor); }
+	//Draw base
+	if (Game::GetInstance()->base != nullptr)
+	{
+		DrawRectangle(mapSize.x / 2 + offset.x - mapScale, mapSize.y / 2 + offset.y - mapScale, mapScale * 2, mapScale * 2, YELLOW);
+	}
 	//Draw enemies
 	Color enemyColor; enemyColor.r = 255; enemyColor.g = 0; enemyColor.b = 0; enemyColor.a = 180;
 	for (int i = 0; i < Game::GetInstance()->enemies.size(); i++)
 	{
-		DrawRectangle((Game::GetInstance()->enemies[i]->globalPosition.x / 32) + offset.x, (Game::GetInstance()->enemies[i]->globalPosition.y / 32) + offset.y, mapScale * 2, mapScale * 2, enemyColor);
+		DrawRectangle((Game::GetInstance()->enemies[i]->globalPosition.x / 32) + offset.x - mapScale, (Game::GetInstance()->enemies[i]->globalPosition.y / 32) + offset.y - mapScale, mapScale * 2, mapScale * 2, enemyColor);
 	}
+	//Draw player
+	Color playerColor; playerColor.r = 0; playerColor.g = 255; playerColor.b = 0; playerColor.a = 180;
+	if (Game::GetInstance()->player != nullptr)
+	{ DrawRectangle((Game::GetInstance()->player->globalPosition.x / 32) + offset.x - mapScale, (Game::GetInstance()->player->globalPosition.y / 32) + offset.y - mapScale, mapScale * 2, mapScale * 2, playerColor); }
+
+	int statXPos = 0;
+	//DRAW SCORE
+	statXPos = mapSize.x + 16;
+	DrawText("SCORE", statXPos, 8, 24, WHITE);
+	string scoreString = "5387239572";
+	DrawText(FormatText("%06i", Game::GetInstance()->score), statXPos, 32, 24, WHITE);
+
+	//DRAW BASE HP
+	int healthbarWidth = 76;
+	DrawText("BASE", statXPos, 80, 24, WHITE);
+	//Background
+	DrawRectangle(statXPos, 104, healthbarWidth + 4, 12, GRAY);
+	//Filler
+	if (Game::GetInstance()->base != nullptr)
+	{
+		DrawRectangle(statXPos + 2, 106, healthbarWidth * ((float)Game::GetInstance()->base->hp / (float)Game::GetInstance()->base->maxHp), 8, RED);
+	}
+
+	GameObject::Draw();
 }
 
 void Minimap::Update()

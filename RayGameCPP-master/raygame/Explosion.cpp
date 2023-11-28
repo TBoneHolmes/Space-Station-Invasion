@@ -31,14 +31,14 @@ void Explosion::Start()
 
 void Explosion::Draw()
 {
-	GameObject::Draw();
-
 	//Draw at position
 	destination.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; destination.y = globalPosition.y - Game::GetInstance()->cameraPosition.y;
 	//Set sprite index
 	spriteSize.x = (sprite->width / spriteFrames) * frame;
 	//Draw player
 	DrawTexturePro(*sprite, spriteSize, destination, spriteOffset, globalRotation, WHITE);
+
+	GameObject::Draw();
 }
 
 void Explosion::Update()

@@ -39,15 +39,18 @@ void Game::Start()
 	spr_explosion = LoadTexture("..//Assets//explosion_spritesheet.png");
 	frames_explosion = 3; //The number of frames in this spritesheet
 	rect_explosion = Rectangle(); rect_explosion.x = 0; rect_explosion.y = 0; rect_explosion.width = spr_explosion.width / frames_explosion; rect_explosion.height = spr_explosion.height;
+	spr_base = LoadTexture("..//Assets//base.png");
+	rect_base = Rectangle(); rect_base.x = 0; rect_base.y = 0; rect_base.width = spr_base.width; rect_base.height = spr_base.height;
+
 
 	//Set game variables
 	worldTileSize.x = 128; worldTileSize.y = 128;
 	worldSize.x = worldTileSize.x * 32; worldSize.y = worldTileSize.y * 32;
 	center.x = worldSize.x / 2; center.y = worldSize.y / 2;
 	score = 0;
-	drawCollisions = false;
+	drawCollisions = true;
 	//Set player spawn pos
-	playerSpawn.x = center.x; playerSpawn.y = center.y;
+	playerSpawn.x = center.x; playerSpawn.y = center.y + 128;
 	//Set camera variables
 	cameraPosition.x = 0; cameraPosition.y = 0;
 	//Set enemy spawn timer
@@ -57,9 +60,13 @@ void Game::Start()
 	playerSpawnTime = 3;
 	playerSpawnTimer = 0;
 
+	gameover = false;
+
 	//Create objects
+	InstanceObject(new Base(), center.x, center.y);
 	InstanceObject(new Minimap(), 0, 0);
-	InstanceObject(new Player(), playerSpawn.x, playerSpawn.y);
+	//InstanceObject(new Player(), playerSpawn.x, playerSpawn.y);
+	InstanceObject(new Button("Button", 200, 64), cameraSize.x / 2, cameraSize.y / 2);
 
 	//ToggleFullscreen();
 
@@ -79,30 +86,41 @@ void Game::Draw()
 			WHITE);
 	}
 
-	//Draw score
-	int scoreXPos = 0;
-	if (minimap != nullptr)
-	{ scoreXPos = minimap->mapSize.x + 16; }
-	DrawText("SCORE", scoreXPos, 8, 24, WHITE);
-	string scoreString = "5387239572";
-	DrawText(FormatText("%06i", score), scoreXPos, 32, 24, WHITE);
+	//Draw gameover
+	if (gameover)
+	{
+		DrawText("GAME OVER", (cameraSize.x / 2) - 288, cameraSize.y / 2 - 128, 96, RED);
+		DrawText("YOUR BASE WAS DESTROYED", (cameraSize.x / 2) - 240, cameraSize.y / 2, 32, WHITE);
+	}
 }
 
 
 void Game::Update()
 {
 	Draw();
+
 	ManageTimers();
 	CameraPosition();
 
 	//DEBUG
-	//cout << scene.size() << endl;
+	cout << scene.size() << endl;
 	//cout << enemies.size() << endl;
 
 	//Update scene objects
 	for (int i = 0; i < scene.size(); i++)
 	{
 		scene[i]->Update();
+	}
+	//Draw other objects
+	for (int draw = 0; draw < 5; draw++)
+	{
+		for (int i = 0; i < scene.size(); i++)
+		{
+			if (scene[i]->drawOrder == draw)
+			{
+				scene[i]->Draw();
+			}
+		}
 	}
 
 }
@@ -115,7 +133,7 @@ void Game::ManageTimers()
 		enemySpawnTimer -= GetFrameTime();
 
 		//Timeout
-		if (enemySpawnTimer <= 0)
+		if (enemySpawnTimer <= 0 && !gameover)
 		{
 			enemySpawnTimer = enemySpawnTimer = enemySpawnTime;
 			SpawnEnemy();
@@ -206,6 +224,25 @@ void Game::InstanceObject(GameObject* newObj, int posX, int posY)
 	newObj->localPosition.y = posY;
 	//Call the new object's start function
 	newObj->Start();
+}
+
+void Game::Gameover()
+{
+	gameover = true;
+
+	//Destroy everything
+	for (GameObject* obj : scene)
+	{
+		obj->~GameObject();
+	}
+
+	//Set references to null
+	player = nullptr;
+	base = nullptr;
+
+	//Stop timers
+	playerSpawnTimer = 0;
+	enemySpawnTimer = 0;
 }
 
 

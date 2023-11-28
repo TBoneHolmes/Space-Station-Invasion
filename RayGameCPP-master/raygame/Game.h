@@ -5,6 +5,8 @@
 #include "EnemyDefault.h"
 #include "Explosion.h"
 #include "Minimap.h"
+#include "Base.h"
+#include "Button.h"
 #include <vector>
 #include <string>
 using namespace std;
@@ -29,7 +31,7 @@ public:
 	vector<CollisionShape*> collisionShapes;
 	vector<GameObject*> enemies;
 	Player* player;
-	Minimap* minimap;
+	Base* base;
 	//Game
 	Vector2 worldSize;
 	Vector2 worldTileSize;
@@ -47,6 +49,7 @@ public:
 	float playerSpawnTimer;
 	//Stats
 	int score;
+	bool gameover;
 	//Textures
 	Texture2D spr_background;
 	Rectangle rect_background;
@@ -59,6 +62,8 @@ public:
 	Texture2D spr_explosion;
 	Rectangle rect_explosion;
 	int frames_explosion;
+	Texture2D spr_base;
+	Rectangle rect_base;
 	//For debugging
 	bool drawCollisions;
 
@@ -68,6 +73,7 @@ public:
 	void Update();
 	void ManageTimers();
 	void CameraPosition();
+	void Gameover();
 	//Spawning
 	void InstanceObject(GameObject*, int, int);
 	void SpawnEnemy();

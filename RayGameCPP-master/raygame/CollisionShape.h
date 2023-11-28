@@ -8,6 +8,7 @@ using namespace std;
 //2 = enemy
 //4 = player bullet
 //8 = enemy bullet
+//16 = base
 
 
 #pragma once

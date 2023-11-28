@@ -19,6 +19,14 @@ void Player::Start()
 {
 	GameObject::Start();
 
+	//Set player reference
+	Game::GetInstance()->player = this;
+	//Set camera
+	Game::GetInstance()->cameraOwner = this;
+
+	//Set draw order
+	drawOrder = 3;
+
 	//Set sprite
 	sprite = &Game::GetInstance()->spr_player;
 	spriteSize = &Game::GetInstance()->rect_player;
@@ -31,10 +39,6 @@ void Player::Start()
 	//Cache collision shape
 	cs = (CollisionShape*)children.back();
 
-	//Set player reference
-	Game::GetInstance()->player = this;
-	//Set camera
-	Game::GetInstance()->cameraOwner = this;
 
 	//Set movement values
 	maxSpeed = 8;
@@ -65,7 +69,6 @@ void Player::Start()
 
 void Player::Draw()
 {
-	GameObject::Draw();
 	//Draw at position
 	destination.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; destination.y = globalPosition.y - Game::GetInstance()->cameraPosition.y;
 	//Set draw color
@@ -92,6 +95,8 @@ void Player::Draw()
 		hpOffset.y = 0 - 2;
 		DrawRectanglePro(hpSize, hpOffset, globalRotation, drawCol);
 	}
+
+	GameObject::Draw();
 }
 
 void Player::Update()

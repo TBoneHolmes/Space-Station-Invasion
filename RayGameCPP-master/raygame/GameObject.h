@@ -4,6 +4,13 @@
 #include <string>
 using namespace std;
 
+//DRAW ORDER
+//0 - Base
+//1 - Asteroids
+//2 - Enemies, bullets
+//3 - Player
+//4 - UI
+
 #pragma once
 class GameObject
 {
@@ -11,7 +18,6 @@ class GameObject
 public:
 	//Constructor
 	GameObject();
-	GameObject(string);
 	//Deconstructor
 	~GameObject();
 
@@ -24,6 +30,7 @@ public:
 	GameObject* parent;
 	vector<GameObject*> children;
 	Vector2 Vector2Right;
+	int drawOrder;
 
 	//Functions
 	void virtual Start();

@@ -20,6 +20,9 @@ void EnemyDefault::Start()
 	//Add self to the game manager's CollisionShapes list
 	Game::GetInstance()->enemies.push_back(this);
 
+	//Set draw order
+	drawOrder = 2;
+
 	//Set sprite
 	sprite = &Game::GetInstance()->spr_enemyDefault;
 	spriteSize = &Game::GetInstance()->rect_enemyDefault;
@@ -50,7 +53,6 @@ void EnemyDefault::Start()
 
 void EnemyDefault::Draw()
 {
-	GameObject::Draw();
 
 	//Draw at position
 	destination.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; destination.y = globalPosition.y - Game::GetInstance()->cameraPosition.y;
@@ -62,6 +64,8 @@ void EnemyDefault::Draw()
 	}
 	//Draw player
 	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, drawCol);
+
+	GameObject::Draw();
 }
 
 void EnemyDefault::Update()
@@ -84,6 +88,13 @@ void EnemyDefault::ManageTimers()
 	}
 	//Clamp timer to 0
 	else { shootRestTimer = 0; }
+
+	//Tick down damage rest timer
+	if (damageRestTimer > 0)
+	{
+		damageRestTimer -= GetFrameTime();
+	} //Clamp damageRestTimer to 0
+	else { damageRestTimer = 0; }
 }
 
 void EnemyDefault::Ai()
@@ -118,13 +129,6 @@ void EnemyDefault::Ai()
 
 void EnemyDefault::CollisionCheck()
 {
-	//Tick down damage rest timer
-	if (damageRestTimer > 0)
-	{
-		damageRestTimer -= GetFrameTime();
-	} //Clamp damageRestTimer to 0
-	else { damageRestTimer = 0; }
-
 	//Check for bullet
 	if (damageRestTimer == 0 && cs->GetOverlappingColliders().size() > 0)
 	{

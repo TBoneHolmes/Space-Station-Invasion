@@ -30,7 +30,6 @@ void CollisionShape::Start()
 
 void CollisionShape::Draw()
 {
-	GameObject::Draw();
 
 	if (Game::GetInstance()->drawCollisions)
 	{
@@ -57,6 +56,9 @@ void CollisionShape::Draw()
 		//	cout << ((collisionMask & (1 << i)) != 0);
 		//}
 		//cout << endl << endl;
+
+	GameObject::Draw();
+
 	}
 }
 

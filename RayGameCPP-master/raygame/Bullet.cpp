@@ -21,6 +21,9 @@ void Bullet::Start()
 {
 	GameObject::Start();
 
+	//Set draw order
+	drawOrder = 2;
+
 	//Set sprite
 	sprite = &Game::GetInstance()->spr_bullet;
 	spriteSize = &Game::GetInstance()->rect_bullet;
@@ -36,11 +39,12 @@ void Bullet::Start()
 
 void Bullet::Draw()
 {
-	GameObject::Draw();
 	//Draw at position
 	destination.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; destination.y = globalPosition.y - Game::GetInstance()->cameraPosition.y;
 	//Draw bullet
 	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, WHITE);
+
+	GameObject::Draw();
 }
 
 void Bullet::Update()
