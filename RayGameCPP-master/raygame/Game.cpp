@@ -53,9 +53,6 @@ void Game::Start()
 	playerSpawn.x = center.x; playerSpawn.y = center.y + 128;
 	//Set camera variables
 	cameraPosition.x = 0; cameraPosition.y = 0;
-	//Set enemy spawn timer
-	enemySpawnTime = 8;
-	enemySpawnTimer = enemySpawnTime;
 	//Set player spawn time
 	playerSpawnTime = 3;
 	playerSpawnTimer = 0;
@@ -63,10 +60,7 @@ void Game::Start()
 	gameover = false;
 
 	//Create objects
-	InstanceObject(new Base(), center.x, center.y);
-	InstanceObject(new Minimap(), 0, 0);
-	//InstanceObject(new Player(), playerSpawn.x, playerSpawn.y);
-	InstanceObject(new Button("Button", 200, 64), cameraSize.x / 2, cameraSize.y / 2);
+	StartGame();
 
 	//ToggleFullscreen();
 
@@ -89,8 +83,12 @@ void Game::Draw()
 	//Draw gameover
 	if (gameover)
 	{
-		DrawText("GAME OVER", (cameraSize.x / 2) - 288, cameraSize.y / 2 - 128, 96, RED);
-		DrawText("YOUR BASE WAS DESTROYED", (cameraSize.x / 2) - 240, cameraSize.y / 2, 32, WHITE);
+		int textWidth = MeasureText("GAME OVER", 96);
+		DrawText("GAME OVER", (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 256, 96, RED);
+		textWidth = MeasureText("YOUR BASE WAS DESTROYED", 32);
+		DrawText("YOUR BASE WAS DESTROYED", (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 160, 32, WHITE);
+		textWidth = MeasureText(FormatText("SCORE: %06i", score), 32);
+		DrawText(FormatText("SCORE: %06i", score), (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 32, 32, GREEN);
 	}
 }
 
@@ -103,7 +101,7 @@ void Game::Update()
 	CameraPosition();
 
 	//DEBUG
-	cout << scene.size() << endl;
+	//cout << scene.size() << endl;
 	//cout << enemies.size() << endl;
 
 	//Update scene objects
@@ -243,6 +241,36 @@ void Game::Gameover()
 	//Stop timers
 	playerSpawnTimer = 0;
 	enemySpawnTimer = 0;
+
+	//Create restart button
+	InstanceObject(new Button("RESTART", 160, 48), cameraSize.x / 2, (cameraSize.y / 2) + 64);
+	//Create quit button
+	InstanceObject(new Button("QUIT", 160, 48), cameraSize.x / 2, (cameraSize.y / 2) + 128);
+}
+
+void Game::StartGame()
+{
+	gameover = false;
+	score = 0;
+
+	//Instance objects
+	InstanceObject(new Base(), center.x, center.y);
+	InstanceObject(new Minimap(), 0, 0);
+	InstanceObject(new Player(), playerSpawn.x, playerSpawn.y);
+
+	SpawnEnemy();
+
+	//Start enemy spawn timer
+	enemySpawnTime = 8;
+	enemySpawnTimer = enemySpawnTime;
+
+	//Destroy buttons
+	for (GameObject* obj : scene)
+	{
+		if (obj->name == "Button")
+		{cout << obj->name << "  deleted" << endl;
+			obj->~GameObject(); }
+	}
 }
 
 

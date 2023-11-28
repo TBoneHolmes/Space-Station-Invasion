@@ -73,7 +73,9 @@ public:
 	void Update();
 	void ManageTimers();
 	void CameraPosition();
+	//Gameover
 	void Gameover();
+	void StartGame();
 	//Spawning
 	void InstanceObject(GameObject*, int, int);
 	void SpawnEnemy();

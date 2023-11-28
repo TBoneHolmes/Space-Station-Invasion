@@ -153,10 +153,15 @@ void Player::ApplyVelocity()
 
 void Player::Input_Rotate()
 {
-	//Get direction of mouse from player
-	float mouseDirection = Vector2Angle(Vector2Subtract(globalPosition, Game::GetInstance()->cameraPosition), GetMousePosition());
-	//Set player's rotation
-	localRotation = mouseDirection;
+	//Get distance of the mouse from player
+	float mouseDistance = Vector2Length(Vector2Subtract(Vector2Subtract(globalPosition, Game::GetInstance()->cameraPosition), GetMousePosition()));
+	if (mouseDistance > 12)
+	{
+		//Get direction of mouse from player
+		float mouseDirection = Vector2Angle(Vector2Subtract(globalPosition, Game::GetInstance()->cameraPosition), GetMousePosition());
+		//Set player's rotation
+		localRotation = mouseDirection;
+	}
 }
 
 void Player::Input_Booster()

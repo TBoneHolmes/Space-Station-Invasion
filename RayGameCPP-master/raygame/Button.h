@@ -10,14 +10,14 @@ class Button : public GameObject
 
 public:
 	//-CONSTRUCTOR-
-	Button(string, int, int);
+	Button(const char*, int, int);
 
 	//-VARIABLES-
 	//Draw
 	Vector2 size;
 	//Interaction
 	int mouseInteract;
-	string text;
+	char* text;
 
 	//-FUNCTIONS-
 	void Start();
