@@ -37,12 +37,15 @@ void EnemyDefault::Start()
 
 	//Set movement values
 	targetPoint = Game::GetInstance()->center;
-	maxSpeed = GetRandomValue(4, 7);
-	acceleration = GetRandomValue(2, 6);
+	maxSpeed = GetRandomValue(3, 6);
+	acceleration = GetRandomValue(4, 8);
 
 	//Set shoot values
 	shootRest = 1;
 	shootRestTimer = 0;
+	
+	//Set score
+	killScore = 10;
 }
 
 void EnemyDefault::Draw()
@@ -103,7 +106,8 @@ void EnemyDefault::Ai()
 	{ shootRestTimer = shootRest; }
 
 	//SHOOT AI
-	if (targetPoint.x == Game::GetInstance()->player->globalPosition.x
+	if (Game::GetInstance()->player != nullptr &&
+		targetPoint.x == Game::GetInstance()->player->globalPosition.x
 		&& targetPoint.y == Game::GetInstance()->player->globalPosition.y)
 	{
 		Shoot();
@@ -124,7 +128,9 @@ void EnemyDefault::CollisionCheck()
 	//Check for bullet
 	if (damageRestTimer == 0 && cs->GetOverlappingColliders().size() > 0)
 	{
+		//Destroy bullet
 		cs->GetOverlappingColliders()[0]->parent->~GameObject();
+		//Damage self
 		Damage(1);
 	}
 }
@@ -137,7 +143,11 @@ void EnemyDefault::Damage(int dmg)
 	//Die when hp reaches 0
 	if (hp <= 0)
 	{
+		Game::GetInstance()->score += killScore;
 		Die();
+	}
+	else {
+		Game::GetInstance()->score += 1;
 	}
 }
 

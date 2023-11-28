@@ -28,6 +28,8 @@ public:
 	//Shoot
 	float shootRest;
 	float shootRestTimer;
+	//Score
+	int killScore;
 
 	//-FUNCTIONS-
 	void Start();

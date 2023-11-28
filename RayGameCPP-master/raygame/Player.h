@@ -28,15 +28,23 @@ public:
 	float acceleration;
 	float decceleration;
 	//Damage
+	int maxHp;
 	int hp;
 	float damageRest;
 	float damageRestTimer;
+	//Shoot
+	float shootRest;
+	float shootRestTimer;
+	//Invincibility
+	float invTime;
+	float invTimer;
 
 	//-FUNCTIONS-
 	void Start();
 	void Draw();
 	void Update();
 	void ApplyVelocity();
+	void ManageTimers();
 	//Inputs
 	void Input_Rotate();
 	void Input_Booster();

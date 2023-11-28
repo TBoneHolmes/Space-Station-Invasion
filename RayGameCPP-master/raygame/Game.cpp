@@ -44,17 +44,22 @@ void Game::Start()
 	worldTileSize.x = 128; worldTileSize.y = 128;
 	worldSize.x = worldTileSize.x * 32; worldSize.y = worldTileSize.y * 32;
 	center.x = worldSize.x / 2; center.y = worldSize.y / 2;
+	score = 0;
 	drawCollisions = false;
+	//Set player spawn pos
+	playerSpawn.x = center.x; playerSpawn.y = center.y;
 	//Set camera variables
 	cameraPosition.x = 0; cameraPosition.y = 0;
+	//Set enemy spawn timer
+	enemySpawnTime = 8;
+	enemySpawnTimer = enemySpawnTime;
+	//Set player spawn time
+	playerSpawnTime = 3;
+	playerSpawnTimer = 0;
 
 	//Create objects
 	InstanceObject(new Minimap(), 0, 0);
-	InstanceObject(new Player(), center.x, center.y);
-	InstanceObject(new EnemyDefault(), center.x - 1000, center.y - 1100);
-	InstanceObject(new EnemyDefault(), center.x + 1400, center.y - 800);
-	InstanceObject(new EnemyDefault(), center.x - 800, center.y + 1600);
-
+	InstanceObject(new Player(), playerSpawn.x, playerSpawn.y);
 
 	//ToggleFullscreen();
 
@@ -73,17 +78,26 @@ void Game::Draw()
 			((((int)floor(i / tileSize.x)) * spr_background.height) - cameraPosition.y),
 			WHITE);
 	}
+
+	//Draw score
+	int scoreXPos = 0;
+	if (minimap != nullptr)
+	{ scoreXPos = minimap->mapSize.x + 16; }
+	DrawText("SCORE", scoreXPos, 8, 24, WHITE);
+	string scoreString = "5387239572";
+	DrawText(FormatText("%06i", score), scoreXPos, 32, 24, WHITE);
 }
 
 
 void Game::Update()
 {
 	Draw();
+	ManageTimers();
 	CameraPosition();
 
 	//DEBUG
 	//cout << scene.size() << endl;
-	cout << enemies.size() << endl;
+	//cout << enemies.size() << endl;
 
 	//Update scene objects
 	for (int i = 0; i < scene.size(); i++)
@@ -91,6 +105,35 @@ void Game::Update()
 		scene[i]->Update();
 	}
 
+}
+
+void Game::ManageTimers()
+{
+	//Enemy spawn tick down
+	if (enemySpawnTimer > 0)
+	{
+		enemySpawnTimer -= GetFrameTime();
+
+		//Timeout
+		if (enemySpawnTimer <= 0)
+		{
+			enemySpawnTimer = enemySpawnTimer = enemySpawnTime;
+			SpawnEnemy();
+		}
+	}
+
+	//Player spawn tick down
+	if (playerSpawnTimer > 0)
+	{
+		playerSpawnTimer -= GetFrameTime();
+
+		//Timeout
+		if (playerSpawnTimer <= 0)
+		{
+			playerSpawnTimer = 0;
+			SpawnPlayer();
+		}
+	}
 }
 
 void Game::CameraPosition()
@@ -104,6 +147,52 @@ void Game::CameraPosition()
 	//Clamp camera position
 	cameraPosition.x = Clamp(cameraPosition.x, 0, worldSize.x - (cameraSize.x));
 	cameraPosition.y = Clamp(cameraPosition.y, 0, worldSize.y - (cameraSize.y));
+}
+
+void Game::SpawnEnemy()
+{
+	//Choose enemy spawn pos
+	//0 = top, 1 = right, 2 = bottom, 3 = left
+	int edgeChoice = GetRandomValue(0, 3);
+	float edgeDist;
+	Vector2 spawnPos;
+	switch (edgeChoice)
+	{
+		case 0:
+			edgeDist = GetRandomValue(0, worldSize.x);
+			spawnPos.x = edgeDist;
+			spawnPos.y = -32;
+			cout << "CASE 0 :: " << spawnPos.x << endl;
+			break;
+		case 1:
+			edgeDist = GetRandomValue(0, worldSize.y);
+			spawnPos.x = worldSize.x + 32;
+			spawnPos.y = edgeDist;
+			cout << "CASE 1 :: " << spawnPos.x << endl;
+			break;
+
+		case 2:
+			edgeDist = GetRandomValue(0, worldSize.x);
+			spawnPos.x = edgeDist;
+			spawnPos.y = worldSize.y + 32;
+			cout << "CASE 2 :: " << spawnPos.x << endl;
+			break;
+		case 3:
+			edgeDist = GetRandomValue(0, worldSize.y);
+			spawnPos.x = -32;
+			spawnPos.y = edgeDist;
+			cout << "CASE 3 :: " << spawnPos.x << endl;
+			break;
+
+	}
+	//Create enemy
+	InstanceObject(new EnemyDefault, spawnPos.x, spawnPos.y);
+	//cout << "Enemy spawned" << endl;
+}
+
+void Game::SpawnPlayer()
+{
+	InstanceObject(new Player, playerSpawn.x, playerSpawn.y);
 }
 
 //Create a root object

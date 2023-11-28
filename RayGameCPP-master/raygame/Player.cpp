@@ -46,8 +46,17 @@ void Player::Start()
 	key_shoot = MOUSE_LEFT_BUTTON;
 
 	//Set HP
-	hp = 3;
+	maxHp = 3;
+	hp = maxHp;
 	damageRest = 0.1;
+
+	//Set shoot timer
+	shootRest = 0.3;
+	shootRestTimer = 0;
+
+	//Set invincible timer
+	invTime = 1;
+	invTimer = invTime;
 
 	//DESTROY SELF
 	//GameObject* ptr = this;
@@ -61,23 +70,68 @@ void Player::Draw()
 	destination.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; destination.y = globalPosition.y - Game::GetInstance()->cameraPosition.y;
 	//Set draw color
 	Color drawCol = WHITE;
-	if (damageRestTimer > 0)
+	if (invTimer > 0)
+	{
+		drawCol.a = 180;
+	}
+	else if (damageRestTimer > 0)
 	{
 		drawCol = RED;
 	}
 	//Draw player
 	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, drawCol);
+
+	//Draw HP
+	Rectangle hpSize; hpSize.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; hpSize.y = globalPosition.y - Game::GetInstance()->cameraPosition.y; hpSize.width = 16 / maxHp; hpSize.height = sprite->height / maxHp;
+	Vector2 hpOffset; hpOffset.x = sprite->width / 2 + 6; hpOffset.y = hpSize.height + 2;
+	if (hp > 1)
+	{
+		DrawRectanglePro(hpSize, hpOffset, globalRotation, drawCol);
+	} if (hp > 2)
+	{
+		hpOffset.y = 0 - 2;
+		DrawRectanglePro(hpSize, hpOffset, globalRotation, drawCol);
+	}
 }
 
 void Player::Update()
 {
 	GameObject::Update();
 	
+	ManageTimers();
 	Input_Rotate();
 	Input_Booster();
 	Input_Shoot();
 	ApplyVelocity();
 	CollisionCheck();
+}
+
+void Player::ManageTimers()
+{
+	//Shoot rest timer
+	if (shootRestTimer > 0)
+	{
+		shootRestTimer -= GetFrameTime();
+		//Timeout
+		if (shootRestTimer <= 0)
+		{ shootRestTimer = 0; }
+	}
+	//Damage rest timer
+	if (damageRestTimer > 0)
+	{
+		damageRestTimer -= GetFrameTime();
+		//Timeout
+		if (damageRestTimer <= 0)
+		{ damageRestTimer = 0; }
+	}
+	//Invincible timer
+	if (invTimer > 0)
+	{
+		invTimer -= GetFrameTime();
+		//Timeout
+		if (invTimer <= 0)
+		{ invTimer = 0; }
+	}
 }
 
 
@@ -118,10 +172,13 @@ void Player::Input_Booster()
 
 void Player::Input_Shoot()
 {
-	if (IsMouseButtonPressed(key_shoot))
+	if (IsMouseButtonDown(key_shoot) && shootRestTimer == 0)
 	{
+		//Spawn bullet
 		Vector2 bulletSpawnPos = Vector2Add(globalPosition, Vector2Rotate(Vector2Scale(Vector2Right, sprite->width / 2), globalRotation));
 		Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, globalRotation), 4), bulletSpawnPos.x, bulletSpawnPos.y);
+		//Set timer
+		shootRestTimer = shootRest;
 	}
 }
 
@@ -130,25 +187,27 @@ void Player::Input_Shoot()
 
 void Player::CollisionCheck()
 {
-	//Tick down damage rest timer
-	if (damageRestTimer > 0)
-	{
-		damageRestTimer -= GetFrameTime();
-	} //Clamp damageRestTimer to 0
-	else { damageRestTimer = 0; }
 
 	//Check for bullet
-	if (damageRestTimer == 0 && cs->GetOverlappingColliders().size() > 0)
+	if (damageRestTimer == 0 && invTimer == 0 && cs->GetOverlappingColliders().size() > 0)
 	{
-		cs->GetOverlappingColliders()[0]->parent->~GameObject();
-		Damage(1);
+		//Hit by bullet
+		if (cs->GetOverlappingColliders()[0]->parent->name == "Bullet")
+		{
+			cs->GetOverlappingColliders()[0]->parent->~GameObject();
+			Damage(1);
+		}
+		else //Hit by enemy body
+		{
+			Die();
+		}
 	}
 }
 
 void Player::Damage(int dmg)
 {
 	hp -= dmg;
-	//Set invulnerability timer
+	//Set damage rest timer
 	damageRestTimer = damageRest;
 	//Die when hp reaches 0
 	if (hp <= 0)
@@ -159,6 +218,8 @@ void Player::Damage(int dmg)
 
 void Player::Die()
 {
+	//Set respawn timer
+	Game::GetInstance()->playerSpawnTimer = Game::GetInstance()->playerSpawnTime;
 	//Create explosion
 	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x + 2.0f, globalPosition.y);
 	//Destroy self

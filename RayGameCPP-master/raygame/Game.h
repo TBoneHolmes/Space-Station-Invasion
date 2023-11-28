@@ -34,10 +34,19 @@ public:
 	Vector2 worldSize;
 	Vector2 worldTileSize;
 	Vector2 center; //Center of the world
+	Vector2 playerSpawn;
 	//Camera
 	Vector2 cameraPosition;
 	Vector2 cameraSize;
 	GameObject* cameraOwner;
+	//Enemy Spawn
+	float enemySpawnTime;
+	float enemySpawnTimer;
+	//Player spawn
+	float playerSpawnTime;
+	float playerSpawnTimer;
+	//Stats
+	int score;
 	//Textures
 	Texture2D spr_background;
 	Rectangle rect_background;
@@ -57,8 +66,12 @@ public:
 	void Start();
 	void Draw();
 	void Update();
+	void ManageTimers();
 	void CameraPosition();
+	//Spawning
 	void InstanceObject(GameObject*, int, int);
+	void SpawnEnemy();
+	void SpawnPlayer();
 
 	//Singleton operator override
 	void operator = (const Game&) = delete;

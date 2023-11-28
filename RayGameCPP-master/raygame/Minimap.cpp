@@ -37,13 +37,14 @@ void Minimap::Draw()
 	DrawRectangle(offset.x, offset.y, mapSize.x * mapScale, mapSize.y * mapScale, backColor);
 	//Draw player
 	Color playerColor; playerColor.r = 0; playerColor.g = 255; playerColor.b = 0; playerColor.a = 180;
-	DrawRectangle((Game::GetInstance()->player->globalPosition.x / 32) + offset.x, (Game::GetInstance()->player->globalPosition.y / 32) + offset.y, mapScale * 2, mapScale * 2, playerColor);
+	if (Game::GetInstance()->player != nullptr)
+	{ DrawRectangle((Game::GetInstance()->player->globalPosition.x / 32) + offset.x, (Game::GetInstance()->player->globalPosition.y / 32) + offset.y, mapScale * 2, mapScale * 2, playerColor); }
 	//Draw enemies
 	Color enemyColor; enemyColor.r = 255; enemyColor.g = 0; enemyColor.b = 0; enemyColor.a = 180;
-	//for (int i = 0; i < enemies.size(); i++)
-	//{
-	//	DrawRectangle((enemies[i]->globalPosition.x / 32) + offset.x, (enemies[i]->globalPosition.y / 32) + offset.y, mapScale * 2, mapScale * 2, enemyColor);
-	//}
+	for (int i = 0; i < Game::GetInstance()->enemies.size(); i++)
+	{
+		DrawRectangle((Game::GetInstance()->enemies[i]->globalPosition.x / 32) + offset.x, (Game::GetInstance()->enemies[i]->globalPosition.y / 32) + offset.y, mapScale * 2, mapScale * 2, enemyColor);
+	}
 }
 
 void Minimap::Update()

@@ -54,6 +54,11 @@ GameObject::~GameObject()
 			iter++;
 		}
 	}
+	//Remove player reference from game
+	else if (name == "Player")
+	{
+		Game::GetInstance()->player = nullptr;
+	}
 	//Remove self from the game's 'scene' list
 	if (parent == nullptr)
 	{
