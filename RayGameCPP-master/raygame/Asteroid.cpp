@@ -123,6 +123,13 @@ void Asteroid::CollisionCheck()
 		//Damage self
 		Damage(1);
 	}
+
+	if (globalPosition.x < 0 || globalPosition.x > Game::GetInstance()->worldSize.x
+		|| globalPosition.y < 0 || globalPosition.y > Game::GetInstance()->worldSize.y)
+	{
+		GameObject* ptr = this;
+		ptr->~GameObject();
+	}
 }
 
 void Asteroid::Damage(int dmg)

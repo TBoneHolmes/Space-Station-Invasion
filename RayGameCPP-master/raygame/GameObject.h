@@ -39,6 +39,5 @@ public:
 	void virtual OnCollision(GameObject*);
 	void virtual InstanceObject(GameObject*, int, int);
 
-
 };
 

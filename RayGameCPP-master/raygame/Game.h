@@ -31,7 +31,7 @@ public:
 	vector<GameObject*> scene;
 	vector<CollisionShape*> collisionShapes;
 	vector<GameObject*> enemies;
-	vector<GameObject*> asteroids;
+	vector<Asteroid*> asteroids;
 	Player* player;
 	Base* base;
 	//Game
@@ -93,7 +93,10 @@ public:
 	void InstanceObject(GameObject*, int, int);
 	void SpawnEnemy();
 	void SpawnPlayer();
-	void SpawnAsteroid();
+	void SpawnAsteroid(int);
+	void SpawnWaveAsteroids();
+	int CheckAsteroidChunk(int);
+	int CountLargeAsteroids();
 	//Waves
 	void WaveIncrease();
 	//Helpful stuff

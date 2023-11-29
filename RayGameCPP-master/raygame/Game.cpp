@@ -64,16 +64,16 @@ void Game::Start()
 	playerSpawnTime = 3;
 	playerSpawnTimer = 0;
 	//Set chunks
-	for (int row = 0; row < 4; row++)
+	for (int col = 0; col < 4; col++)
 	{
-		for (int col = 0; col < 4; col++)
+		for (int row = 0; row < 4; row++)
 		{
 			//Set chunk size
-			chunk[row * 4 + col].width = worldSize.x / 4;
-			chunk[row * 4 + col].height = worldSize.y / 4;
+			chunk[col + row * 4].width = worldSize.x / 4;
+			chunk[col + row * 4].height = worldSize.y / 4;
 			//Set chunk location
-			chunk[row * 4 + col].x = (worldSize.x / 4) * row;
-			chunk[row * 4 + col].y = (worldSize.y / 4) * col;
+			chunk[col + row * 4].x = (worldSize.x / 4) * col;
+			chunk[col + row * 4].y = (worldSize.y / 4) * row;
 		}
 	}
 
@@ -111,6 +111,17 @@ void Game::Draw()
 		textWidth = MeasureText(FormatText("SCORE: %06i", score), 32);
 		DrawText(FormatText("SCORE: %06i", score), (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 32, 32, GREEN);
 	}
+
+
+	//DEBUG Draw chunk grid
+	//for (int i = 0; i < sizeof(chunk) / sizeof(int); i++)
+	//{
+	//	DrawLine(chunk[i].x - cameraPosition.x, chunk[i].y - cameraPosition.y, chunk[i].x + chunk[i].width - cameraPosition.x, chunk[i].y - cameraPosition.y, GREEN);
+	//	DrawLine(chunk[i].x + chunk[i].width - cameraPosition.x, chunk[i].y - cameraPosition.y, chunk[i].x + chunk[i].width - cameraPosition.x, chunk[i].y + chunk[i].height - cameraPosition.y, GREEN);
+	//	DrawLine(chunk[i].x + chunk[i].width - cameraPosition.x, chunk[i].y + chunk[i].height - cameraPosition.y, chunk[i].x - cameraPosition.x, chunk[i].y + chunk[i].height - cameraPosition.y, GREEN);
+	//	DrawLine(chunk[i].x - cameraPosition.x, chunk[i].y + chunk[i].height - cameraPosition.y, chunk[i].x - cameraPosition.x, chunk[i].y - cameraPosition.y, GREEN);
+	//	DrawText(FormatText("%00i", i), chunk[i].x + 32 - cameraPosition.x, chunk[i].y + 32 - cameraPosition.y, 32, GREEN);
+	//}
 }
 
 
@@ -141,6 +152,8 @@ void Game::Update()
 			}
 		}
 	}
+
+	cout << CountLargeAsteroids() << endl;
 
 }
 
@@ -239,66 +252,80 @@ void Game::SpawnPlayer()
 	InstanceObject(new Player, playerSpawn.x, playerSpawn.y);
 }
 
-void Game::SpawnAsteroid()
+//Spawns an asteroid at a given chunk
+void Game::SpawnAsteroid(int spawnChunk)
 {
-	//Look for a free chunk to spawn the asteroid in
-	Rectangle freeChunk; freeChunk.x = -1;
+	Vector2 newSpawnPlus;
+	do { //Set a random spawn position and ensure it's not in camerea view
+		newSpawnPlus.x = GetRandomValue(128, chunk[spawnChunk].width - 128);
+		newSpawnPlus.y = GetRandomValue(128, chunk[spawnChunk].height - 128);
+	} while (chunk[spawnChunk].x + newSpawnPlus.x > cameraPosition.x && chunk[spawnChunk].x + newSpawnPlus.x < cameraPosition.x - cameraSize.x
+		&& chunk[spawnChunk].y + newSpawnPlus.y > cameraPosition.y && chunk[spawnChunk].y + newSpawnPlus.y < cameraPosition.y - cameraSize.y);
+	//Spawn asteroid
+	InstanceObject(new Asteroid(), (chunk[spawnChunk].x + newSpawnPlus.x), (chunk[spawnChunk].y + newSpawnPlus.y));
+}
 
-	//Shuffle the order of chunks to search in (and exclude the 4 middle chunks)
-	int newOrder[12] = {0, 1, 2, 3, 4, 5, 8, 9, 12, 13, 14, 15};
+//Spawns asteroids based on the wave count
+void Game::SpawnWaveAsteroids()
+{
+	int newAsteroidCount = 0;
+	newAsteroidCount = Clamp(newAsteroidCount, 10 + (2 * wave), 36); //The number of asteroids to exist at the start of the next round
+	//Set a random order of the chunks to check through for spawning
+	int newOrder[12] = { 0, 1, 2, 3, 4, 7, 8, 11, 12, 13, 14, 15 };
 	random_shuffle(begin(newOrder), end(newOrder));
-	
-	//if (asteroids.size() > 0)
-	//{
-		//Search each chunk until a free one is found
-		for (int i = 0; i < sizeof(chunk) / sizeof(Rectangle); i++)
+	//Spawn asteroids
+	int i = 0;
+	while (CountLargeAsteroids() < newAsteroidCount)
+	{
+		//Reshuffle order
+		if (i / 12 >= 1)
 		{
-			if (i != 6 && i != 7 && i != 10 && i != 11)
-			{
-				Vector2 newSpawnPlus;
-				newSpawnPlus.x = GetRandomValue(128, chunk[i].width - 128);
-				newSpawnPlus.y = GetRandomValue(128, chunk[i].height - 128);
-				//Spawn asteroid
-				InstanceObject(new Asteroid(), (chunk[i].x + newSpawnPlus.x), (chunk[i].y + newSpawnPlus.y));
-			}
-			//for (GameObject* asteroid : asteroids)
-			//{
-			//	if	(//Make sure this chunk is free of any other asteroids
-			//		(asteroid->globalPosition.x < chunk[newOrder[i]].x || asteroid->globalPosition.x > chunk[newOrder[i]].x + chunk[newOrder[i]].width)
-			//		&& (asteroid->globalPosition.y < chunk[newOrder[i]].y || asteroid->globalPosition.y > chunk[newOrder[i]].y + chunk[newOrder[i]].height))
-			//	{
-			//		freeChunk = chunk[newOrder[i]];
-			//		break;
-			//	}
-			//}
-			//if (freeChunk.x != -1)
-			//{
-			//	break;
-			//}
+			random_shuffle(begin(newOrder), end(newOrder));
 		}
-	//}
-	//No asteroids currently exist. Just choose the first chunk option
-	//else
-	//{
-	//	freeChunk = chunk[newOrder[0]];
-	//	//cout << "Chunk chosen: " << newOrder[0] << endl;
-	//}
-	
-	//A free chunk was found. Spawn asteroid in the chunk
-	//if (freeChunk.x != -1)
-	//{
-	//	//Choose random position within the chunk
-	//	Vector2 newSpawnPlus;
-	//	newSpawnPlus.x = GetRandomValue(128, freeChunk.width - 128);
-	//	newSpawnPlus.y = GetRandomValue(128, freeChunk.height - 128);
-	//	//Spawn asteroid
-	//	InstanceObject(new Asteroid(), (freeChunk.x + newSpawnPlus.x), (freeChunk.y + newSpawnPlus.y));
-	//	//cout << "Spawned asteroid at: " << freeChunk.x + newSpawnPlus.x << ", " << freeChunk.y + newSpawnPlus.y << endl;
-	//}
-	//else
-	//{
-	//	cout << "WHAT";
-	//}
+
+		//Spawn an asteroid in the newOrder[i] chunk if the chunk isn't cluttered with too many asteroids
+		if (CheckAsteroidChunk(newOrder[i - (12 * (int)floorf(((float)i / (float)12)))]) <= (int)floorf((float)i / (float)12))
+		{
+			SpawnAsteroid(newOrder[i - (12 * (int)floorf(((float)i / (float)12)))]);
+		}
+
+
+		i++;
+	}
+}
+
+//Returns true if the given chunk contains an asteroid
+int Game::CheckAsteroidChunk(int chunkToCheck)
+{
+	int returnCount = 0;
+	if (asteroids.size() > 0)
+	{
+		//Count up if any asteroids occupy the chunk
+		for (int a = 0; a < asteroids.size(); a++)
+		{
+			if (asteroids[a]->globalPosition.x > chunk[chunkToCheck].x && asteroids[a]->globalPosition.x < chunk[chunkToCheck].x + chunk[chunkToCheck].width
+				&& asteroids[a]->globalPosition.y > chunk[chunkToCheck].y && asteroids[a]->globalPosition.y < chunk[chunkToCheck].y + chunk[chunkToCheck].height)
+			{
+				returnCount++;
+			}
+		}
+	}
+
+	return returnCount;
+}
+
+//Counts how many large asteroids currently exist in the world
+int Game::CountLargeAsteroids()
+{
+	int returnCount = 0;
+	for (int a = 0; a < asteroids.size(); a++)
+	{
+		if (asteroids[a]->size == 3)
+		{
+			returnCount++;
+		}
+	}
+	return returnCount;
 }
 
 
@@ -306,11 +333,25 @@ void Game::WaveIncrease()
 {
 	wave += 1;
 	//Reset spawn count
-	enemiesToSpawn = 6;
+	enemiesToSpawn = 2;
 	//Reset spawn timer
 	if (enemySpawnTime > 1)
 	{ enemySpawnTime -= 1; }
 	enemySpawnTimer = enemySpawnTime;
+
+	//Destroy small asteroids
+	for (int a = 0; a < asteroids.size(); a++)
+	{
+		if (asteroids[a]->size != 3//Only destroy small asteroids if they're not in camera view
+			&& (asteroids[a]->globalPosition.x < cameraPosition.x - 32 || asteroids[a]->globalPosition.x > cameraPosition.x + cameraSize.x + 32
+			|| asteroids[a]->globalPosition.y < cameraPosition.y - 32 || asteroids[a]->globalPosition.y > cameraPosition.y + cameraSize.y + 32))
+		{
+			GameObject* ptr = asteroids[a];
+			ptr->~GameObject();
+		}
+	}
+	//Spawn asteroids
+	SpawnWaveAsteroids();
 }
 
 //Create a root object
@@ -357,7 +398,7 @@ void Game::StartGame()
 	score = 0;
 	//Reset wave
 	wave = 1;
-	enemiesToSpawn = 6;
+	enemiesToSpawn = 2;
 
 	//Destroy all objects
 	for (GameObject* obj : scene)
@@ -369,12 +410,19 @@ void Game::StartGame()
 	InstanceObject(new Base(), center.x, center.y);
 	InstanceObject(new Minimap(), 0, 0);
 	InstanceObject(new Player(), playerSpawn.x, playerSpawn.y);
-	//Create asteroids
-	SpawnAsteroid();
 
 	//Start enemy spawn timer
 	enemySpawnTime = 8;
 	enemySpawnTimer = enemySpawnTime;
+
+	//Create asteroids
+	for (int i = 0; i < sizeof(chunk) / sizeof(Rectangle); i++)
+	{
+		if (i != 5 && i != 6 && i != 9 && i != 10)
+		{
+			SpawnAsteroid(i);
+		}
+	}
 
 }
 
