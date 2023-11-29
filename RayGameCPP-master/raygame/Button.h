@@ -11,10 +11,12 @@ class Button : public GameObject
 public:
 	//-CONSTRUCTOR-
 	Button(const char*, int, int);
+	Button(const char*, float, int, int);
 
 	//-VARIABLES-
 	//Draw
 	Vector2 size;
+	float fontScale;
 	//Interaction
 	int mouseInteract;
 	char* text;

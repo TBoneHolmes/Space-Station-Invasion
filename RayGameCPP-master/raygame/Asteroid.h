@@ -11,7 +11,7 @@ class Asteroid : public GameObject
 public:
 	//-CONSTRUCTOR-
 	Asteroid();
-	Asteroid(int);
+	Asteroid(int, Asteroid*);
 
 	//-VARIABLES-
 	//Sprite
@@ -28,18 +28,21 @@ public:
 	//Breaking
 	int size;
 	int killScore;
+	Asteroid* creator;
 	//Movement
 	Vector2 velocity;
 	float speed;
-
+	float bounceTimer;
+	float torque;
 	//-FUNCTIONS-
 	void Start();
 	void Draw();
 	void Update();
 	void ManageTimers();
-	void ApplyVelocity();
 	//Damage
 	void Damage(int);
 	void Die();
 	void CollisionCheck();
+	//Movement
+	void ApplyVelocity();
 };

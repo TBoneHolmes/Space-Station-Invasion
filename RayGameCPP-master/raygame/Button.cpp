@@ -14,6 +14,16 @@ Button::Button(const char* txt, int w, int h)
 	text = (char*)txt;
 	size.x = w;
 	size.y = h;
+	fontScale = 1;
+}
+Button::Button(const char* txt, float f, int w, int h)
+{
+	GameObject::name = "Button";
+
+	text = (char*)txt;
+	size.x = w;
+	size.y = h;
+	fontScale = f;
 }
 
 
@@ -49,9 +59,9 @@ void Button::Draw()
 	//Draw button
 	DrawRectangle(globalPosition.x - (size.x / 2), globalPosition.y - (size.y / 2), size.x, size.y, buttonCol);
 	//Draw text
-	int fontSize = size.y / 2;
+	int fontSize = (size.y / 2) * fontScale;
 	int textWidth = MeasureText(text, fontSize);
-	DrawText(text, globalPosition.x - (textWidth / 2), globalPosition.y - (size.y / 4), fontSize, fontCol);
+	DrawText(text, globalPosition.x - (textWidth / 2), globalPosition.y - (fontSize / 2.5), fontSize, fontCol);
 	
 	GameObject::Draw();
 }
@@ -87,12 +97,16 @@ void Button::DetectMouse()
 
 void Button::Clicked()
 {
-	if (text == "RESTART")
+	if (text == "RESTART" || text == "START")
 	{
 		Game::GetInstance()->StartGame();
 	}
 	else if (text == "QUIT")
 	{
 		CloseWindow();
+	}
+	else if (text == "FULLSCREEN")
+	{
+		ToggleFullscreen();
 	}
 }

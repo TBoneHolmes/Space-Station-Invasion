@@ -39,6 +39,8 @@ public:
 	Vector2 worldTileSize;
 	Vector2 center; //Center of the world
 	Vector2 playerSpawn;
+	bool gameover;
+	bool menuOpen;
 	//Camera
 	Vector2 cameraPosition;
 	Vector2 cameraSize;
@@ -49,9 +51,11 @@ public:
 	//Player spawn
 	float playerSpawnTime;
 	float playerSpawnTimer;
+	//Start timer
+	float instructionTime;
+	float instructionTimer;
 	//Stats
 	int score;
-	bool gameover;
 	//Textures
 	Texture2D spr_background;
 	Rectangle rect_background;
@@ -77,6 +81,7 @@ public:
 	//Waves
 	int wave;
 	int enemiesToSpawn;
+	int enemiesPerWave;
 	//Asteroid spawning
 	Rectangle chunk[16];
 

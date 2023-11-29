@@ -89,11 +89,11 @@ void Player::Draw()
 	Vector2 hpOffset; hpOffset.x = sprite->width / 2 + 6; hpOffset.y = hpSize.height + 2;
 	if (hp > 1)
 	{
-		DrawRectanglePro(hpSize, hpOffset, globalRotation, drawCol);
+		DrawRectanglePro(hpSize, hpOffset, globalRotation, GREEN);
 	} if (hp > 2)
 	{
 		hpOffset.y = 0 - 2;
-		DrawRectanglePro(hpSize, hpOffset, globalRotation, drawCol);
+		DrawRectanglePro(hpSize, hpOffset, globalRotation, GREEN);
 	}
 
 	GameObject::Draw();

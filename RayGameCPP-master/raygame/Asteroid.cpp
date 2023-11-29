@@ -11,11 +11,13 @@ Asteroid::Asteroid()
 {
 	GameObject::name = "Asteroid";
 	size = 3;
+	creator = nullptr;
 }
-Asteroid::Asteroid(int s)
+Asteroid::Asteroid(int s, Asteroid* c)
 {
 	GameObject::name = "Asteroid";
 	size = s;
+	creator = c;
 }
 
 void Asteroid::Start()
@@ -48,7 +50,7 @@ void Asteroid::Start()
 	int csSize = 16 * size;
 	if (size == 3)
 	{ csSize += 16; }
-	InstanceObject(new CollisionShape(csSize, 2, 4), 0, 0);
+	InstanceObject(new CollisionShape(csSize, 2, 2 + 4), 0, 0);
 	//Cache collision shape
 	cs = (CollisionShape*)children.back();
 
@@ -59,6 +61,9 @@ void Asteroid::Start()
 	damageRest = 0.1;
 	damageRestTimer = 0;
 
+	//Set bounce timer
+	bounceTimer = 0;
+
 	hp = size;
 
 	//Set speed and direction
@@ -66,6 +71,10 @@ void Asteroid::Start()
 	int direction = GetRandomValue(0, 359);
 	velocity.x = speed; velocity.y = 0;
 	velocity = Vector2Rotate(velocity, direction);
+
+	//Set rotation and torque
+	localRotation = GetRandomValue(0, 359);
+	torque = (GetRandomValue(-5, 5) * 0.1);
 }
 
 void Asteroid::Draw()
@@ -103,11 +112,44 @@ void Asteroid::ManageTimers()
 			damageRestTimer = 0;
 		}
 	}
+
+	//Bounce timer
+	if (bounceTimer > 0)
+	{
+		bounceTimer -= GetFrameTime();
+		//Timeout
+		if (bounceTimer <= 0)
+		{
+			//Reset timer if still colliding with an asteroid
+			for (int i = 0; i < cs->GetOverlappingColliders().size(); i++)
+			{
+				if (cs->GetOverlappingColliders()[i]->parent->name == "Asteroid")
+				{
+					Asteroid* asteroidCollider = (Asteroid*)cs->GetOverlappingColliders()[i]->parent;
+					if (creator == nullptr || asteroidCollider->creator != creator)
+					{
+						bounceTimer = 1;
+					}
+					else
+					{
+						bounceTimer = 0;
+					}
+					
+				}
+			}
+			//Not colliding with an asteroid; stop timer
+			bounceTimer = 0;
+		}
+	}
 }
 
 void Asteroid::ApplyVelocity()
 {
+	//Apply velocity
 	localPosition = Vector2Add(localPosition, velocity);
+
+	//Apply torque
+	localRotation += torque;
 }
 
 
@@ -115,20 +157,42 @@ void Asteroid::ApplyVelocity()
 
 void Asteroid::CollisionCheck()
 {
-	//Check for bullet
-	if (damageRestTimer == 0 && cs->GetOverlappingColliders().size() > 0)
+	//Check collision
+	if (cs->GetOverlappingColliders().size() > 0)
 	{
-		//Destroy bullet
-		cs->GetOverlappingColliders()[0]->parent->~GameObject();
-		//Damage self
-		Damage(1);
+		for (int i = 0; i < cs->GetOverlappingColliders().size(); i++)
+		{
+			//Collision with bullet
+			if (cs->GetOverlappingColliders()[i]->parent->name == "Bullet" && damageRestTimer == 0)
+			{
+				cout << "Destroyed bullet" << endl;
+				//Destroy bullet
+				cs->GetOverlappingColliders()[i]->parent->~GameObject();
+				//Damage self
+				Damage(1);
+			}
+			//Collision with asteroid
+			else if (cs->GetOverlappingColliders()[i]->parent->name == "Asteroid" && bounceTimer == 0)
+			{
+				//Only bounce if asteroid wasn't created by the same larger asteroid
+				Asteroid* asteroidCollider = (Asteroid*)cs->GetOverlappingColliders()[i]->parent;
+				if (creator == nullptr || asteroidCollider->creator != creator)
+				{
+					velocity = Vector2Scale(velocity, -1);
+					bounceTimer = 0.2;
+				}
+			}
+
+		}
 	}
 
-	if (globalPosition.x < 0 || globalPosition.x > Game::GetInstance()->worldSize.x
-		|| globalPosition.y < 0 || globalPosition.y > Game::GetInstance()->worldSize.y)
+	//Bounce off edge of screen
+	if (globalPosition.x + velocity.x < sprite->width / 2 || globalPosition.x + velocity.x > Game::GetInstance()->worldSize.x - (sprite->width / 2)
+		|| globalPosition.y + velocity.y < sprite->height / 2 || globalPosition.y + velocity.y > Game::GetInstance()->worldSize.y - (sprite->height / 2)
+		&& bounceTimer == 0)
 	{
-		GameObject* ptr = this;
-		ptr->~GameObject();
+		velocity = Vector2Scale(velocity, -1);
+		bounceTimer = 0.1;
 	}
 }
 
@@ -154,7 +218,8 @@ void Asteroid::Die()
 		spawnPos = Vector2Normalize(Vector2Rotate(velocity, 90));
 		for (int i = 0; i < 2; i++)
 		{ 
-			Game::GetInstance()->InstanceObject(new Asteroid(size - 1), globalPosition.x + (spawnPos.x * (sprite->width / 4)), globalPosition.y + (spawnPos.y * (sprite->width / 4)));
+			Asteroid* newCreator = (creator == nullptr) ? this : creator;
+			Game::GetInstance()->InstanceObject(new Asteroid(size - 1, newCreator), globalPosition.x + (spawnPos.x * (sprite->width / 4)), globalPosition.y + (spawnPos.y * (sprite->width / 4)));
 			spawnPos = Vector2Scale(spawnPos, -1);
 		}
 	}

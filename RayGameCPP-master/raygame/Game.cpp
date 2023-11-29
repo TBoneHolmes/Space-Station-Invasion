@@ -55,7 +55,7 @@ void Game::Start()
 	worldSize.x = worldTileSize.x * 32; worldSize.y = worldTileSize.y * 32;
 	center.x = worldSize.x / 2; center.y = worldSize.y / 2;
 	score = 0;
-	drawCollisions = false;
+	drawCollisions = false; //For debugging; Change to 'true' to draw collision shapes
 	//Set player spawn pos
 	playerSpawn.x = center.x; playerSpawn.y = center.y + 128;
 	//Set camera variables
@@ -63,6 +63,10 @@ void Game::Start()
 	//Set player spawn time
 	playerSpawnTime = 3;
 	playerSpawnTimer = 0;
+	//Set instruction time
+	instructionTime = 12;
+	//Set wave size
+	enemiesPerWave = 5;
 	//Set chunks
 	for (int col = 0; col < 4; col++)
 	{
@@ -77,11 +81,16 @@ void Game::Start()
 		}
 	}
 
-
+	menuOpen = true;
 	gameover = false;
 
-	//Create objects
-	StartGame();
+	//Add menu
+	//Create start button
+	InstanceObject(new Button("START", 160, 48), cameraSize.x / 2, (cameraSize.y / 2) -32);
+	//Create quit button
+	InstanceObject(new Button("QUIT", 160, 48), cameraSize.x / 2, (cameraSize.y / 2) + 64);
+	//Create fullscreen button
+	InstanceObject(new Button("FULLSCREEN", 0.2, 96, 48), cameraSize.x - 96, cameraSize.y - 64);
 
 	//ToggleFullscreen();
 
@@ -101,15 +110,31 @@ void Game::Draw()
 			WHITE);
 	}
 
-	//Draw gameover
-	if (gameover)
+	//Draw menu
+	if (menuOpen)
 	{
-		int textWidth = MeasureText("GAME OVER", 96);
-		DrawText("GAME OVER", (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 256, 96, RED);
-		textWidth = MeasureText("YOUR BASE WAS DESTROYED", 32);
-		DrawText("YOUR BASE WAS DESTROYED", (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 160, 32, WHITE);
-		textWidth = MeasureText(FormatText("SCORE: %06i", score), 32);
-		DrawText(FormatText("SCORE: %06i", score), (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 32, 32, GREEN);
+		//Draw title
+		char* text = (char*)"TITLE HERE";
+		int textWidth = MeasureText(text, 64);
+		DrawText(text, (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 256, 64, WHITE);
+		//Draw fullscreen shortcut
+		text = (char*)"(F11)";
+		textWidth = MeasureText(text, 24);
+		DrawText(text, (cameraSize.x - 96) - (textWidth / 2), cameraSize.y - 120, 24, WHITE);
+	}
+
+	//Draw gameover
+	else if (gameover)
+	{
+		char* text = (char*)"GAME OVER";
+		int textWidth = MeasureText(text, 96);
+		DrawText(text, (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 256, 96, RED);
+		text = (char*)"YOUR BASE WAS DESTROYED";
+		textWidth = MeasureText(text, 32);
+		DrawText(text, (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 160, 32, WHITE);
+		text = (char*)"SCORE: %06i";
+		textWidth = MeasureText(FormatText(text, score), 32);
+		DrawText(FormatText(text, score), (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 32, 32, GREEN);
 	}
 
 
@@ -153,7 +178,14 @@ void Game::Update()
 		}
 	}
 
-	cout << CountLargeAsteroids() << endl;
+	//Clamp score
+	score = Clamp(score, 0, 999999);
+
+	//Toggle fullscren key
+	if (IsKeyPressed(KEY_F11))
+	{
+		ToggleFullscreen();
+	}
 
 }
 
@@ -167,7 +199,7 @@ void Game::ManageTimers()
 		//Timeout
 		if (enemySpawnTimer <= 0 && !gameover)
 		{
-			enemySpawnTimer = enemySpawnTimer = enemySpawnTime;
+			enemySpawnTimer = enemySpawnTime;
 			SpawnEnemy();
 		}
 	}
@@ -183,6 +215,21 @@ void Game::ManageTimers()
 		{
 			playerSpawnTimer = 0;
 			SpawnPlayer();
+		}
+	}
+
+	//Start timer
+	if (instructionTimer > 0)
+	{
+		instructionTimer -= GetFrameTime();
+
+		//Timeout
+		if (instructionTimer <= 0)
+		{
+			instructionTimer = 0;
+			//Set enemy spawn timer and spawn the first enemy
+			enemySpawnTimer = enemySpawnTime;
+			SpawnEnemy();
 		}
 	}
 }
@@ -259,8 +306,8 @@ void Game::SpawnAsteroid(int spawnChunk)
 	do { //Set a random spawn position and ensure it's not in camerea view
 		newSpawnPlus.x = GetRandomValue(128, chunk[spawnChunk].width - 128);
 		newSpawnPlus.y = GetRandomValue(128, chunk[spawnChunk].height - 128);
-	} while (chunk[spawnChunk].x + newSpawnPlus.x > cameraPosition.x && chunk[spawnChunk].x + newSpawnPlus.x < cameraPosition.x - cameraSize.x
-		&& chunk[spawnChunk].y + newSpawnPlus.y > cameraPosition.y && chunk[spawnChunk].y + newSpawnPlus.y < cameraPosition.y - cameraSize.y);
+	} while (chunk[spawnChunk].x + newSpawnPlus.x > cameraPosition.x && chunk[spawnChunk].x + newSpawnPlus.x < cameraPosition.x + cameraSize.x
+		&& chunk[spawnChunk].y + newSpawnPlus.y > cameraPosition.y && chunk[spawnChunk].y + newSpawnPlus.y < cameraPosition.y + cameraSize.y);
 	//Spawn asteroid
 	InstanceObject(new Asteroid(), (chunk[spawnChunk].x + newSpawnPlus.x), (chunk[spawnChunk].y + newSpawnPlus.y));
 }
@@ -333,7 +380,7 @@ void Game::WaveIncrease()
 {
 	wave += 1;
 	//Reset spawn count
-	enemiesToSpawn = 2;
+	enemiesToSpawn = enemiesPerWave;
 	//Reset spawn timer
 	if (enemySpawnTime > 1)
 	{ enemySpawnTime -= 1; }
@@ -394,16 +441,20 @@ void Game::Gameover()
 void Game::StartGame()
 {
 	//Reset game variables
+	menuOpen = false;
 	gameover = false;
 	score = 0;
 	//Reset wave
 	wave = 1;
-	enemiesToSpawn = 2;
+	enemiesToSpawn = enemiesPerWave;
 
 	//Destroy all objects
-	for (GameObject* obj : scene)
+	while (scene.size() > 0)
 	{
-		obj->~GameObject();
+		for (int i = 0; i < scene.size(); i++)
+		{
+			scene[i]->~GameObject();
+		}
 	}
 
 	//Instance objects
@@ -413,7 +464,7 @@ void Game::StartGame()
 
 	//Start enemy spawn timer
 	enemySpawnTime = 8;
-	enemySpawnTimer = enemySpawnTime;
+	enemySpawnTimer = -1; //Pause spawn timer until instructions are finished displaying
 
 	//Create asteroids
 	for (int i = 0; i < sizeof(chunk) / sizeof(Rectangle); i++)
@@ -423,6 +474,9 @@ void Game::StartGame()
 			SpawnAsteroid(i);
 		}
 	}
+
+	//Set start timer
+	instructionTimer = instructionTime;
 
 }
 

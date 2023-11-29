@@ -48,7 +48,7 @@ void EnemyDefault::Start()
 	shootRestTimer = 0;
 	
 	//Set score
-	killScore = 10;
+	killScore = 50;
 }
 
 void EnemyDefault::Draw()
@@ -149,9 +149,6 @@ void EnemyDefault::Damage(int dmg)
 	{
 		Game::GetInstance()->score += killScore;
 		Die();
-	}
-	else {
-		Game::GetInstance()->score += 1;
 	}
 }
 

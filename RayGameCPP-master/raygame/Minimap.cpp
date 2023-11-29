@@ -51,11 +51,12 @@ void Minimap::Draw()
 	Color playerColor; playerColor.r = 0; playerColor.g = 255; playerColor.b = 0; playerColor.a = 180;
 	if (Game::GetInstance()->player != nullptr)
 	{ DrawRectangle((Game::GetInstance()->player->globalPosition.x / 32) + offset.x - mapScale, (Game::GetInstance()->player->globalPosition.y / 32) + offset.y - mapScale, mapScale * 2, mapScale * 2, playerColor); }
-
-	for (int i = 0; i < Game::GetInstance()->asteroids.size(); i++)
-	{
-		DrawRectangle((Game::GetInstance()->asteroids[i]->globalPosition.x / 32) + offset.x - mapScale, (Game::GetInstance()->asteroids[i]->globalPosition.y / 32) + offset.y - mapScale, mapScale * 2, mapScale * 2, SKYBLUE);
-	}
+	
+	//DEBUG Draw asteroids on minimap
+	//for (int i = 0; i < Game::GetInstance()->asteroids.size(); i++)
+	//{
+	//	DrawRectangle((Game::GetInstance()->asteroids[i]->globalPosition.x / 32) + offset.x - mapScale, (Game::GetInstance()->asteroids[i]->globalPosition.y / 32) + offset.y - mapScale, mapScale * 2, mapScale * 2, SKYBLUE);
+	//}
 
 
 	int statXPos = 0;
@@ -73,7 +74,30 @@ void Minimap::Draw()
 	//Filler
 	if (Game::GetInstance()->base != nullptr)
 	{
-		DrawRectangle(statXPos + 2, 106, healthbarWidth * ((float)Game::GetInstance()->base->hp / (float)Game::GetInstance()->base->maxHp), 8, RED);
+		DrawRectangle(statXPos + 2, 106, healthbarWidth * ((float)Game::GetInstance()->base->hp / (float)Game::GetInstance()->base->maxHp), 8, GREEN);
+	}
+
+	//DRAW INSTRUCTIONS
+	int textWidth;
+	char* text;
+	//Move instructions
+	if (Game::GetInstance()->instructionTimer > Game::GetInstance()->instructionTime - Game::GetInstance()->instructionTime / 3)
+	{
+		text = (char*)"Hold RIGHT mouse button to move";
+		textWidth = MeasureText(text, 32);
+		DrawText(text, (Game::GetInstance()->cameraSize.x / 2) - (textWidth / 2), Game::GetInstance()->cameraSize.y / 2 - 160, 32, RED);
+	} //Shoot instructions
+	else if (Game::GetInstance()->instructionTimer > Game::GetInstance()->instructionTime / 3)
+	{
+		text = (char*)"Hold LEFT mouse button to shoot";
+		textWidth = MeasureText(text, 32);
+		DrawText(text, (Game::GetInstance()->cameraSize.x / 2) - (textWidth / 2), Game::GetInstance()->cameraSize.y / 2 - 160, 32, RED);
+	} //Goal
+	else if (Game::GetInstance()->instructionTimer != 0)
+	{
+		text = (char*)"Protect the BASE in the center of the map";
+		textWidth = MeasureText(text, 32);
+		DrawText(text, (Game::GetInstance()->cameraSize.x / 2) - (textWidth / 2), Game::GetInstance()->cameraSize.y / 2 - 160, 32, RED);
 	}
 
 	GameObject::Draw();

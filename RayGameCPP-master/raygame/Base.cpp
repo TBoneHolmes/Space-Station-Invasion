@@ -30,7 +30,7 @@ void Base::Start()
 	spriteOffset = Vector2(); spriteOffset.x = sprite->height / 2; spriteOffset.y = sprite->width / 2;
 
 	//Create collision shape
-	InstanceObject(new CollisionShape(96, 16, 2 + 8), 0, 0);
+	InstanceObject(new CollisionShape(80, 16, 2 + 8), 0, 0);
 	//Cache collision shape
 	cs = (CollisionShape*)children.back();
 
@@ -84,7 +84,7 @@ void Base::CollisionCheck()
 		{
 			Damage(1);
 		}
-		else //Hit by enemy body
+		else if (cs->GetOverlappingColliders()[0]->parent->name == "EnemyDefault") //Hit by enemy body
 		{
 			//Create explosion for the enemy that hit
 			Game::GetInstance()->InstanceObject(new Explosion(), cs->GetOverlappingColliders()[0]->parent->globalPosition.x, cs->GetOverlappingColliders()[0]->parent->globalPosition.y);
