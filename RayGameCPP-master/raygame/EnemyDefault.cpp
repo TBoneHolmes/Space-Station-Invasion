@@ -35,7 +35,7 @@ void EnemyDefault::Start()
 	cs = (CollisionShape*)children.back();
 
 	//Set HP
-	hp = 3;
+	hp = 2;
 	damageRest = 0.1;
 
 	//Set movement values

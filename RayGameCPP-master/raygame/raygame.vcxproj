@@ -154,8 +154,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Minimap.cpp" />
+    <ClCompile Include="Asteroid.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asteroid.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Button.h" />

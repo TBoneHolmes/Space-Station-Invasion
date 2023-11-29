@@ -7,6 +7,7 @@
 #include "Minimap.h"
 #include "Base.h"
 #include "Button.h"
+#include "Asteroid.h"
 #include <vector>
 #include <string>
 using namespace std;
@@ -30,6 +31,7 @@ public:
 	vector<GameObject*> scene;
 	vector<CollisionShape*> collisionShapes;
 	vector<GameObject*> enemies;
+	vector<GameObject*> asteroids;
 	Player* player;
 	Base* base;
 	//Game
@@ -64,8 +66,19 @@ public:
 	int frames_explosion;
 	Texture2D spr_base;
 	Rectangle rect_base;
+	Texture2D spr_asteroidS;
+	Rectangle rect_asteroidS;
+	Texture2D spr_asteroidM;
+	Rectangle rect_asteroidM;
+	Texture2D spr_asteroidL;
+	Rectangle rect_asteroidL;
 	//For debugging
 	bool drawCollisions;
+	//Waves
+	int wave;
+	int enemiesToSpawn;
+	//Asteroid spawning
+	Rectangle chunk[16];
 
 	//Functions
 	void Start();
@@ -80,6 +93,11 @@ public:
 	void InstanceObject(GameObject*, int, int);
 	void SpawnEnemy();
 	void SpawnPlayer();
+	void SpawnAsteroid();
+	//Waves
+	void WaveIncrease();
+	//Helpful stuff
+	void ShuffleArray(int[], int);
 
 	//Singleton operator override
 	void operator = (const Game&) = delete;

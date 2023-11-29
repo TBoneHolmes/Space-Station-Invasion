@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include <list>
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 //Singleton stuff
@@ -41,6 +42,12 @@ void Game::Start()
 	rect_explosion = Rectangle(); rect_explosion.x = 0; rect_explosion.y = 0; rect_explosion.width = spr_explosion.width / frames_explosion; rect_explosion.height = spr_explosion.height;
 	spr_base = LoadTexture("..//Assets//base.png");
 	rect_base = Rectangle(); rect_base.x = 0; rect_base.y = 0; rect_base.width = spr_base.width; rect_base.height = spr_base.height;
+	spr_asteroidS = LoadTexture("..//Assets//asteroid_s.png");
+	rect_asteroidS = Rectangle(); rect_asteroidS.x = 0; rect_asteroidS.y = 0; rect_asteroidS.width = spr_asteroidS.width; rect_asteroidS.height = spr_asteroidS.height;
+	spr_asteroidM = LoadTexture("..//Assets//asteroid_m.png");
+	rect_asteroidM = Rectangle(); rect_asteroidM.x = 0; rect_asteroidM.y = 0; rect_asteroidM.width = spr_asteroidM.width; rect_asteroidM.height = spr_asteroidM.height;
+	spr_asteroidL = LoadTexture("..//Assets//asteroid_l.png");
+	rect_asteroidL = Rectangle(); rect_asteroidL.x = 0; rect_asteroidL.y = 0; rect_asteroidL.width = spr_asteroidL.width; rect_asteroidL.height = spr_asteroidL.height;
 
 
 	//Set game variables
@@ -48,7 +55,7 @@ void Game::Start()
 	worldSize.x = worldTileSize.x * 32; worldSize.y = worldTileSize.y * 32;
 	center.x = worldSize.x / 2; center.y = worldSize.y / 2;
 	score = 0;
-	drawCollisions = true;
+	drawCollisions = false;
 	//Set player spawn pos
 	playerSpawn.x = center.x; playerSpawn.y = center.y + 128;
 	//Set camera variables
@@ -56,6 +63,20 @@ void Game::Start()
 	//Set player spawn time
 	playerSpawnTime = 3;
 	playerSpawnTimer = 0;
+	//Set chunks
+	for (int row = 0; row < 4; row++)
+	{
+		for (int col = 0; col < 4; col++)
+		{
+			//Set chunk size
+			chunk[row * 4 + col].width = worldSize.x / 4;
+			chunk[row * 4 + col].height = worldSize.y / 4;
+			//Set chunk location
+			chunk[row * 4 + col].x = (worldSize.x / 4) * row;
+			chunk[row * 4 + col].y = (worldSize.y / 4) * col;
+		}
+	}
+
 
 	gameover = false;
 
@@ -137,6 +158,7 @@ void Game::ManageTimers()
 			SpawnEnemy();
 		}
 	}
+	//cout <<"Wave " << wave << " : " << enemySpawnTimer << endl;
 
 	//Player spawn tick down
 	if (playerSpawnTimer > 0)
@@ -203,12 +225,92 @@ void Game::SpawnEnemy()
 	}
 	//Create enemy
 	InstanceObject(new EnemyDefault, spawnPos.x, spawnPos.y);
-	//cout << "Enemy spawned" << endl;
+	
+	//Manage waves
+	enemiesToSpawn -= 1;
+	if (enemiesToSpawn <= 0)
+	{
+		WaveIncrease();
+	}
 }
 
 void Game::SpawnPlayer()
 {
 	InstanceObject(new Player, playerSpawn.x, playerSpawn.y);
+}
+
+void Game::SpawnAsteroid()
+{
+	//Look for a free chunk to spawn the asteroid in
+	Rectangle freeChunk; freeChunk.x = -1;
+
+	//Shuffle the order of chunks to search in (and exclude the 4 middle chunks)
+	int newOrder[12] = {0, 1, 2, 3, 4, 5, 8, 9, 12, 13, 14, 15};
+	random_shuffle(begin(newOrder), end(newOrder));
+	
+	//if (asteroids.size() > 0)
+	//{
+		//Search each chunk until a free one is found
+		for (int i = 0; i < sizeof(chunk) / sizeof(Rectangle); i++)
+		{
+			if (i != 6 && i != 7 && i != 10 && i != 11)
+			{
+				Vector2 newSpawnPlus;
+				newSpawnPlus.x = GetRandomValue(128, chunk[i].width - 128);
+				newSpawnPlus.y = GetRandomValue(128, chunk[i].height - 128);
+				//Spawn asteroid
+				InstanceObject(new Asteroid(), (chunk[i].x + newSpawnPlus.x), (chunk[i].y + newSpawnPlus.y));
+			}
+			//for (GameObject* asteroid : asteroids)
+			//{
+			//	if	(//Make sure this chunk is free of any other asteroids
+			//		(asteroid->globalPosition.x < chunk[newOrder[i]].x || asteroid->globalPosition.x > chunk[newOrder[i]].x + chunk[newOrder[i]].width)
+			//		&& (asteroid->globalPosition.y < chunk[newOrder[i]].y || asteroid->globalPosition.y > chunk[newOrder[i]].y + chunk[newOrder[i]].height))
+			//	{
+			//		freeChunk = chunk[newOrder[i]];
+			//		break;
+			//	}
+			//}
+			//if (freeChunk.x != -1)
+			//{
+			//	break;
+			//}
+		}
+	//}
+	//No asteroids currently exist. Just choose the first chunk option
+	//else
+	//{
+	//	freeChunk = chunk[newOrder[0]];
+	//	//cout << "Chunk chosen: " << newOrder[0] << endl;
+	//}
+	
+	//A free chunk was found. Spawn asteroid in the chunk
+	//if (freeChunk.x != -1)
+	//{
+	//	//Choose random position within the chunk
+	//	Vector2 newSpawnPlus;
+	//	newSpawnPlus.x = GetRandomValue(128, freeChunk.width - 128);
+	//	newSpawnPlus.y = GetRandomValue(128, freeChunk.height - 128);
+	//	//Spawn asteroid
+	//	InstanceObject(new Asteroid(), (freeChunk.x + newSpawnPlus.x), (freeChunk.y + newSpawnPlus.y));
+	//	//cout << "Spawned asteroid at: " << freeChunk.x + newSpawnPlus.x << ", " << freeChunk.y + newSpawnPlus.y << endl;
+	//}
+	//else
+	//{
+	//	cout << "WHAT";
+	//}
+}
+
+
+void Game::WaveIncrease()
+{
+	wave += 1;
+	//Reset spawn count
+	enemiesToSpawn = 6;
+	//Reset spawn timer
+	if (enemySpawnTime > 1)
+	{ enemySpawnTime -= 1; }
+	enemySpawnTimer = enemySpawnTime;
 }
 
 //Create a root object
@@ -250,27 +352,30 @@ void Game::Gameover()
 
 void Game::StartGame()
 {
+	//Reset game variables
 	gameover = false;
 	score = 0;
+	//Reset wave
+	wave = 1;
+	enemiesToSpawn = 6;
+
+	//Destroy all objects
+	for (GameObject* obj : scene)
+	{
+		obj->~GameObject();
+	}
 
 	//Instance objects
 	InstanceObject(new Base(), center.x, center.y);
 	InstanceObject(new Minimap(), 0, 0);
 	InstanceObject(new Player(), playerSpawn.x, playerSpawn.y);
-
-	SpawnEnemy();
+	//Create asteroids
+	SpawnAsteroid();
 
 	//Start enemy spawn timer
 	enemySpawnTime = 8;
 	enemySpawnTimer = enemySpawnTime;
 
-	//Destroy buttons
-	for (GameObject* obj : scene)
-	{
-		if (obj->name == "Button")
-		{cout << obj->name << "  deleted" << endl;
-			obj->~GameObject(); }
-	}
 }
 
 

@@ -16,6 +16,7 @@ GameObject::GameObject()
 //Deconstructor
 GameObject::~GameObject()
 {
+
 	//Delete all children
 	auto childIter = children.begin();
 	for (int i = 0; i < children.size(); i++)
@@ -47,6 +48,20 @@ GameObject::~GameObject()
 			if (Game::GetInstance()->enemies[i] == ptr)
 			{
 				Game::GetInstance()->enemies.erase(iter);
+				break;
+			}
+			iter++;
+		}
+	}
+	//Remove self from game's asteroids list
+	else if (name == "Asteroid")
+	{
+		auto iter = Game::GetInstance()->asteroids.begin();
+		for (int i = 0; i < Game::GetInstance()->asteroids.size(); i++)
+		{
+			if (Game::GetInstance()->asteroids[i] == ptr)
+			{
+				Game::GetInstance()->asteroids.erase(iter);
 				break;
 			}
 			iter++;

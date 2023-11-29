@@ -52,6 +52,12 @@ void Minimap::Draw()
 	if (Game::GetInstance()->player != nullptr)
 	{ DrawRectangle((Game::GetInstance()->player->globalPosition.x / 32) + offset.x - mapScale, (Game::GetInstance()->player->globalPosition.y / 32) + offset.y - mapScale, mapScale * 2, mapScale * 2, playerColor); }
 
+	for (int i = 0; i < Game::GetInstance()->asteroids.size(); i++)
+	{
+		DrawRectangle((Game::GetInstance()->asteroids[i]->globalPosition.x / 32) + offset.x - mapScale, (Game::GetInstance()->asteroids[i]->globalPosition.y / 32) + offset.y - mapScale, mapScale * 2, mapScale * 2, SKYBLUE);
+	}
+
+
 	int statXPos = 0;
 	//DRAW SCORE
 	statXPos = mapSize.x + 16;

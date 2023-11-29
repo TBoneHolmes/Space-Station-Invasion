@@ -5,7 +5,7 @@ using namespace std;
 
 //LAYERS
 //1 = player
-//2 = enemy
+//2 = enemy and asteroid
 //4 = player bullet
 //8 = enemy bullet
 //16 = base

@@ -16,6 +16,7 @@ class Explosion : public GameObject
 public:
 	//-CONSTRUCTOR-
 	Explosion();
+	Explosion(float);
 
 	//-VARIABLES-
 	//Sprite

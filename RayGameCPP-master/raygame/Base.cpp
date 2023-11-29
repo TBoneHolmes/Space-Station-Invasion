@@ -35,7 +35,7 @@ void Base::Start()
 	cs = (CollisionShape*)children.back();
 
 	//Set HP
-	maxHp = 3;
+	maxHp = 30;
 	hp = maxHp;
 	damageRest = 0.1;
 }

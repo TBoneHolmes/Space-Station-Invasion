@@ -91,4 +91,8 @@ void Button::Clicked()
 	{
 		Game::GetInstance()->StartGame();
 	}
+	else if (text == "QUIT")
+	{
+		CloseWindow();
+	}
 }
