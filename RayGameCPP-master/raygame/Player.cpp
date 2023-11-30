@@ -29,10 +29,13 @@ void Player::Start()
 
 	//Set sprite
 	sprite = &Game::GetInstance()->spr_player;
+	spriteBooster = &Game::GetInstance()->spr_playerBooster;
 	spriteSize = &Game::GetInstance()->rect_player;
+	spriteBoosterSize = &Game::GetInstance()->rect_playerBooster;
 	destination = Game::GetInstance()->rect_player;
-	spriteOffset = Vector2(); spriteOffset.x = sprite->height/2; spriteOffset.y = sprite->width/2;
-
+	destinationBooster = Game::GetInstance()->rect_playerBooster;
+	spriteOffset = Vector2(); spriteOffset.x = sprite->width / 2; spriteOffset.y = sprite->height / 2;
+	spriteBoosterOffset = Vector2(); spriteBoosterOffset.x = spriteBooster->width; spriteBoosterOffset.y = spriteBooster->height / 2;
 
 	//Create collision shape
 	InstanceObject(new CollisionShape(12, 1, 2 + 8), -4.0, 0);
@@ -71,6 +74,7 @@ void Player::Draw()
 {
 	//Draw at position
 	destination.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; destination.y = globalPosition.y - Game::GetInstance()->cameraPosition.y;
+	destinationBooster.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; destinationBooster.y = globalPosition.y - Game::GetInstance()->cameraPosition.y;
 	//Set draw color
 	Color drawCol = WHITE;
 	if (invTimer > 0)
@@ -81,6 +85,8 @@ void Player::Draw()
 	{
 		drawCol = RED;
 	}
+	//Draw booster
+	DrawTexturePro(*spriteBooster, *spriteBoosterSize, destinationBooster, spriteBoosterOffset, globalRotation, WHITE);
 	//Draw player
 	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, drawCol);
 
@@ -170,11 +176,16 @@ void Player::Input_Booster()
 	if (IsMouseButtonDown(key_boost) &&
 		Vector2Length(Vector2Add(velocity, Vector2Scale(Vector2Rotate(Vector2Right, globalRotation), acceleration))) < maxSpeed)
 	{
+		//Play sfx
+		if (!IsSoundPlaying(Game::GetInstance()->sfx_boostPlayer))
+		{ PlaySound(Game::GetInstance()->sfx_boostPlayer); }
+		//Set velocity
 		velocity = Vector2Add(velocity, Vector2Scale(Vector2Rotate(Vector2Right, globalRotation), acceleration));
 	}
 	//Player deccelerate
 	else
 	{
+		//Set velocity
 		velocity.x = Lerp(velocity.x, 0.0f, decceleration * 0.01f);
 		velocity.y = Lerp(velocity.y, 0.0f, decceleration * 0.01f);
 	}
@@ -189,6 +200,8 @@ void Player::Input_Shoot()
 		Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, globalRotation), 4), bulletSpawnPos.x, bulletSpawnPos.y);
 		//Set timer
 		shootRestTimer = shootRest;
+		//Play sfx
+		PlaySound(Game::GetInstance()->sfx_shootPlayer);
 	}
 }
 
@@ -221,13 +234,14 @@ void Player::Damage(int dmg)
 	damageRestTimer = damageRest;
 	//Die when hp reaches 0
 	if (hp <= 0)
-	{
-		Die();
-	}
+	{ Die(); }
+	else
+	{ PlaySound(Game::GetInstance()->sfx_hitPlayer); }
 }
 
 void Player::Die()
 {
+	PlaySound(Game::GetInstance()->sfx_explodePlayer);
 	//Set respawn timer
 	Game::GetInstance()->playerSpawnTimer = Game::GetInstance()->playerSpawnTime;
 	//Create explosion

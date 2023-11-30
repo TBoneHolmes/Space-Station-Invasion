@@ -14,9 +14,13 @@ public:
 	//-VARIABLES-
 	//Sprite
 	Texture2D* sprite;
+	Texture2D* spriteBooster;
 	Rectangle* spriteSize;
+	Rectangle* spriteBoosterSize;
 	Rectangle destination;
+	Rectangle destinationBooster;
 	Vector2 spriteOffset;
+	Vector2 spriteBoosterOffset;
 	//Collision Shape
 	CollisionShape* cs;
 	//Input

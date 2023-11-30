@@ -150,10 +150,13 @@ void EnemyDefault::Damage(int dmg)
 		Game::GetInstance()->score += killScore;
 		Die();
 	}
+	else
+	{ PlaySound(Game::GetInstance()->sfx_hitEnemy); }
 }
 
 void EnemyDefault::Die()
 {
+	PlaySound(Game::GetInstance()->sfx_explodeEnemy);
 	//Create explosion
 	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x + 2.0f, globalPosition.y);
 	//Destroy self
@@ -201,5 +204,7 @@ void EnemyDefault::Shoot()
 		//Spawn bullet
 		Vector2 bulletSpawnPos = Vector2Add(globalPosition, Vector2Rotate(Vector2Scale(Vector2Right, sprite->width / 2), globalRotation));
 		Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, globalRotation), 8), bulletSpawnPos.x, bulletSpawnPos.y);
+		//Play sfx
+		PlaySound(Game::GetInstance()->sfx_shootEnemy);
 	}
 }

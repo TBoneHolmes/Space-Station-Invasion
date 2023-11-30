@@ -61,6 +61,9 @@ public:
 	Rectangle rect_background;
 	Texture2D spr_player;
 	Rectangle rect_player;
+	Texture2D spr_playerBooster;
+	Rectangle rect_playerBooster;
+	int frames_playerBooster;
 	Texture2D spr_bullet;
 	Rectangle rect_bullet;
 	Texture2D spr_enemyDefault;
@@ -76,6 +79,20 @@ public:
 	Rectangle rect_asteroidM;
 	Texture2D spr_asteroidL;
 	Rectangle rect_asteroidL;
+	//Sounds
+	Sound sfx_boostPlayer;
+	Sound sfx_shootPlayer;
+	Sound sfx_shootEnemy;
+	Sound sfx_hitPlayer;
+	Sound sfx_hitEnemy;
+	Sound sfx_hitAsteroid;
+	Sound sfx_hitBase;
+	Sound sfx_explodePlayer;
+	Sound sfx_explodeEnemy;
+	Sound sfx_explodeAsteroid;
+	Sound sfx_buttonHover;
+	Sound sfx_buttonClick;
+	Sound sfx_gameover;
 	//For debugging
 	bool drawCollisions;
 	//Waves

@@ -27,6 +27,8 @@ int main()
 
 	InitWindow(screenWidth, screenHeight, "Infiltration Amongst the Stars");
 
+	InitAudioDevice();
+
 	SetTargetFPS(60);
 	game->Start();
 	//--------------------------------------------------------------------------------------
@@ -49,6 +51,22 @@ int main()
 
 	// De-Initialization
 	//--------------------------------------------------------------------------------------   
+
+	UnloadSound(Game::GetInstance()->sfx_boostPlayer);
+	UnloadSound(Game::GetInstance()->sfx_shootPlayer);
+	UnloadSound(Game::GetInstance()->sfx_shootEnemy);
+	UnloadSound(Game::GetInstance()->sfx_hitPlayer);
+	UnloadSound(Game::GetInstance()->sfx_hitEnemy);
+	UnloadSound(Game::GetInstance()->sfx_hitAsteroid);
+	UnloadSound(Game::GetInstance()->sfx_hitBase);
+	UnloadSound(Game::GetInstance()->sfx_explodePlayer);
+	UnloadSound(Game::GetInstance()->sfx_explodeEnemy);
+	UnloadSound(Game::GetInstance()->sfx_explodeAsteroid);
+	UnloadSound(Game::GetInstance()->sfx_buttonHover);
+	UnloadSound(Game::GetInstance()->sfx_buttonClick);
+	UnloadSound(Game::GetInstance()->sfx_gameover);
+	CloseAudioDevice();
+
 	CloseWindow();        // Close window and OpenGL context
 	//--------------------------------------------------------------------------------------
 

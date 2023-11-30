@@ -29,25 +29,44 @@ void Game::Start()
 {
 	
 	//Load textures
-	spr_background = LoadTexture("..//Assets//background.png");
+	spr_background = LoadTexture("..//Assets//Sprites//background.png");
 	rect_background = Rectangle(); rect_background.x = 0; rect_background.y = 0; rect_background.width = spr_background.width; rect_background.height = spr_background.height;
-	spr_player = LoadTexture("..//Assets//player.png");
+	spr_player = LoadTexture("..//Assets//Sprites//player.png");
 	rect_player = Rectangle(); rect_player.x = 0; rect_player.y = 0; rect_player.width = spr_player.width; rect_player.height = spr_player.height;
-	spr_bullet = LoadTexture("..//Assets//bullet.png");
+	spr_playerBooster = LoadTexture("..//Assets//Sprites//player_booster.png");
+	frames_playerBooster = 2; //The number of frames in this spritesheet
+	rect_playerBooster = Rectangle(); rect_playerBooster.x = 0; rect_playerBooster.y = 0; rect_playerBooster.width = spr_playerBooster.width / frames_playerBooster; rect_playerBooster.height = spr_playerBooster.height;
+	spr_bullet = LoadTexture("..//Assets//Sprites//bullet.png");
 	rect_bullet = Rectangle(); rect_bullet.x = 0; rect_bullet.y = 0; rect_bullet.width = spr_bullet.width; rect_bullet.height = spr_bullet.height;
-	spr_enemyDefault = LoadTexture("..//Assets//enemyDefault.png");
+	spr_enemyDefault = LoadTexture("..//Assets//Sprites//enemyDefault.png");
 	rect_enemyDefault = Rectangle(); rect_enemyDefault.x = 0; rect_enemyDefault.y = 0; rect_enemyDefault.width = spr_enemyDefault.width; rect_enemyDefault.height = spr_enemyDefault.height;
-	spr_explosion = LoadTexture("..//Assets//explosion_spritesheet.png");
+	spr_explosion = LoadTexture("..//Assets//Sprites//explosion_spritesheet.png");
 	frames_explosion = 3; //The number of frames in this spritesheet
 	rect_explosion = Rectangle(); rect_explosion.x = 0; rect_explosion.y = 0; rect_explosion.width = spr_explosion.width / frames_explosion; rect_explosion.height = spr_explosion.height;
-	spr_base = LoadTexture("..//Assets//base.png");
+	spr_base = LoadTexture("..//Assets//Sprites//base.png");
 	rect_base = Rectangle(); rect_base.x = 0; rect_base.y = 0; rect_base.width = spr_base.width; rect_base.height = spr_base.height;
-	spr_asteroidS = LoadTexture("..//Assets//asteroid_s.png");
+	spr_asteroidS = LoadTexture("..//Assets//Sprites//asteroid_s.png");
 	rect_asteroidS = Rectangle(); rect_asteroidS.x = 0; rect_asteroidS.y = 0; rect_asteroidS.width = spr_asteroidS.width; rect_asteroidS.height = spr_asteroidS.height;
-	spr_asteroidM = LoadTexture("..//Assets//asteroid_m.png");
+	spr_asteroidM = LoadTexture("..//Assets//Sprites//asteroid_m.png");
 	rect_asteroidM = Rectangle(); rect_asteroidM.x = 0; rect_asteroidM.y = 0; rect_asteroidM.width = spr_asteroidM.width; rect_asteroidM.height = spr_asteroidM.height;
-	spr_asteroidL = LoadTexture("..//Assets//asteroid_l.png");
+	spr_asteroidL = LoadTexture("..//Assets//Sprites//asteroid_l.png");
 	rect_asteroidL = Rectangle(); rect_asteroidL.x = 0; rect_asteroidL.y = 0; rect_asteroidL.width = spr_asteroidL.width; rect_asteroidL.height = spr_asteroidL.height;
+	
+	//Load sounds
+	sfx_boostPlayer = LoadSound("..//Assets//Sounds//boost_player.wav");
+	sfx_shootPlayer = LoadSound("..//Assets//Sounds//shoot_player.wav");
+	sfx_shootEnemy = LoadSound("..//Assets//Sounds//shoot_enemy.wav");
+	sfx_hitPlayer = LoadSound("..//Assets//Sounds//hit_player.wav");
+	sfx_hitEnemy = LoadSound("..//Assets//Sounds//hit_enemy.wav");
+	sfx_hitAsteroid = LoadSound("..//Assets//Sounds//hit_asteroid.wav");
+	sfx_hitBase = LoadSound("..//Assets//Sounds//hit_base.wav");
+	sfx_explodePlayer = LoadSound("..//Assets//Sounds//explode_player.wav");
+	sfx_explodeEnemy = LoadSound("..//Assets//Sounds//explode_enemy.wav");
+	sfx_explodeAsteroid = LoadSound("..//Assets//Sounds//explode_asteroid.wav");
+	sfx_buttonHover = LoadSound("..//Assets//Sounds//buttonHover.wav");
+	sfx_buttonClick = LoadSound("..//Assets//Sounds//buttonClick.wav");
+	sfx_gameover = LoadSound("..//Assets//Sounds//gameover.wav");
+
 
 
 	//Set game variables
@@ -417,6 +436,8 @@ void Game::InstanceObject(GameObject* newObj, int posX, int posY)
 void Game::Gameover()
 {
 	gameover = true;
+
+	PlaySound(sfx_gameover);
 
 	//Destroy everything
 	for (GameObject* obj : scene)

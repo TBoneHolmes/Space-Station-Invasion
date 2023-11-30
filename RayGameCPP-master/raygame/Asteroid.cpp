@@ -207,6 +207,8 @@ void Asteroid::Damage(int dmg)
 		Game::GetInstance()->score += killScore * size;
 		Die();
 	}
+	else 
+	{ PlaySound(Game::GetInstance()->sfx_hitAsteroid); }
 }
 
 void Asteroid::Die()
@@ -223,6 +225,7 @@ void Asteroid::Die()
 			spawnPos = Vector2Scale(spawnPos, -1);
 		}
 	}
+	PlaySound(Game::GetInstance()->sfx_explodeAsteroid);
 	//Create explosion
 	Game::GetInstance()->InstanceObject(new Explosion(), globalPosition.x + 2.0f, globalPosition.y);
 	//Destroy self

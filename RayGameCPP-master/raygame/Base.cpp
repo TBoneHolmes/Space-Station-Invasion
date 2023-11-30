@@ -50,7 +50,7 @@ void Base::Draw()
 	{
 		drawCol = RED;
 	}
-	//Draw player
+	//Draw base
 	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, drawCol);
 
 	GameObject::Draw();
@@ -62,6 +62,8 @@ void Base::Update()
 
 	ManageTimers();
 	CollisionCheck();
+	//Apply torque
+	localRotation += 0.1;
 }
 
 void Base::ManageTimers()
@@ -82,20 +84,15 @@ void Base::CollisionCheck()
 		//Hit by bullet
 		if (cs->GetOverlappingColliders()[0]->parent->name == "Bullet")
 		{
+			cs->GetOverlappingColliders()[0]->parent->~GameObject();
 			Damage(1);
 		}
 		else if (cs->GetOverlappingColliders()[0]->parent->name == "EnemyDefault") //Hit by enemy body
 		{
 			//Create explosion for the enemy that hit
 			Game::GetInstance()->InstanceObject(new Explosion(), cs->GetOverlappingColliders()[0]->parent->globalPosition.x, cs->GetOverlappingColliders()[0]->parent->globalPosition.y);
+			cs->GetOverlappingColliders()[0]->parent->~GameObject();
 			Damage(4);
-		}
-		cs->GetOverlappingColliders()[0]->parent->~GameObject();
-
-		//Check for death
-		if (hp <= 0)
-		{
-			Die();
 		}
 	}
 }
@@ -105,6 +102,11 @@ void Base::Damage(int dmg)
 	hp -= dmg;
 	//Set invulnerability timer
 	damageRestTimer = damageRest;
+	//Check for death
+	if (hp <= 0)
+	{ Die(); }
+	else
+	{ PlaySound(Game::GetInstance()->sfx_hitBase); }
 }
 
 void Base::Die()

@@ -79,6 +79,10 @@ void Button::DetectMouse()
 	if (GetMousePosition().x > globalPosition.x - (size.x / 2) && GetMousePosition().x < globalPosition.x + (size.x / 2)
 		&& GetMousePosition().y > globalPosition.y - (size.y / 2) && GetMousePosition().y < globalPosition.y + (size.y / 2))
 	{
+		//Play sfx
+		if (mouseInteract == 0)
+		{ PlaySound(Game::GetInstance()->sfx_buttonHover); }
+
 		//Mouse pressed
 		if (IsMouseButtonDown(0))
 		{ mouseInteract = 2; }
@@ -97,6 +101,9 @@ void Button::DetectMouse()
 
 void Button::Clicked()
 {
+	//Play sound
+	PlaySound(Game::GetInstance()->sfx_buttonClick);
+	//Functionality
 	if (text == "RESTART" || text == "START")
 	{
 		Game::GetInstance()->StartGame();
