@@ -81,6 +81,7 @@ void Base::CollisionCheck()
 	//Check for bullet
 	if (damageRestTimer == 0 && cs->GetOverlappingColliders().size() > 0)
 	{
+		//TODO: Change this to interact with each collider, not just the first index
 		//Hit by bullet
 		if (cs->GetOverlappingColliders()[0]->parent->name == "Bullet")
 		{

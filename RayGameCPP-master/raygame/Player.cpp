@@ -85,6 +85,7 @@ void Player::Draw()
 	{
 		drawCol = RED;
 	}
+	//TODO: Animate booster
 	//Draw booster
 	DrawTexturePro(*spriteBooster, *spriteBoosterSize, destinationBooster, spriteBoosterOffset, globalRotation, WHITE);
 	//Draw player
