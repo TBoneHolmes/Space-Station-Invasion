@@ -65,6 +65,7 @@ int main()
 	UnloadSound(Game::GetInstance()->sfx_buttonHover);
 	UnloadSound(Game::GetInstance()->sfx_buttonClick);
 	UnloadSound(Game::GetInstance()->sfx_gameover);
+	UnloadSound(Game::GetInstance()->sfx_powerup);
 	CloseAudioDevice();
 
 	CloseWindow();        // Close window and OpenGL context

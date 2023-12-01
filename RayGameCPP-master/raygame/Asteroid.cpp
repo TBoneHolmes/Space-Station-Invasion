@@ -1,4 +1,5 @@
 #include "Asteroid.h"
+#include "Powerup.h"
 #include "Game.h"
 #include "raylib.h"
 #include "raymath.h"
@@ -165,7 +166,6 @@ void Asteroid::CollisionCheck()
 			//Collision with bullet
 			if (cs->GetOverlappingColliders()[i]->parent->name == "Bullet" && damageRestTimer == 0)
 			{
-				cout << "Destroyed bullet" << endl;
 				//Destroy bullet
 				cs->GetOverlappingColliders()[i]->parent->~GameObject();
 				//Damage self
@@ -224,6 +224,11 @@ void Asteroid::Die()
 			Game::GetInstance()->InstanceObject(new Asteroid(size - 1, newCreator), globalPosition.x + (spawnPos.x * (sprite->width / 4)), globalPosition.y + (spawnPos.y * (sprite->width / 4)));
 			spawnPos = Vector2Scale(spawnPos, -1);
 		}
+	}
+	//Create powerup
+	if (size == 2)
+	{
+		Game::GetInstance()->InstanceObject(new Powerup(), globalPosition.x, globalPosition.y);
 	}
 	PlaySound(Game::GetInstance()->sfx_explodeAsteroid);
 	//Create explosion

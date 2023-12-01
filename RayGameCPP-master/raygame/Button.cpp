@@ -6,6 +6,8 @@
 #include <string>
 using namespace std;
 
+//TODO: Give buttons a slight delay before activation to avoid accidental clicks
+
 //Constructor
 Button::Button(const char* txt, int w, int h)
 {

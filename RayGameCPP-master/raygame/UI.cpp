@@ -1,4 +1,4 @@
-#include "Minimap.h"
+#include "UI.h"
 #include "Game.h"
 #include "raylib.h"
 #include "raymath.h"
@@ -7,18 +7,18 @@
 using namespace std;
 
 //Constructor
-Minimap::Minimap()
+UI::UI()
 {
 	GameObject::name = "CollisionShape";
 }
 
 
-void Minimap::Start()
+void UI::Start()
 {
 	GameObject::Start();
 
 	//Set draw order
-	drawOrder = 4;
+	drawOrder = 5;
 
 	//Set offset
 	offset.x = 8; offset.y = 8;
@@ -29,7 +29,7 @@ void Minimap::Start()
 	mapScale = 1;
 }
 
-void Minimap::Draw()
+void UI::Draw()
 {
 
 	//DRAW MINIMAP
@@ -103,7 +103,7 @@ void Minimap::Draw()
 	GameObject::Draw();
 }
 
-void Minimap::Update()
+void UI::Update()
 {
 	GameObject::Update();
 }

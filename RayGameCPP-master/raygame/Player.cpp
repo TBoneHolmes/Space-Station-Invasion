@@ -31,11 +31,17 @@ void Player::Start()
 	sprite = &Game::GetInstance()->spr_player;
 	spriteBooster = &Game::GetInstance()->spr_playerBooster;
 	spriteSize = &Game::GetInstance()->rect_player;
-	spriteBoosterSize = &Game::GetInstance()->rect_playerBooster;
+	spriteBoosterSize = Game::GetInstance()->rect_playerBooster;
 	destination = Game::GetInstance()->rect_player;
 	destinationBooster = Game::GetInstance()->rect_playerBooster;
 	spriteOffset = Vector2(); spriteOffset.x = sprite->width / 2; spriteOffset.y = sprite->height / 2;
 	spriteBoosterOffset = Vector2(); spriteBoosterOffset.x = spriteBooster->width; spriteBoosterOffset.y = spriteBooster->height / 2;
+
+	//Animation
+	spriteFrames = Game::GetInstance()->frames_playerBooster;
+	frame = 0;
+	animationSpeed = 15;
+	animationTimer = 1;
 
 	//Create collision shape
 	InstanceObject(new CollisionShape(12, 1, 2 + 8), -4.0, 0);
@@ -60,10 +66,13 @@ void Player::Start()
 	//Set shoot timer
 	shootRest = 0.3;
 	shootRestTimer = 0;
-
 	//Set invincible timer
 	invTime = 1;
 	invTimer = invTime;
+	//Set powerup timer
+	powerupTime = 20;
+	powerupTimer = 0;
+
 
 	//DESTROY SELF
 	//GameObject* ptr = this;
@@ -77,23 +86,37 @@ void Player::Draw()
 	destinationBooster.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; destinationBooster.y = globalPosition.y - Game::GetInstance()->cameraPosition.y;
 	//Set draw color
 	Color drawCol = WHITE;
-	if (invTimer > 0)
+	//Repsawn invinciblility color
+	if (invTimer > 0 && powerupTimer == 0)
 	{
 		drawCol.a = 180;
 	}
+	//Damaged color
 	else if (damageRestTimer > 0)
 	{
 		drawCol = RED;
 	}
-	//TODO: Animate booster
+	//Powerup color
+	else if (powerupTimer > 0
+		//Only show powerup color every 0.2 seconds (to create a flashing effect)
+		&& ((((float)floor(powerupTimer) - powerupTimer) / 0.2) - (float)floor((((float)floor(powerupTimer) - powerupTimer) / 0.2))) > 0.5)
+	{
+		drawCol = YELLOW;
+	}
+
 	//Draw booster
-	DrawTexturePro(*spriteBooster, *spriteBoosterSize, destinationBooster, spriteBoosterOffset, globalRotation, WHITE);
+	if (IsMouseButtonDown(key_boost))
+	{
+		//Set sprite index
+		spriteBoosterSize.x = (spriteBooster->width / spriteFrames) * frame;
+		DrawTexturePro(*spriteBooster, spriteBoosterSize, destinationBooster, spriteBoosterOffset, globalRotation, WHITE);
+	}
 	//Draw player
 	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, drawCol);
 
 	//Draw HP
 	Rectangle hpSize; hpSize.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; hpSize.y = globalPosition.y - Game::GetInstance()->cameraPosition.y; hpSize.width = 16 / maxHp; hpSize.height = sprite->height / maxHp;
-	Vector2 hpOffset; hpOffset.x = sprite->width / 2 + 6; hpOffset.y = hpSize.height + 2;
+	Vector2 hpOffset; hpOffset.x = sprite->width / 2; hpOffset.y = hpSize.height + 2;
 	if (hp > 1)
 	{
 		DrawRectanglePro(hpSize, hpOffset, globalRotation, GREEN);
@@ -111,6 +134,8 @@ void Player::Update()
 	GameObject::Update();
 	
 	ManageTimers();
+	ManageAnimation();
+	ManagePowerup();
 	Input_Rotate();
 	Input_Booster();
 	Input_Shoot();
@@ -144,6 +169,42 @@ void Player::ManageTimers()
 		if (invTimer <= 0)
 		{ invTimer = 0; }
 	}
+	//Powerup timer
+	if (powerupTimer > 0)
+	{
+		powerupTimer -= GetFrameTime();
+		//Timeout
+		if (powerupTimer <= 0)
+		{ powerupTimer = 0; }
+	}
+}
+
+void Player::ManageAnimation()
+{
+	if (IsMouseButtonDown(key_boost))
+	{
+		//Tick down timer
+		animationTimer -= GetFrameTime() * animationSpeed;
+		//Timeout
+		if (animationTimer <= 0)
+		{
+			animationTimer = 1;
+			frame += 1;
+			//Destroy self if out of frame range
+			if (frame >= spriteFrames)
+			{
+				frame = 0;
+			}
+		}
+	}
+}
+
+void Player::ManagePowerup()
+{
+	if (powerupTimer > 0)
+	{ shootRest = 0.15; }
+	else
+	{ shootRest = 0.3; }
 }
 
 

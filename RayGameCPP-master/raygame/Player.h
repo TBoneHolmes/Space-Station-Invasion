@@ -16,11 +16,15 @@ public:
 	Texture2D* sprite;
 	Texture2D* spriteBooster;
 	Rectangle* spriteSize;
-	Rectangle* spriteBoosterSize;
+	Rectangle spriteBoosterSize;
 	Rectangle destination;
 	Rectangle destinationBooster;
 	Vector2 spriteOffset;
 	Vector2 spriteBoosterOffset;
+	int spriteFrames;
+	int frame;
+	float animationSpeed;
+	float animationTimer;
 	//Collision Shape
 	CollisionShape* cs;
 	//Input
@@ -42,6 +46,9 @@ public:
 	//Invincibility
 	float invTime;
 	float invTimer;
+	//Powerup
+	float powerupTime;
+	float powerupTimer;
 
 	//-FUNCTIONS-
 	void Start();
@@ -49,6 +56,8 @@ public:
 	void Update();
 	void ApplyVelocity();
 	void ManageTimers();
+	void ManageAnimation();
+	void ManagePowerup();
 	//Inputs
 	void Input_Rotate();
 	void Input_Booster();

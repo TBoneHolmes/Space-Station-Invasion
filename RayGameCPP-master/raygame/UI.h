@@ -5,12 +5,12 @@ using namespace std;
 
 
 #pragma once
-class Minimap : public GameObject
+class UI : public GameObject
 {
 
 public:
 	//-CONSTRUCTOR-
-	Minimap();
+	UI();
 
 	//-VARIABLES-
 	Vector2 offset;

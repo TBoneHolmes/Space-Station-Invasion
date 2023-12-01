@@ -153,8 +153,9 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Minimap.cpp" />
+    <ClCompile Include="UI.cpp" />
     <ClCompile Include="Asteroid.cpp" />
+    <ClCompile Include="Powerup.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asteroid.h" />
@@ -166,8 +167,9 @@
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Minimap.h" />
+    <ClInclude Include="UI.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Powerup.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

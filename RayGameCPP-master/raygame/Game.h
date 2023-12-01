@@ -4,13 +4,21 @@
 #include "Bullet.h"
 #include "EnemyDefault.h"
 #include "Explosion.h"
-#include "Minimap.h"
+#include "UI.h"
 #include "Base.h"
 #include "Button.h"
 #include "Asteroid.h"
 #include <vector>
 #include <string>
 using namespace std;
+
+//DRAW ORDER
+//0 - Base
+//1 - Asteroids
+//2 - Enemies, bullets
+//3 - Player
+//4 - Powerups, explosions
+//5 - UI
 
 #pragma once
 class Game
@@ -79,6 +87,8 @@ public:
 	Rectangle rect_asteroidM;
 	Texture2D spr_asteroidL;
 	Rectangle rect_asteroidL;
+	Texture2D spr_powerup;
+	Rectangle rect_powerup;
 	//Sounds
 	Sound sfx_boostPlayer;
 	Sound sfx_shootPlayer;
@@ -93,6 +103,7 @@ public:
 	Sound sfx_buttonHover;
 	Sound sfx_buttonClick;
 	Sound sfx_gameover;
+	Sound sfx_powerup;
 	//For debugging
 	bool drawCollisions;
 	//Waves

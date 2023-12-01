@@ -4,13 +4,6 @@
 #include <string>
 using namespace std;
 
-//DRAW ORDER
-//0 - Base
-//1 - Asteroids
-//2 - Enemies, bullets
-//3 - Player
-//4 - UI
-
 #pragma once
 class GameObject
 {

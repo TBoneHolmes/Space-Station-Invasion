@@ -51,7 +51,10 @@ void Game::Start()
 	rect_asteroidM = Rectangle(); rect_asteroidM.x = 0; rect_asteroidM.y = 0; rect_asteroidM.width = spr_asteroidM.width; rect_asteroidM.height = spr_asteroidM.height;
 	spr_asteroidL = LoadTexture("..//Assets//Sprites//asteroid_l.png");
 	rect_asteroidL = Rectangle(); rect_asteroidL.x = 0; rect_asteroidL.y = 0; rect_asteroidL.width = spr_asteroidL.width; rect_asteroidL.height = spr_asteroidL.height;
-	
+	spr_powerup = LoadTexture("..//Assets//Sprites//powerup.png");
+	rect_powerup = Rectangle(); rect_powerup.x = 0; rect_powerup.y = 0; rect_powerup.width = spr_powerup.width; rect_powerup.height = spr_powerup.height;
+
+
 	//Load sounds
 	sfx_boostPlayer = LoadSound("..//Assets//Sounds//boost_player.wav");
 	sfx_shootPlayer = LoadSound("..//Assets//Sounds//shoot_player.wav");
@@ -66,6 +69,7 @@ void Game::Start()
 	sfx_buttonHover = LoadSound("..//Assets//Sounds//buttonHover.wav");
 	sfx_buttonClick = LoadSound("..//Assets//Sounds//buttonClick.wav");
 	sfx_gameover = LoadSound("..//Assets//Sounds//gameover.wav");
+	sfx_powerup = LoadSound("..//Assets//Sounds//powerup.wav");
 
 
 
@@ -186,7 +190,7 @@ void Game::Update()
 		scene[i]->Update();
 	}
 	//Draw other objects
-	for (int draw = 0; draw < 5; draw++)
+	for (int draw = 0; draw < 6; draw++)
 	{
 		for (int i = 0; i < scene.size(); i++)
 		{
@@ -480,7 +484,7 @@ void Game::StartGame()
 
 	//Instance objects
 	InstanceObject(new Base(), center.x, center.y);
-	InstanceObject(new Minimap(), 0, 0);
+	InstanceObject(new UI(), 0, 0);
 	InstanceObject(new Player(), playerSpawn.x, playerSpawn.y);
 
 	//Start enemy spawn timer

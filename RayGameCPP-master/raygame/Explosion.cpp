@@ -27,6 +27,8 @@ void Explosion::Start()
 	frame = 0;
 	animationSpeed = 20;
 	animationTimer = 1;
+	
+	drawOrder = 4;
 }
 
 void Explosion::Draw()
