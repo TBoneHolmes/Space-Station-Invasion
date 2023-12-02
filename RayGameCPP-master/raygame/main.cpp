@@ -25,7 +25,7 @@ int main()
 	int screenWidth = game->cameraSize.x;
 	int screenHeight = game->cameraSize.y;
 
-	InitWindow(screenWidth, screenHeight, "Infiltration Amongst the Stars");
+	InitWindow(screenWidth, screenHeight, "Space Station Invasion");
 
 	InitAudioDevice();
 

@@ -29,6 +29,7 @@ void Game::Start()
 {
 	
 	//Load textures
+	spr_title = LoadTexture("..//Assets//Sprites//title.png");
 	spr_background = LoadTexture("..//Assets//Sprites//background.png");
 	rect_background = Rectangle(); rect_background.x = 0; rect_background.y = 0; rect_background.width = spr_background.width; rect_background.height = spr_background.height;
 	spr_player = LoadTexture("..//Assets//Sprites//player.png");
@@ -104,16 +105,14 @@ void Game::Start()
 		}
 	}
 
+	//Powerup stuff
+	powerupSpawnRange.x = 3; powerupSpawnRange.y = 6;
+	powerupSpawn = GetRandomValue(powerupSpawnRange.x, powerupSpawnRange.y); //The number of medium sized asteroids you have to destroy before a powerup spawns
+
 	menuOpen = true;
 	gameover = false;
 
-	//Add menu
-	//Create start button
-	InstanceObject(new Button("START", 160, 48), cameraSize.x / 2, (cameraSize.y / 2) -32);
-	//Create quit button
-	InstanceObject(new Button("QUIT", 160, 48), cameraSize.x / 2, (cameraSize.y / 2) + 64);
-	//Create fullscreen button
-	InstanceObject(new Button("FULLSCREEN", 0.2, 96, 48), cameraSize.x - 96, cameraSize.y - 64);
+	StartMenu();
 
 	//ToggleFullscreen();
 
@@ -137,12 +136,10 @@ void Game::Draw()
 	if (menuOpen)
 	{
 		//Draw title
-		char* text = (char*)"TITLE HERE";
-		int textWidth = MeasureText(text, 64);
-		DrawText(text, (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 256, 64, WHITE);
+		DrawTexture(spr_title, (cameraSize.x / 2) - (spr_title.width / 2), (cameraSize.y / 2) - (spr_title.height / 2) - 160, WHITE);
 		//Draw fullscreen shortcut
-		text = (char*)"(F11)";
-		textWidth = MeasureText(text, 24);
+		char* text = (char*)"(F11)";
+		int textWidth = MeasureText(text, 24);
 		DrawText(text, (cameraSize.x - 96) - (textWidth / 2), cameraSize.y - 120, 24, WHITE);
 	}
 
@@ -503,6 +500,17 @@ void Game::StartGame()
 	//Set start timer
 	instructionTimer = instructionTime;
 
+}
+
+void Game::StartMenu()
+{
+	menuOpen = true;
+	//Create start button
+	InstanceObject(new Button("START", 160, 48), cameraSize.x / 2, (cameraSize.y / 2) + 16);
+	//Create quit button
+	InstanceObject(new Button("QUIT", 160, 48), cameraSize.x / 2, (cameraSize.y / 2) + 96);
+	//Create fullscreen button
+	InstanceObject(new Button("FULLSCREEN", 0.2, 96, 48), cameraSize.x - 96, cameraSize.y - 64);
 }
 
 

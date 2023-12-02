@@ -65,6 +65,7 @@ public:
 	//Stats
 	int score;
 	//Textures
+	Texture2D spr_title;
 	Texture2D spr_background;
 	Rectangle rect_background;
 	Texture2D spr_player;
@@ -112,6 +113,9 @@ public:
 	int enemiesPerWave;
 	//Asteroid spawning
 	Rectangle chunk[16];
+	//Powerup spawning
+	int powerupSpawn;
+	Vector2 powerupSpawnRange;
 
 	//Functions
 	void Start();
@@ -119,9 +123,10 @@ public:
 	void Update();
 	void ManageTimers();
 	void CameraPosition();
-	//Gameover
+	//Game
 	void Gameover();
 	void StartGame();
+	void StartMenu();
 	//Spawning
 	void InstanceObject(GameObject*, int, int);
 	void SpawnEnemy();

@@ -225,11 +225,18 @@ void Asteroid::Die()
 			spawnPos = Vector2Scale(spawnPos, -1);
 		}
 	}
-	//Create powerup
+
+	//Chance to drop powerup
 	if (size == 2)
 	{
-		Game::GetInstance()->InstanceObject(new Powerup(), globalPosition.x, globalPosition.y);
+		Game::GetInstance()->powerupSpawn -= 1;
+		if (Game::GetInstance()->powerupSpawn <= 0)
+		{
+			Game::GetInstance()->powerupSpawn = GetRandomValue(Game::GetInstance()->powerupSpawnRange.x, Game::GetInstance()->powerupSpawnRange.y);
+			Game::GetInstance()->InstanceObject(new Powerup(), globalPosition.x, globalPosition.y);
+		}
 	}
+
 	PlaySound(Game::GetInstance()->sfx_explodeAsteroid);
 	//Create explosion
 	Game::GetInstance()->InstanceObject(new Explosion(), globalPosition.x + 2.0f, globalPosition.y);
