@@ -64,7 +64,7 @@ void UI::Draw()
 	statXPos = mapSize.x + 16;
 	DrawText("SCORE", statXPos, 8, 24, WHITE);
 	string scoreString = "5387239572";
-	DrawText(FormatText("%06i", Game::GetInstance()->score), statXPos, 32, 24, WHITE);
+	DrawText(TextFormat("%06i", Game::GetInstance()->score), statXPos, 32, 24, WHITE);
 
 	//DRAW BASE HP
 	int healthbarWidth = 76;

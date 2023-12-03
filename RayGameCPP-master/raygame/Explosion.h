@@ -3,11 +3,6 @@
 #include <string>
 using namespace std;
 
-//LAYERS
-//1 = player
-//2 = enemy
-//4 = bullet
-
 
 #pragma once
 class Explosion : public GameObject

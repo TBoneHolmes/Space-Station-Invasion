@@ -10,7 +10,8 @@ using namespace std;
 GameObject::GameObject()
 {
 	GameObject::name = "Game Object";
-	drawOrder = 0;
+	drawOrder = 0; //The order that this object is drawn in
+	pauseIgnore = false; //If true, this object still functions while game is paused
 }
 
 //Deconstructor

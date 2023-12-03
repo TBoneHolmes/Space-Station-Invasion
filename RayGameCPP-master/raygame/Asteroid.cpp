@@ -1,5 +1,6 @@
 #include "Asteroid.h"
 #include "Powerup.h"
+#include "ScoreNotifier.h"
 #include "Game.h"
 #include "raylib.h"
 #include "raymath.h"
@@ -227,7 +228,7 @@ void Asteroid::Die()
 	}
 
 	//Chance to drop powerup
-	if (size == 2)
+	if (size == 2 && Game::GetInstance()->wave >= 2)
 	{
 		Game::GetInstance()->powerupSpawn -= 1;
 		if (Game::GetInstance()->powerupSpawn <= 0)
@@ -237,9 +238,13 @@ void Asteroid::Die()
 		}
 	}
 
-	PlaySound(Game::GetInstance()->sfx_explodeAsteroid);
 	//Create explosion
 	Game::GetInstance()->InstanceObject(new Explosion(), globalPosition.x + 2.0f, globalPosition.y);
+
+	//Create scoreNotifier
+	Game::GetInstance()->InstanceObject(new ScoreNotifier(killScore * size), globalPosition.x, globalPosition.y);
+
+	PlaySound(Game::GetInstance()->sfx_explodeAsteroid);
 	//Destroy self
 	GameObject* ptr = this;
 	ptr->~GameObject();

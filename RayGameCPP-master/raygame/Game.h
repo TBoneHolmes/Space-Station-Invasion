@@ -17,7 +17,7 @@ using namespace std;
 //1 - Asteroids
 //2 - Enemies, bullets
 //3 - Player
-//4 - Powerups, explosions
+//4 - Powerups, explosions, scoreNotifier
 //5 - UI
 
 #pragma once
@@ -49,6 +49,7 @@ public:
 	Vector2 playerSpawn;
 	bool gameover;
 	bool menuOpen;
+	bool gamePaused;
 	//Camera
 	Vector2 cameraPosition;
 	Vector2 cameraSize;
@@ -105,6 +106,8 @@ public:
 	Sound sfx_buttonClick;
 	Sound sfx_gameover;
 	Sound sfx_powerup;
+	//Font
+	Font fnt_gameover;
 	//For debugging
 	bool drawCollisions;
 	//Waves

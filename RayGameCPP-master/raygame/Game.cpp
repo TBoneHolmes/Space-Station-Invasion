@@ -55,7 +55,6 @@ void Game::Start()
 	spr_powerup = LoadTexture("..//Assets//Sprites//powerup.png");
 	rect_powerup = Rectangle(); rect_powerup.x = 0; rect_powerup.y = 0; rect_powerup.width = spr_powerup.width; rect_powerup.height = spr_powerup.height;
 
-
 	//Load sounds
 	sfx_boostPlayer = LoadSound("..//Assets//Sounds//boost_player.wav");
 	sfx_shootPlayer = LoadSound("..//Assets//Sounds//shoot_player.wav");
@@ -71,6 +70,9 @@ void Game::Start()
 	sfx_buttonClick = LoadSound("..//Assets//Sounds//buttonClick.wav");
 	sfx_gameover = LoadSound("..//Assets//Sounds//gameover.wav");
 	sfx_powerup = LoadSound("..//Assets//Sounds//powerup.wav");
+
+	//Load font
+	fnt_gameover = LoadFont("..//Assets//Fonts//gameover.ttf");
 
 
 
@@ -106,11 +108,12 @@ void Game::Start()
 	}
 
 	//Powerup stuff
-	powerupSpawnRange.x = 3; powerupSpawnRange.y = 6;
+	powerupSpawnRange.x = 4; powerupSpawnRange.y = 8;
 	powerupSpawn = GetRandomValue(powerupSpawnRange.x, powerupSpawnRange.y); //The number of medium sized asteroids you have to destroy before a powerup spawns
 
 	menuOpen = true;
 	gameover = false;
+	gamePaused = false;
 
 	StartMenu();
 
@@ -148,13 +151,25 @@ void Game::Draw()
 	{
 		char* text = (char*)"GAME OVER";
 		int textWidth = MeasureText(text, 96);
-		DrawText(text, (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 256, 96, RED);
+		Vector2 textPos; textPos.x = (cameraSize.x / 2) - (textWidth / 2) - 144; textPos.y = cameraSize.y / 2 - 256;
+		DrawTextEx(fnt_gameover, text, textPos, 96, 0, RED);
 		text = (char*)"YOUR BASE WAS DESTROYED";
 		textWidth = MeasureText(text, 32);
 		DrawText(text, (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 160, 32, WHITE);
 		text = (char*)"SCORE: %06i";
-		textWidth = MeasureText(FormatText(text, score), 32);
-		DrawText(FormatText(text, score), (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 32, 32, GREEN);
+		textWidth = MeasureText(TextFormat(text, score), 32);
+		DrawText(TextFormat(text, score), (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 32, 32, GREEN);
+	}
+
+	//Draw pause
+	else if (gamePaused)
+	{
+		char* text = (char*)"PAUSED";
+		int textWidth = MeasureText(text, 64);
+		DrawText(text, (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 128, 64, WHITE);
+		text = (char*)"PRESS 'ENTER' TO CONTINUE";
+		textWidth = MeasureText(text, 32);
+		DrawText(text, (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2, 32, WHITE);
 	}
 
 
@@ -172,26 +187,33 @@ void Game::Draw()
 
 void Game::Update()
 {
-	Draw();
-
-	ManageTimers();
-	CameraPosition();
-
 	//DEBUG
 	//cout << scene.size() << endl;
 	//cout << enemies.size() << endl;
 
+	Draw();
+
+	if (!gamePaused)
+	{
+		ManageTimers();
+		CameraPosition();
+	}
+
 	//Update scene objects
 	for (int i = 0; i < scene.size(); i++)
 	{
-		scene[i]->Update();
+		if (!gamePaused || scene[i]->pauseIgnore)
+		{ 
+			scene[i]->Update();
+		}
 	}
 	//Draw other objects
 	for (int draw = 0; draw < 6; draw++)
 	{
 		for (int i = 0; i < scene.size(); i++)
 		{
-			if (scene[i]->drawOrder == draw)
+			if (scene[i]->drawOrder == draw
+				&& (!gamePaused || scene[i]->pauseIgnore))
 			{
 				scene[i]->Draw();
 			}
@@ -201,6 +223,10 @@ void Game::Update()
 	//Clamp score
 	score = Clamp(score, 0, 999999);
 
+
+	//Toggle pause
+	if (IsKeyPressed(KEY_ENTER) && !gameover && !menuOpen)
+	{ gamePaused = !gamePaused; }
 	//Toggle fullscren key
 	if (IsKeyPressed(KEY_F11))
 	{
@@ -402,7 +428,7 @@ void Game::WaveIncrease()
 	//Reset spawn count
 	enemiesToSpawn = enemiesPerWave;
 	//Reset spawn timer
-	if (enemySpawnTime > 1)
+	if (enemySpawnTime > 2)
 	{ enemySpawnTime -= 1; }
 	enemySpawnTimer = enemySpawnTime;
 

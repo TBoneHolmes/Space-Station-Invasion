@@ -155,6 +155,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ScoreNotifier.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="Asteroid.cpp" />
     <ClCompile Include="Powerup.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="ScoreNotifier.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Powerup.h" />

@@ -1,4 +1,5 @@
 #include "EnemyDefault.h"
+#include "ScoreNotifier.h"
 #include "Game.h"
 #include "raylib.h"
 #include "raymath.h"
@@ -159,6 +160,8 @@ void EnemyDefault::Die()
 	PlaySound(Game::GetInstance()->sfx_explodeEnemy);
 	//Create explosion
 	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x + 2.0f, globalPosition.y);
+	//Create scoreNotifier
+	Game::GetInstance()->InstanceObject(new ScoreNotifier(killScore), globalPosition.x, globalPosition.y);
 	//Destroy self
 	GameObject* ptr = this;
 	ptr->~GameObject();

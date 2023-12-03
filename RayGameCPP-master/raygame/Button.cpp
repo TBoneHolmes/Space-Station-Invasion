@@ -35,6 +35,7 @@ void Button::Start()
 
 	//Set draw order
 	drawOrder = 0;
+	pauseIgnore = true; //Object continues functionality when paused
 
 	mouseInteract = 0; //0 = none, 1 = hovered, 2 = pressed
 }

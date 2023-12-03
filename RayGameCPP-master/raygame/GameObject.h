@@ -24,6 +24,7 @@ public:
 	vector<GameObject*> children;
 	Vector2 Vector2Right;
 	int drawOrder;
+	bool pauseIgnore;
 
 	//Functions
 	void virtual Start();
