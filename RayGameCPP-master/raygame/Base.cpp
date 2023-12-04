@@ -90,19 +90,21 @@ void Base::CollisionCheck()
 	//Check for bullet
 	if (damageRestTimer == 0 && cs->GetOverlappingColliders().size() > 0)
 	{
-		//TODO: Change this to interact with each collider, not just the first index
-		//Hit by bullet
-		if (cs->GetOverlappingColliders()[0]->parent->name == "Bullet")
+		for (int i = 0; i < cs->GetOverlappingColliders().size(); i++)
 		{
-			cs->GetOverlappingColliders()[0]->parent->~GameObject();
-			Damage(1);
-		}
-		else if (cs->GetOverlappingColliders()[0]->parent->name == "EnemyDefault") //Hit by enemy body
-		{
-			//Create explosion for the enemy that hit
-			Game::GetInstance()->InstanceObject(new Explosion(), cs->GetOverlappingColliders()[0]->parent->globalPosition.x, cs->GetOverlappingColliders()[0]->parent->globalPosition.y);
-			cs->GetOverlappingColliders()[0]->parent->~GameObject();
-			Damage(4);
+			//Hit by bullet
+			if (cs->GetOverlappingColliders()[i]->parent->name == "Bullet")
+			{
+				cs->GetOverlappingColliders()[i]->parent->~GameObject();
+				Damage(1);
+			}
+			else if (cs->GetOverlappingColliders()[i]->parent->name == "EnemyDefault") //Hit by enemy body
+			{
+				//Create explosion for the enemy that hit
+				Game::GetInstance()->InstanceObject(new Explosion(), cs->GetOverlappingColliders()[0]->parent->globalPosition.x, cs->GetOverlappingColliders()[0]->parent->globalPosition.y);
+				cs->GetOverlappingColliders()[i]->parent->~GameObject();
+				Damage(4);
+			}
 		}
 	}
 }

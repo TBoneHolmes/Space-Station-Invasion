@@ -110,7 +110,7 @@ void Game::Start()
 	}
 
 	//Powerup stuff
-	powerupSpawnRange.x = 4; powerupSpawnRange.y = 8;
+	powerupSpawnRange.x = 3; powerupSpawnRange.y = 8;
 	powerupSpawn = GetRandomValue(powerupSpawnRange.x, powerupSpawnRange.y); //The number of medium sized asteroids you have to destroy before a powerup spawns
 
 	menuOpen = true;
@@ -347,26 +347,22 @@ void Game::SpawnEnemy()
 			edgeDist = GetRandomValue(0, worldSize.x);
 			spawnPos.x = edgeDist;
 			spawnPos.y = -32;
-			cout << "CASE 0 :: " << spawnPos.x << endl;
 			break;
 		case 1:
 			edgeDist = GetRandomValue(0, worldSize.y);
 			spawnPos.x = worldSize.x + 32;
 			spawnPos.y = edgeDist;
-			cout << "CASE 1 :: " << spawnPos.x << endl;
 			break;
 
 		case 2:
 			edgeDist = GetRandomValue(0, worldSize.x);
 			spawnPos.x = edgeDist;
 			spawnPos.y = worldSize.y + 32;
-			cout << "CASE 2 :: " << spawnPos.x << endl;
 			break;
 		case 3:
 			edgeDist = GetRandomValue(0, worldSize.y);
 			spawnPos.x = -32;
 			spawnPos.y = edgeDist;
-			cout << "CASE 3 :: " << spawnPos.x << endl;
 			break;
 
 	}

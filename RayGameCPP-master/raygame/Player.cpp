@@ -287,7 +287,7 @@ void Player::Input_Shoot()
 		//Set bullet spawn position at the front of the player
 		Vector2 bulletSpawnPos = Vector2Add(globalPosition, Vector2Rotate(Vector2Scale(Vector2Right, sprite->width / 2), globalRotation));
 		Color newCol = WHITE;
-		/* ENABLE FOR RAINBOW BULLETS WHEN POWERED UP
+		/* //ENABLE FOR RAINBOW BULLETS WHEN POWERED UP
 		if (powerupTimer > 0)
 		{
 			//Set bullet color
@@ -305,7 +305,7 @@ void Player::Input_Shoot()
 			{ newCol = VIOLET; }
 			bulletColor = (bulletColor < 5) ? bulletColor + 1 : 0;
 		}*/
-		Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, globalRotation), 4, WHITE), bulletSpawnPos.x, bulletSpawnPos.y);
+		Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, globalRotation), 4, newCol), bulletSpawnPos.x, bulletSpawnPos.y);
 		//Set timer
 		shootRestTimer = shootRest;
 		//Play sfx
