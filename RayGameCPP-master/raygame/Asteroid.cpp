@@ -228,7 +228,7 @@ void Asteroid::Die()
 	}
 
 	//Chance to drop powerup
-	if (size == 2 && Game::GetInstance()->wave >= 2)
+	if (size == 2)// && Game::GetInstance()->wave >= 2)
 	{
 		Game::GetInstance()->powerupSpawn -= 1;
 		if (Game::GetInstance()->powerupSpawn <= 0)

@@ -64,6 +64,8 @@ int main()
 	UnloadSound(Game::GetInstance()->sfx_explodeAsteroid);
 	UnloadSound(Game::GetInstance()->sfx_buttonHover);
 	UnloadSound(Game::GetInstance()->sfx_buttonClick);
+	UnloadSound(Game::GetInstance()->sfx_pause);
+	UnloadSound(Game::GetInstance()->sfx_unpause);
 	UnloadSound(Game::GetInstance()->sfx_gameover);
 	UnloadSound(Game::GetInstance()->sfx_powerup);
 	CloseAudioDevice();

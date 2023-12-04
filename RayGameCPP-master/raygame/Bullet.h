@@ -10,6 +10,7 @@ class Bullet : public GameObject
 public:
 	//-CONSTRUCTOR-
 	Bullet(Vector2, int);
+	Bullet(Vector2, int, Color);
 
 	//-VARIABLES-
 	//Sprite
@@ -17,6 +18,7 @@ public:
 	Rectangle* spriteSize;
 	Rectangle destination;
 	Vector2 spriteOffset;
+	Color bulletCol;
 	//Movement
 	Vector2 velocity;
 	Vector2 moveDirection;

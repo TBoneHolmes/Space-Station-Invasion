@@ -59,7 +59,6 @@ void ScoreNotifier::Update()
 	//Destroy
 	if (alpha <= 0)
 	{
-		cout << "DELETED" << endl;
 		GameObject* ptr = this;
 		ptr->~GameObject();
 	}

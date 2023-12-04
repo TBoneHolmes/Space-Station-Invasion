@@ -34,10 +34,12 @@ void Base::Start()
 	//Cache collision shape
 	cs = (CollisionShape*)children.back();
 
-	//Set HP
+	//Damage
 	maxHp = 30;
 	hp = maxHp;
 	damageRest = 0.1;
+	hitNotifyTime = 1;
+	hitNotifyTimer = 0;
 }
 
 void Base::Draw()
@@ -72,8 +74,15 @@ void Base::ManageTimers()
 	if (damageRestTimer > 0)
 	{
 		damageRestTimer -= GetFrameTime();
-	} //Clamp damageRestTimer to 0
+	} //Timeout
 	else { damageRestTimer = 0; }
+
+	//Hit notifier
+	if (hitNotifyTimer > 0)
+	{
+		hitNotifyTimer -= GetFrameTime();
+	}//Timeout
+	else { hitNotifyTimer = 0; }
 }
 
 void Base::CollisionCheck()
@@ -103,6 +112,7 @@ void Base::Damage(int dmg)
 	hp -= dmg;
 	//Set invulnerability timer
 	damageRestTimer = damageRest;
+	hitNotifyTimer = hitNotifyTime;
 	//Check for death
 	if (hp <= 0)
 	{ Die(); }

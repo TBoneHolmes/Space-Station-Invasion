@@ -14,7 +14,18 @@ Bullet::Bullet(Vector2 direction, int layer)
 	moveDirection = direction;
 	//Set collisionLayer
 	colLayer = layer;
+	bulletCol = WHITE;
 }
+Bullet::Bullet(Vector2 direction, int layer, Color col)
+{
+	GameObject::name = "Bullet";
+	//Set direction
+	moveDirection = direction;
+	//Set collisionLayer
+	colLayer = layer;
+	bulletCol = col;
+}
+
 
 
 void Bullet::Start()
@@ -42,7 +53,7 @@ void Bullet::Draw()
 	//Draw at position
 	destination.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; destination.y = globalPosition.y - Game::GetInstance()->cameraPosition.y;
 	//Draw bullet
-	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, WHITE);
+	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, bulletCol);
 
 	GameObject::Draw();
 }

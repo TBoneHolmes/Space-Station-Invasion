@@ -72,6 +72,8 @@ void Player::Start()
 	//Set powerup timer
 	powerupTime = 20;
 	powerupTimer = 0;
+	powerupColor = 0;
+	powerupColorChanged = false;
 
 
 	//DESTROY SELF
@@ -97,11 +99,36 @@ void Player::Draw()
 		drawCol = RED;
 	}
 	//Powerup color
-	else if (powerupTimer > 0
-		//Only show powerup color every 0.2 seconds (to create a flashing effect)
-		&& ((((float)floor(powerupTimer) - powerupTimer) / 0.2) - (float)floor((((float)floor(powerupTimer) - powerupTimer) / 0.2))) > 0.5)
+	else if (powerupTimer > 0)
 	{
-		drawCol = YELLOW;
+		//Only show powerup color every 0.2 seconds (to create a flashing effect)
+		if (((((float)floor(powerupTimer) - powerupTimer) / 0.2) - (float)floor((((float)floor(powerupTimer) - powerupTimer) / 0.2))) > 0.5)
+		{
+			if (powerupColor == 0)
+			{ drawCol = RED; }
+			else if (powerupColor == 1)
+			{ drawCol = ORANGE; }
+			else if (powerupColor == 2)
+			{ drawCol = YELLOW; }
+			else if (powerupColor == 3)
+			{ drawCol = GREEN; }
+			else if (powerupColor == 4)
+			{ drawCol = BLUE; }
+			else if (powerupColor == 5)
+			{ drawCol = VIOLET; }
+			if (!powerupColorChanged)
+			{
+				powerupColorChanged = true;
+				//Increase color selection
+				powerupColor = (powerupColor < 5) ? powerupColor + 1 : 0;
+			}
+		}
+		else
+		{
+			powerupColorChanged = false;
+		}
+
+
 	}
 
 	//Draw booster
@@ -257,9 +284,28 @@ void Player::Input_Shoot()
 {
 	if (IsMouseButtonDown(key_shoot) && shootRestTimer == 0)
 	{
-		//Spawn bullet
+		//Set bullet spawn position at the front of the player
 		Vector2 bulletSpawnPos = Vector2Add(globalPosition, Vector2Rotate(Vector2Scale(Vector2Right, sprite->width / 2), globalRotation));
-		Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, globalRotation), 4), bulletSpawnPos.x, bulletSpawnPos.y);
+		Color newCol = WHITE;
+		/* ENABLE FOR RAINBOW BULLETS WHEN POWERED UP
+		if (powerupTimer > 0)
+		{
+			//Set bullet color
+			if (bulletColor == 0)
+			{ newCol = RED; }
+			else if (bulletColor == 1)
+			{ newCol = ORANGE; }
+			else if (bulletColor == 2)
+			{ newCol = YELLOW; }
+			else if (bulletColor == 3)
+			{ newCol = GREEN; }
+			else if (bulletColor == 4)
+			{ newCol = BLUE; }
+			else if (bulletColor == 5)
+			{ newCol = VIOLET; }
+			bulletColor = (bulletColor < 5) ? bulletColor + 1 : 0;
+		}*/
+		Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, globalRotation), 4, WHITE), bulletSpawnPos.x, bulletSpawnPos.y);
 		//Set timer
 		shootRestTimer = shootRest;
 		//Play sfx
@@ -298,11 +344,16 @@ void Player::Damage(int dmg)
 	if (hp <= 0)
 	{ Die(); }
 	else
-	{ PlaySound(Game::GetInstance()->sfx_hitPlayer); }
+	{
+		Game::GetInstance()->screenshake = 10;
+		PlaySound(Game::GetInstance()->sfx_hitPlayer);
+	}
 }
 
 void Player::Die()
 {
+	Game::GetInstance()->screenshake = 20;
+	Game::GetInstance()->freeze = 0.1;
 	PlaySound(Game::GetInstance()->sfx_explodePlayer);
 	//Set respawn timer
 	Game::GetInstance()->playerSpawnTimer = Game::GetInstance()->playerSpawnTime;

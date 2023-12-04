@@ -49,6 +49,9 @@ public:
 	//Powerup
 	float powerupTime;
 	float powerupTimer;
+	int powerupColor;
+	int bulletColor;
+	bool powerupColorChanged;
 
 	//-FUNCTIONS-
 	void Start();

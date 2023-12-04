@@ -68,13 +68,21 @@ void UI::Draw()
 
 	//DRAW BASE HP
 	int healthbarWidth = 76;
+	int healthbarYPos = 106;
 	DrawText("BASE", statXPos, 80, 24, WHITE);
 	//Background
-	DrawRectangle(statXPos, 104, healthbarWidth + 4, 12, GRAY);
+	DrawRectangle(statXPos, healthbarYPos - 2, healthbarWidth + 4, 12, GRAY);
 	//Filler
 	if (Game::GetInstance()->base != nullptr)
 	{
-		DrawRectangle(statXPos + 2, 106, healthbarWidth * ((float)Game::GetInstance()->base->hp / (float)Game::GetInstance()->base->maxHp), 8, GREEN);
+		Color fillCol = (Game::GetInstance()->base->hitNotifyTimer == 0) ? GREEN : RED;
+		DrawRectangle(statXPos + 2, healthbarYPos, healthbarWidth * ((float)Game::GetInstance()->base->hp / (float)Game::GetInstance()->base->maxHp), 8, fillCol);
+		//Hit '!' symbol
+		if (Game::GetInstance()->base->hitNotifyTimer > 0)
+		{
+			Vector2 textPos; textPos.x = statXPos + healthbarWidth + 8; textPos.y = healthbarYPos - 12;
+			DrawTextEx(Game::GetInstance()->fnt_gameover, "!", textPos, 32, 0, RED);
+		}
 	}
 
 	//DRAW INSTRUCTIONS

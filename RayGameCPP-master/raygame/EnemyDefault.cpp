@@ -142,12 +142,14 @@ void EnemyDefault::CollisionCheck()
 
 void EnemyDefault::Damage(int dmg)
 {
+	Game::GetInstance()->screenshake = 5;
 	hp -= dmg;
 	//Set invulnerability timer
 	damageRestTimer = damageRest;
 	//Die when hp reaches 0
 	if (hp <= 0)
 	{
+		Game::GetInstance()->freeze = 0.08;
 		Game::GetInstance()->score += killScore;
 		Die();
 	}
@@ -157,6 +159,7 @@ void EnemyDefault::Damage(int dmg)
 
 void EnemyDefault::Die()
 {
+	Game::GetInstance()->freeze = 0.12;
 	PlaySound(Game::GetInstance()->sfx_explodeEnemy);
 	//Create explosion
 	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x + 2.0f, globalPosition.y);

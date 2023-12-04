@@ -30,14 +30,22 @@ void Powerup::Start()
 	InstanceObject(new CollisionShape(12, 0, 1), 0, 0);
 	//Cache collision shape
 	cs = (CollisionShape*)children.back();
+
+	//Vanish
+	vanishTime = 10;
+	vanishTimer = vanishTime;
+	alpha = 255;
 }
 
 void Powerup::Draw()
 {
+	//Set draw color
+	Color drawCol = WHITE;
+	drawCol.a = alpha;
 	//Draw at position
 	destination.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; destination.y = globalPosition.y - Game::GetInstance()->cameraPosition.y;
 	//Draw bullet
-	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, WHITE);
+	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, drawCol);
 
 	GameObject::Draw();
 }
@@ -45,7 +53,37 @@ void Powerup::Draw()
 void Powerup::Update()
 {
 	GameObject::Update();
+	ManageTimers();
 	CollisionCheck();
+}
+
+void Powerup::ManageTimers()
+{
+	//Vanish
+	if (vanishTimer > 0)
+	{
+		vanishTimer -= GetFrameTime();
+
+		//Timeout
+		if (vanishTimer <= 0)
+		{
+			vanishTimer = 0;
+		}
+	}
+
+
+	//Alpha
+	if (vanishTimer <= 0)
+	{
+		alpha -= GetFrameTime() * 300;
+
+		if (alpha <= 0)
+		{
+			//Destroy self
+			GameObject* ptr = this;
+			ptr->~GameObject();
+		}
+	}
 }
 
 void Powerup::CollisionCheck()

@@ -26,6 +26,8 @@ public:
 	int hp;
 	float damageRest;
 	float damageRestTimer;
+	float hitNotifyTime;
+	float hitNotifyTimer;
 
 	//-FUNCTIONS-
 	void Start();

@@ -68,6 +68,8 @@ void Game::Start()
 	sfx_explodeAsteroid = LoadSound("..//Assets//Sounds//explode_asteroid.wav");
 	sfx_buttonHover = LoadSound("..//Assets//Sounds//buttonHover.wav");
 	sfx_buttonClick = LoadSound("..//Assets//Sounds//buttonClick.wav");
+	sfx_pause = LoadSound("..//Assets//Sounds//pause.wav");
+	sfx_unpause = LoadSound("..//Assets//Sounds//unpause.wav");
 	sfx_gameover = LoadSound("..//Assets//Sounds//gameover.wav");
 	sfx_powerup = LoadSound("..//Assets//Sounds//powerup.wav");
 
@@ -114,6 +116,7 @@ void Game::Start()
 	menuOpen = true;
 	gameover = false;
 	gamePaused = false;
+	freeze = 0;
 
 	StartMenu();
 
@@ -155,7 +158,7 @@ void Game::Draw()
 		DrawTextEx(fnt_gameover, text, textPos, 96, 0, RED);
 		text = (char*)"YOUR BASE WAS DESTROYED";
 		textWidth = MeasureText(text, 32);
-		DrawText(text, (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 160, 32, WHITE);
+		DrawText(text, (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 152, 32, WHITE);
 		text = (char*)"SCORE: %06i";
 		textWidth = MeasureText(TextFormat(text, score), 32);
 		DrawText(TextFormat(text, score), (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 32, 32, GREEN);
@@ -200,11 +203,14 @@ void Game::Update()
 	}
 
 	//Update scene objects
-	for (int i = 0; i < scene.size(); i++)
+	if (!freeze)
 	{
-		if (!gamePaused || scene[i]->pauseIgnore)
-		{ 
-			scene[i]->Update();
+		for (int i = 0; i < scene.size(); i++)
+		{
+			if (!gamePaused || scene[i]->pauseIgnore)
+			{ 
+				scene[i]->Update();
+			}
 		}
 	}
 	//Draw other objects
@@ -226,10 +232,18 @@ void Game::Update()
 
 	//Toggle pause
 	if (IsKeyPressed(KEY_ENTER) && !gameover && !menuOpen)
-	{ gamePaused = !gamePaused; }
+	{
+		gamePaused = !gamePaused;
+		//Play sound
+		if (gamePaused)
+		{ PlaySound(sfx_pause); }
+		else
+		{ PlaySound(sfx_unpause); }
+	}
 	//Toggle fullscren key
 	if (IsKeyPressed(KEY_F11))
 	{
+		PlaySound(sfx_buttonClick);
 		ToggleFullscreen();
 	}
 
@@ -278,16 +292,43 @@ void Game::ManageTimers()
 			SpawnEnemy();
 		}
 	}
+
+	//Game freeze
+	if (freeze > 0)
+	{
+		freeze -= GetFrameTime();
+
+		//Timeout
+		if (freeze <= 0)
+		{
+			freeze = 0;
+		}
+	}
 }
 
 void Game::CameraPosition()
 {
+	//Screen shake
+	if (screenshake > 0.1)
+	{
+		screenshake = Lerp(screenshake, 0, 0.1);
+		cameraShakePos.x = GetRandomValue(-screenshake, screenshake);
+		cameraShakePos.y = GetRandomValue(-screenshake, screenshake);
+	}
+	else
+	{
+		screenshake = 0;
+		cameraShakePos = Vector2Zero();
+	}
+
 	//Update camera position
 	if (cameraOwner != nullptr)
 	{
 		cameraPosition.x = cameraOwner->globalPosition.x - (cameraSize.x / 2);
 		cameraPosition.y = cameraOwner->globalPosition.y - (cameraSize.y / 2);
 	}
+	//Add screenshake
+	cameraPosition = Vector2Add(cameraPosition, cameraShakePos);
 	//Clamp camera position
 	cameraPosition.x = Clamp(cameraPosition.x, 0, worldSize.x - (cameraSize.x));
 	cameraPosition.y = Clamp(cameraPosition.y, 0, worldSize.y - (cameraSize.y));

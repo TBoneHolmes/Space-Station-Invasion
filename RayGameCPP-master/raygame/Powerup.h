@@ -20,11 +20,16 @@ public:
 	Vector2 spriteOffset;
 	//Collision
 	CollisionShape* cs;
+	//Vanish
+	float vanishTime;
+	float vanishTimer;
+	float alpha;
 
 	//-FUNCTIONS-
 	void Start();
 	void Draw();
 	void Update();
+	void ManageTimers();
 	void CollisionCheck();
 	void Collect();
 };

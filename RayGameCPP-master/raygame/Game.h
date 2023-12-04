@@ -50,10 +50,13 @@ public:
 	bool gameover;
 	bool menuOpen;
 	bool gamePaused;
+	float freeze;
 	//Camera
 	Vector2 cameraPosition;
 	Vector2 cameraSize;
 	GameObject* cameraOwner;
+	Vector2 cameraShakePos;
+	float screenshake;
 	//Enemy Spawn
 	float enemySpawnTime;
 	float enemySpawnTimer;
@@ -104,6 +107,8 @@ public:
 	Sound sfx_explodeAsteroid;
 	Sound sfx_buttonHover;
 	Sound sfx_buttonClick;
+	Sound sfx_pause;
+	Sound sfx_unpause;
 	Sound sfx_gameover;
 	Sound sfx_powerup;
 	//Font
