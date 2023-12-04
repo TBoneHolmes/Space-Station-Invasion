@@ -41,6 +41,8 @@ void Game::Start()
 	rect_bullet = Rectangle(); rect_bullet.x = 0; rect_bullet.y = 0; rect_bullet.width = spr_bullet.width; rect_bullet.height = spr_bullet.height;
 	spr_enemyDefault = LoadTexture("..//Assets//Sprites//enemyDefault.png");
 	rect_enemyDefault = Rectangle(); rect_enemyDefault.x = 0; rect_enemyDefault.y = 0; rect_enemyDefault.width = spr_enemyDefault.width; rect_enemyDefault.height = spr_enemyDefault.height;
+	spr_boss = LoadTexture("..//Assets//Sprites//boss.png");
+	rect_boss = Rectangle(); rect_boss.x = 0; rect_boss.y = 0; rect_boss.width = spr_boss.width; rect_boss.height = spr_boss.height;
 	spr_explosion = LoadTexture("..//Assets//Sprites//explosion_spritesheet.png");
 	frames_explosion = 3; //The number of frames in this spritesheet
 	rect_explosion = Rectangle(); rect_explosion.x = 0; rect_explosion.y = 0; rect_explosion.width = spr_explosion.width / frames_explosion; rect_explosion.height = spr_explosion.height;

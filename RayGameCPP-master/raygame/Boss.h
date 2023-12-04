@@ -20,7 +20,6 @@ public:
 	float damageRestTimer;
 	//Movement
 	Vector2 velocity;
-	Vector2 targetPoint;
 	Vector2 playerTargetOffset;
 	float maxSpeed;
 	float acceleration;
@@ -45,7 +44,5 @@ public:
 	void ApplyVelocity();
 	//Shoot
 	void Shoot();
-	//AI
-	void Ai();
 };
 

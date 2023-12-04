@@ -25,31 +25,30 @@ void Boss::Start()
 	drawOrder = 2;
 
 	//Set sprite
-	sprite = &Game::GetInstance()->spr_enemyDefault;
-	spriteSize = &Game::GetInstance()->rect_enemyDefault;
-	destination = Game::GetInstance()->rect_enemyDefault;
+	sprite = &Game::GetInstance()->spr_boss;
+	spriteSize = &Game::GetInstance()->rect_boss;
+	destination = Game::GetInstance()->rect_boss;
 	spriteOffset = Vector2(); spriteOffset.x = sprite->height / 2; spriteOffset.y = sprite->width / 2;
 
 	//Create collision shape
-	InstanceObject(new CollisionShape(12, 2, 4), 2.0f, 0);
+	InstanceObject(new CollisionShape(24, 2, 4), 0, 0);
 	//Cache collision shape
 	cs = (CollisionShape*)children.back();
 
 	//Set HP
-	hp = 2;
+	hp = 10;
 	damageRest = 0.1;
 
 	//Set movement values
-	targetPoint = Game::GetInstance()->center;
-	maxSpeed = GetRandomValue(3, 6);
-	acceleration = GetRandomValue(4, 8);
+	maxSpeed = 2;
+	acceleration = 4;
 
 	//Set shoot values
 	shootRest = 1;
 	shootRestTimer = 0;
 
 	//Set score
-	killScore = 50;
+	killScore = 500;
 }
 
 void Boss::Draw()
@@ -58,12 +57,8 @@ void Boss::Draw()
 	//Draw at position
 	destination.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; destination.y = globalPosition.y - Game::GetInstance()->cameraPosition.y;
 	//Set draw color
-	Color drawCol = WHITE;
-	if (damageRestTimer > 0)
-	{
-		drawCol = RED;
-	}
-	//Draw player
+	Color drawCol = (damageRestTimer > 0) ? RED : WHITE;
+	//Draw boss
 	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, drawCol);
 
 	GameObject::Draw();
@@ -74,7 +69,6 @@ void Boss::Update()
 	GameObject::Update();
 
 	ManageTimers();
-	Ai();
 	CollisionCheck();
 	MoveToPoint();
 	ApplyVelocity();
@@ -96,36 +90,6 @@ void Boss::ManageTimers()
 		damageRestTimer -= GetFrameTime();
 	} //Clamp damageRestTimer to 0
 	else { damageRestTimer = 0; }
-}
-
-void Boss::Ai()
-{
-	Vector2 lastTargetPoint = targetPoint;
-	//MOVE AI
-	//Set target position as player position
-	if (Game::GetInstance()->player != nullptr
-		&& Vector2Length(Vector2Subtract(Game::GetInstance()->player->globalPosition, globalPosition)) < 384)
-	{
-		targetPoint = Game::GetInstance()->player->globalPosition;
-	}
-	else //Set target position as world center
-	{
-		targetPoint = Game::GetInstance()->center;
-	}
-	//On targetPoint change, reset shoot timer
-	if ((targetPoint.x != lastTargetPoint.x || targetPoint.y != lastTargetPoint.y)
-		&& (lastTargetPoint.x == Game::GetInstance()->center.x && lastTargetPoint.y == Game::GetInstance()->center.y))
-	{
-		shootRestTimer = shootRest;
-	}
-
-	//SHOOT AI
-	if (Game::GetInstance()->player != nullptr &&
-		targetPoint.x == Game::GetInstance()->player->globalPosition.x
-		&& targetPoint.y == Game::GetInstance()->player->globalPosition.y)
-	{
-		Shoot();
-	}
 }
 
 //DAMAGE
@@ -151,7 +115,6 @@ void Boss::Damage(int dmg)
 	//Die when hp reaches 0
 	if (hp <= 0)
 	{
-		Game::GetInstance()->freeze = 0.08;
 		Game::GetInstance()->score += killScore;
 		Die();
 	}
@@ -166,7 +129,7 @@ void Boss::Die()
 	Game::GetInstance()->freeze = 0.12;
 	PlaySound(Game::GetInstance()->sfx_explodeEnemy);
 	//Create explosion
-	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x + 2.0f, globalPosition.y);
+	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x, globalPosition.y);
 	//Create scoreNotifier
 	Game::GetInstance()->InstanceObject(new ScoreNotifier(killScore), globalPosition.x, globalPosition.y);
 	//Destroy self
@@ -179,7 +142,7 @@ void Boss::Die()
 void Boss::MoveToPoint()
 {
 	//Get the angle to point to
-	float targetDirection = Vector2Angle(Vector2Subtract(globalPosition, Game::GetInstance()->cameraPosition), Vector2Subtract(targetPoint, Game::GetInstance()->cameraPosition));
+	float targetDirection = Vector2Angle(Vector2Subtract(globalPosition, Game::GetInstance()->cameraPosition), Vector2Subtract(Game::GetInstance()->center, Game::GetInstance()->cameraPosition));
 	//Set rotation
 	localRotation = targetDirection;
 

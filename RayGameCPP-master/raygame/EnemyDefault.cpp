@@ -58,12 +58,8 @@ void EnemyDefault::Draw()
 	//Draw at position
 	destination.x = globalPosition.x - Game::GetInstance()->cameraPosition.x; destination.y = globalPosition.y - Game::GetInstance()->cameraPosition.y;
 	//Set draw color
-	Color drawCol = WHITE;
-	if (damageRestTimer > 0)
-	{
-		drawCol = RED;
-	}
-	//Draw player
+	Color drawCol = (damageRestTimer > 0) ? RED : WHITE;
+	//Draw enemy
 	DrawTexturePro(*sprite, *spriteSize, destination, spriteOffset, globalRotation, drawCol);
 
 	GameObject::Draw();
@@ -149,7 +145,6 @@ void EnemyDefault::Damage(int dmg)
 	//Die when hp reaches 0
 	if (hp <= 0)
 	{
-		Game::GetInstance()->freeze = 0.08;
 		Game::GetInstance()->score += killScore;
 		Die();
 	}
