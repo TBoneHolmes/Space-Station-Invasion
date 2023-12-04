@@ -1,11 +1,11 @@
 #pragma once
 #include "GameObject.h"
 #include "CollisionShape.h"
-class Boss : public GameObject
+class BossShield : public GameObject
 {
 public:
 	//-CONSTRUCTOR-
-	Boss();
+	BossShield();
 
 	//-VARIABLES-
 	//Sprite

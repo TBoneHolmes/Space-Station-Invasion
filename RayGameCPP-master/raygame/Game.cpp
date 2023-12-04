@@ -194,7 +194,7 @@ void Game::Update()
 {
 	//DEBUG
 	//cout << scene.size() << endl;
-	//cout << enemies.size() << endl;
+	cout << enemies.size() << endl;
 
 	Draw();
 
@@ -253,6 +253,8 @@ void Game::Update()
 
 void Game::ManageTimers()
 {
+	//cout <<"Wave " << wave << " : " << enemySpawnTimer << endl;
+
 	//Enemy spawn tick down
 	if (enemySpawnTimer > 0)
 	{
@@ -262,10 +264,9 @@ void Game::ManageTimers()
 		if (enemySpawnTimer <= 0 && !gameover)
 		{
 			enemySpawnTimer = enemySpawnTime;
-			SpawnEnemy();
+			SpawnEnemy(false);
 		}
 	}
-	//cout <<"Wave " << wave << " : " << enemySpawnTimer << endl;
 
 	//Player spawn tick down
 	if (playerSpawnTimer > 0)
@@ -291,7 +292,7 @@ void Game::ManageTimers()
 			instructionTimer = 0;
 			//Set enemy spawn timer and spawn the first enemy
 			enemySpawnTimer = enemySpawnTime;
-			SpawnEnemy();
+			SpawnEnemy(false);
 		}
 	}
 
@@ -336,7 +337,7 @@ void Game::CameraPosition()
 	cameraPosition.y = Clamp(cameraPosition.y, 0, worldSize.y - (cameraSize.y));
 }
 
-void Game::SpawnEnemy()
+void Game::SpawnEnemy(bool boss)
 {
 	//Choose enemy spawn pos
 	//0 = top, 1 = right, 2 = bottom, 3 = left
@@ -369,13 +370,19 @@ void Game::SpawnEnemy()
 
 	}
 	//Create enemy
-	InstanceObject(new EnemyDefault, spawnPos.x, spawnPos.y);
-	
-	//Manage waves
-	enemiesToSpawn -= 1;
-	if (enemiesToSpawn <= 0)
+	if (!boss)
 	{
-		WaveIncrease();
+		InstanceObject(new EnemyDefault(), spawnPos.x, spawnPos.y);
+		//Manage waves
+		enemiesToSpawn -= 1;
+		if (enemiesToSpawn <= 0)
+		{
+			WaveIncrease();
+		}
+	}
+	else
+	{
+		InstanceObject(new Boss(), spawnPos.x, spawnPos.y);
 	}
 }
 
@@ -478,8 +485,7 @@ void Game::WaveIncrease()
 			&& (asteroids[a]->globalPosition.x < cameraPosition.x - 32 || asteroids[a]->globalPosition.x > cameraPosition.x + cameraSize.x + 32
 			|| asteroids[a]->globalPosition.y < cameraPosition.y - 32 || asteroids[a]->globalPosition.y > cameraPosition.y + cameraSize.y + 32))
 		{
-			GameObject* ptr = asteroids[a];
-			ptr->~GameObject();
+			delete asteroids[a];
 		}
 	}
 	//Spawn asteroids
@@ -508,7 +514,7 @@ void Game::Gameover()
 	//Destroy everything
 	for (GameObject* obj : scene)
 	{
-		obj->~GameObject();
+		delete obj;
 	}
 
 	//Set references to null
@@ -540,7 +546,7 @@ void Game::StartGame()
 	{
 		for (int i = 0; i < scene.size(); i++)
 		{
-			scene[i]->~GameObject();
+			delete scene[i];
 		}
 	}
 
@@ -561,6 +567,8 @@ void Game::StartGame()
 			SpawnAsteroid(i);
 		}
 	}
+
+	SpawnEnemy(true);
 
 	//Set start timer
 	instructionTimer = instructionTime;

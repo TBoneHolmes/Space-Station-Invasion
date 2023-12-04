@@ -80,8 +80,7 @@ void Powerup::ManageTimers()
 		if (alpha <= 0)
 		{
 			//Destroy self
-			GameObject* ptr = this;
-			ptr->~GameObject();
+			delete this;
 		}
 	}
 }
@@ -103,6 +102,5 @@ void Powerup::Collect()
 	//Play sfx
 	PlaySound(Game::GetInstance()->sfx_powerup);
 	//Destroy self
-	GameObject* ptr = this;
-	ptr->~GameObject();
+	delete this;
 }

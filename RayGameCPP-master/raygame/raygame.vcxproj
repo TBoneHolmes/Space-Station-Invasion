@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="CollisionShape.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ScoreNotifier.cpp" />
+    <ClCompile Include="BossShield.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="Asteroid.cpp" />
     <ClCompile Include="Powerup.cpp" />
@@ -163,6 +165,8 @@
   <ItemGroup>
     <ClInclude Include="Asteroid.h" />
     <ClInclude Include="Base.h" />
+    <ClInclude Include="Boss.h" />
+    <ClInclude Include="BossShield.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="CollisionShape.h" />

@@ -22,7 +22,8 @@ GameObject::~GameObject()
 	auto childIter = children.begin();
 	for (int i = 0; i < children.size(); i++)
 	{
-		children[i]->~GameObject();
+		//children[i]->~GameObject();
+		delete children[i];
 	}
 
 	GameObject* ptr = this;
@@ -72,6 +73,7 @@ GameObject::~GameObject()
 	else if (name == "Player")
 	{
 		Game::GetInstance()->player = nullptr;
+		Game::GetInstance()->cameraOwner = nullptr;
 	}
 	//Remove self from the game's 'scene' list
 	if (parent == nullptr)
@@ -121,8 +123,7 @@ void GameObject::Update()
 	//Destroy on gameover
 	if (Game::GetInstance()->gameover && name != "Button")
 	{
-		GameObject* ptr = this;
-		ptr->~GameObject();
+		delete this;
 	}
 	
 	//Update position and rotation

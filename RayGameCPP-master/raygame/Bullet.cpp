@@ -84,7 +84,6 @@ void Bullet::DestroyCheck()
 		|| globalPosition.y > Game::GetInstance()->cameraPosition.y + Game::GetInstance()->cameraSize.y)
 	{
 		//Destroy self
-		GameObject* ptr = this;
-		ptr->~GameObject();
+		delete this;
 	}
 }

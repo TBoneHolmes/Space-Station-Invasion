@@ -28,7 +28,6 @@ void ScoreNotifier::Start()
 
 void ScoreNotifier::Draw()
 {
-
 	//Set text color
 	Color textCol; textCol.r = 50; textCol.g = 255; textCol.b = 50;
 	textCol.a = alpha;
@@ -36,13 +35,14 @@ void ScoreNotifier::Draw()
 	char* text = (char*)"%00i";
 	//Set text position
 	Vector2 posPlus; posPlus.x = (fontSize / 2); posPlus.y = fontSize / 2;
-	if (score > 9)
+	if (score >= 10 && score < 100)
 	{ posPlus.x += fontSize / 2; }
+	else if (score >= 100)
+	{ posPlus.x += fontSize; }
 	Vector2 textPos; textPos.x = (globalPosition.x - Game::GetInstance()->cameraPosition.x) - (posPlus.x); textPos.y = (globalPosition.y - Game::GetInstance()->cameraPosition.y) - posPlus.y;
 	//Draw text
 	DrawTextEx(Game::GetInstance()->fnt_gameover, TextFormat(text, score), textPos, fontSize, -2, textCol);
 	
-
 	GameObject::Draw();
 }
 
@@ -59,7 +59,6 @@ void ScoreNotifier::Update()
 	//Destroy
 	if (alpha <= 0)
 	{
-		GameObject* ptr = this;
-		ptr->~GameObject();
+		delete this;
 	}
 }

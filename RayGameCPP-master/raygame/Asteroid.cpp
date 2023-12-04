@@ -52,6 +52,7 @@ void Asteroid::Start()
 	int csSize = 16 * size;
 	if (size == 3)
 	{ csSize += 16; }
+
 	InstanceObject(new CollisionShape(csSize, 2, 2 + 4), 0, 0);
 	//Cache collision shape
 	cs = (CollisionShape*)children.back();
@@ -171,6 +172,8 @@ void Asteroid::CollisionCheck()
 				cs->GetOverlappingColliders()[i]->parent->~GameObject();
 				//Damage self
 				Damage(1);
+				if (hp <= 0)
+				{ break; }
 			}
 			//Collision with asteroid
 			else if (cs->GetOverlappingColliders()[i]->parent->name == "Asteroid" && bounceTimer == 0)
@@ -188,12 +191,15 @@ void Asteroid::CollisionCheck()
 	}
 
 	//Bounce off edge of screen
-	if (globalPosition.x + velocity.x < sprite->width / 2 || globalPosition.x + velocity.x > Game::GetInstance()->worldSize.x - (sprite->width / 2)
-		|| globalPosition.y + velocity.y < sprite->height / 2 || globalPosition.y + velocity.y > Game::GetInstance()->worldSize.y - (sprite->height / 2)
-		&& bounceTimer == 0)
+	if (hp > 0)
 	{
-		velocity = Vector2Scale(velocity, -1);
-		bounceTimer = 0.1;
+		if (globalPosition.x + velocity.x < sprite->width / 2 || globalPosition.x + velocity.x > Game::GetInstance()->worldSize.x - (sprite->width / 2)
+			|| globalPosition.y + velocity.y < sprite->height / 2 || globalPosition.y + velocity.y > Game::GetInstance()->worldSize.y - (sprite->height / 2)
+			&& bounceTimer == 0)
+		{
+			velocity = Vector2Scale(velocity, -1);
+			bounceTimer = 0.1;
+		}
 	}
 }
 
@@ -246,6 +252,7 @@ void Asteroid::Die()
 
 	PlaySound(Game::GetInstance()->sfx_explodeAsteroid);
 	//Destroy self
-	GameObject* ptr = this;
-	ptr->~GameObject();
+	//GameObject* ptr = this;
+	//ptr->~GameObject();
+	delete this;
 }

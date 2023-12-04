@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "EnemyDefault.h"
+#include "Boss.h"
 #include "Explosion.h"
 #include "UI.h"
 #include "Base.h"
@@ -139,7 +140,7 @@ public:
 	void StartMenu();
 	//Spawning
 	void InstanceObject(GameObject*, int, int);
-	void SpawnEnemy();
+	void SpawnEnemy(bool);
 	void SpawnPlayer();
 	void SpawnAsteroid(int);
 	void SpawnWaveAsteroids();

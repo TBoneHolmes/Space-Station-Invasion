@@ -360,6 +360,5 @@ void Player::Die()
 	//Create explosion
 	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x + 2.0f, globalPosition.y);
 	//Destroy self
-	GameObject* ptr = this;
-	ptr->~GameObject();
+	delete this;
 }
