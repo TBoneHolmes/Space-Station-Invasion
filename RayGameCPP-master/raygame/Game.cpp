@@ -340,6 +340,14 @@ void Game::CameraPosition()
 	cameraPosition.y = Clamp(cameraPosition.y, 0, worldSize.y - (cameraSize.y));
 }
 
+
+
+
+
+
+
+
+
 void Game::ClearGarbageCollection()
 {
 	//Garbage collection
@@ -348,12 +356,21 @@ void Game::ClearGarbageCollection()
 		cout << garbageCollection.size() << endl;
 		for (int i = 0; i < garbageCollection.size() - 1; i++)
 		{
-			garbageCollection[i]->name;
 			delete garbageCollection[i];
 		}
 		garbageCollection.clear();
 	}
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -525,19 +542,35 @@ void Game::InstanceObject(GameObject* newObj, int posX, int posY)
 	newObj->Start();
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void Game::Gameover()
 {
 	gameover = true;
 
 	PlaySound(sfx_gameover);
 
+
+	garbageCollection.clear();
 	//Destroy everything
 	for (GameObject* obj : scene)
 	{
-		cout << obj->name << endl;
 		obj->Destroy();
 	}
-	cout << garbageCollection.size() << endl;
 
 	//Set references to null
 	player = nullptr;
