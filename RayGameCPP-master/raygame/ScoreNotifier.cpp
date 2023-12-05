@@ -59,6 +59,6 @@ void ScoreNotifier::Update()
 	//Destroy
 	if (alpha <= 0)
 	{
-		delete this;
+		Destroy();
 	}
 }

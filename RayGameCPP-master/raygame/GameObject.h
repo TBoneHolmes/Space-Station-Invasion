@@ -25,6 +25,7 @@ public:
 	Vector2 Vector2Right;
 	int drawOrder;
 	bool pauseIgnore;
+	bool gameoverIgnore;
 
 	//Functions
 	void virtual Start();
@@ -32,6 +33,7 @@ public:
 	void virtual Update();
 	void virtual OnCollision(GameObject*);
 	void virtual InstanceObject(GameObject*, int, int);
+	void virtual Destroy();
 
 };
 

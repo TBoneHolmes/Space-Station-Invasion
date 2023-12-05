@@ -62,7 +62,7 @@ void Explosion::ManageAnimation()
 		//Destroy self if out of frame range
 		if (frame >= spriteFrames)
 		{
-			delete this;
+			Destroy();
 		}
 	}
 }

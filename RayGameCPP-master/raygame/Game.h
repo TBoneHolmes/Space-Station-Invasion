@@ -41,6 +41,7 @@ public:
 	vector<CollisionShape*> collisionShapes;
 	vector<GameObject*> enemies;
 	vector<Asteroid*> asteroids;
+	vector<GameObject*> garbageCollection;
 	Player* player;
 	Base* base;
 	//Game
@@ -134,6 +135,7 @@ public:
 	void Update();
 	void ManageTimers();
 	void CameraPosition();
+	void ClearGarbageCollection();
 	//Game
 	void Gameover();
 	void StartGame();

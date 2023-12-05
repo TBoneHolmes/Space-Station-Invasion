@@ -57,6 +57,7 @@ public:
 	void Start();
 	void Draw();
 	void Update();
+	void Destroy();
 	void ApplyVelocity();
 	void ManageTimers();
 	void ManageAnimation();

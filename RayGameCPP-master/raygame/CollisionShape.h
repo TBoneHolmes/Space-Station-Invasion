@@ -29,6 +29,7 @@ public:
 	void Start();
 	void Draw();
 	void Update();
+	void Destroy();
 	bool CheckMask(int, int);
 	vector<CollisionShape*> GetOverlappingColliders();
 };

@@ -38,6 +38,7 @@ public:
 	void Start();
 	void Draw();
 	void Update();
+	void Destroy();
 	void ManageTimers();
 	//Damage
 	void Damage(int);

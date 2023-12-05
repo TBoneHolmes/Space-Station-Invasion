@@ -102,5 +102,5 @@ void Powerup::Collect()
 	//Play sfx
 	PlaySound(Game::GetInstance()->sfx_powerup);
 	//Destroy self
-	delete this;
+	Destroy();
 }

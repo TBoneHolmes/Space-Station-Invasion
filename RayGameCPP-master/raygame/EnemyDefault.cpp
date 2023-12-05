@@ -161,7 +161,7 @@ void EnemyDefault::Die()
 	//Create scoreNotifier
 	Game::GetInstance()->InstanceObject(new ScoreNotifier(killScore), globalPosition.x, globalPosition.y);
 	//Destroy self
-	delete this;
+	Destroy();
 }
 
 //MOVEMENT
@@ -207,4 +207,22 @@ void EnemyDefault::Shoot()
 		//Play sfx
 		PlaySound(Game::GetInstance()->sfx_shootEnemy);
 	}
+}
+
+
+void EnemyDefault::Destroy()
+{
+	GameObject* ptr = this;
+	auto iter = Game::GetInstance()->enemies.begin();
+	for (int i = 0; i < Game::GetInstance()->enemies.size(); i++)
+	{
+		if (Game::GetInstance()->enemies[i] == ptr)
+		{
+			Game::GetInstance()->enemies.erase(iter);
+			break;
+		}
+		iter++;
+	}
+
+	GameObject::Destroy();
 }

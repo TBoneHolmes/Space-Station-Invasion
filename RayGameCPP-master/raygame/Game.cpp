@@ -209,7 +209,8 @@ void Game::Update()
 	{
 		for (int i = 0; i < scene.size(); i++)
 		{
-			if (!gamePaused || scene[i]->pauseIgnore)
+			if ((!gamePaused || scene[i]->pauseIgnore)
+				&& (!gameover || scene[i]->gameoverIgnore))
 			{ 
 				scene[i]->Update();
 			}
@@ -221,7 +222,8 @@ void Game::Update()
 		for (int i = 0; i < scene.size(); i++)
 		{
 			if (scene[i]->drawOrder == draw
-				&& (!gamePaused || scene[i]->pauseIgnore))
+				&& (!gamePaused || scene[i]->pauseIgnore)
+				&& (!gameover || scene[i]->gameoverIgnore))
 			{
 				scene[i]->Draw();
 			}
@@ -249,6 +251,7 @@ void Game::Update()
 		ToggleFullscreen();
 	}
 
+	ClearGarbageCollection();
 }
 
 void Game::ManageTimers()
@@ -336,6 +339,23 @@ void Game::CameraPosition()
 	cameraPosition.x = Clamp(cameraPosition.x, 0, worldSize.x - (cameraSize.x));
 	cameraPosition.y = Clamp(cameraPosition.y, 0, worldSize.y - (cameraSize.y));
 }
+
+void Game::ClearGarbageCollection()
+{
+	//Garbage collection
+	if (garbageCollection.size() > 0)
+	{
+		cout << garbageCollection.size() << endl;
+		for (int i = 0; i < garbageCollection.size() - 1; i++)
+		{
+			garbageCollection[i]->name;
+			delete garbageCollection[i];
+		}
+		garbageCollection.clear();
+	}
+}
+
+
 
 void Game::SpawnEnemy(bool boss)
 {
@@ -485,7 +505,7 @@ void Game::WaveIncrease()
 			&& (asteroids[a]->globalPosition.x < cameraPosition.x - 32 || asteroids[a]->globalPosition.x > cameraPosition.x + cameraSize.x + 32
 			|| asteroids[a]->globalPosition.y < cameraPosition.y - 32 || asteroids[a]->globalPosition.y > cameraPosition.y + cameraSize.y + 32))
 		{
-			delete asteroids[a];
+			asteroids[a]->Destroy();
 		}
 	}
 	//Spawn asteroids
@@ -514,8 +534,10 @@ void Game::Gameover()
 	//Destroy everything
 	for (GameObject* obj : scene)
 	{
-		delete obj;
+		cout << obj->name << endl;
+		obj->Destroy();
 	}
+	cout << garbageCollection.size() << endl;
 
 	//Set references to null
 	player = nullptr;
@@ -569,6 +591,7 @@ void Game::StartGame()
 	}
 
 	SpawnEnemy(true);
+	SpawnEnemy(false);
 
 	//Set start timer
 	instructionTimer = instructionTime;

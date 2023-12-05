@@ -11,7 +11,8 @@ GameObject::GameObject()
 {
 	GameObject::name = "Game Object";
 	drawOrder = 0; //The order that this object is drawn in
-	pauseIgnore = false; //If true, this object still functions while game is paused
+	pauseIgnore = false; //If true, this object still updates while game is paused
+	gameoverIgnore = false; //If true, this object still updates when gameover is true
 }
 
 //Deconstructor
@@ -25,56 +26,7 @@ GameObject::~GameObject()
 		//children[i]->~GameObject();
 		delete children[i];
 	}
-
 	GameObject* ptr = this;
-	//Remove self from game's collisionShapes list
-	if (name == "CollisionShape")
-	{
-		auto iter = Game::GetInstance()->collisionShapes.begin();
-		for (int i = 0; i < Game::GetInstance()->collisionShapes.size(); i++)
-		{
-			if (Game::GetInstance()->collisionShapes[i] == ptr)
-			{
-				Game::GetInstance()->collisionShapes.erase(iter);
-				break;
-			}
-			iter++;
-		}
-	}
-	//Remove self from game's enemies list
-	else if (name == "EnemyDefault")
-	{
-		auto iter = Game::GetInstance()->enemies.begin();
-		for (int i = 0; i < Game::GetInstance()->enemies.size(); i++)
-		{
-			if (Game::GetInstance()->enemies[i] == ptr)
-			{
-				Game::GetInstance()->enemies.erase(iter);
-				break;
-			}
-			iter++;
-		}
-	}
-	//Remove self from game's asteroids list
-	else if (name == "Asteroid")
-	{
-		auto iter = Game::GetInstance()->asteroids.begin();
-		for (int i = 0; i < Game::GetInstance()->asteroids.size(); i++)
-		{
-			if (Game::GetInstance()->asteroids[i] == ptr)
-			{
-				Game::GetInstance()->asteroids.erase(iter);
-				break;
-			}
-			iter++;
-		}
-	}
-	//Remove player reference from game
-	else if (name == "Player")
-	{
-		Game::GetInstance()->player = nullptr;
-		Game::GetInstance()->cameraOwner = nullptr;
-	}
 	//Remove self from the game's 'scene' list
 	if (parent == nullptr)
 	{
@@ -123,7 +75,7 @@ void GameObject::Update()
 	//Destroy on gameover
 	if (Game::GetInstance()->gameover && name != "Button")
 	{
-		delete this;
+		Destroy();
 	}
 	
 	//Update position and rotation
@@ -172,4 +124,9 @@ void GameObject::InstanceObject(GameObject* newObj, int posX, int posY)
 	newObj->localPosition.y = posY;
 	//Call the new object's start function
 	newObj->Start();
+}
+
+void GameObject::Destroy()
+{
+	Game::GetInstance()->garbageCollection.push_back(this);
 }

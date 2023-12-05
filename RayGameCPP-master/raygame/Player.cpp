@@ -360,5 +360,13 @@ void Player::Die()
 	//Create explosion
 	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x + 2.0f, globalPosition.y);
 	//Destroy self
-	delete this;
+	Destroy();
+}
+
+void Player::Destroy()
+{
+	GameObject::Destroy();
+
+	Game::GetInstance()->player = nullptr;
+	Game::GetInstance()->cameraOwner = nullptr;
 }

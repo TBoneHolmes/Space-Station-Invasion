@@ -35,12 +35,14 @@ void Base::Start()
 	cs = (CollisionShape*)children.back();
 
 	//Damage
-	maxHp = 30;
+	maxHp = 3;
 	hp = maxHp;
 	damageRest = 0.1;
 	hitNotifyTime = 1;
 	hitNotifyTimer = 0;
 }
+
+
 
 void Base::Draw()
 {
@@ -95,14 +97,14 @@ void Base::CollisionCheck()
 			//Hit by bullet
 			if (cs->GetOverlappingColliders()[i]->parent->name == "Bullet")
 			{
-				cs->GetOverlappingColliders()[i]->parent->~GameObject();
+				cs->GetOverlappingColliders()[i]->parent->Destroy();//~GameObject();
 				Damage(1);
 			}
 			else if (cs->GetOverlappingColliders()[i]->parent->name == "EnemyDefault") //Hit by enemy body
 			{
 				//Create explosion for the enemy that hit
 				Game::GetInstance()->InstanceObject(new Explosion(), cs->GetOverlappingColliders()[0]->parent->globalPosition.x, cs->GetOverlappingColliders()[0]->parent->globalPosition.y);
-				cs->GetOverlappingColliders()[i]->parent->~GameObject();
+				cs->GetOverlappingColliders()[i]->parent->Destroy();//~GameObject();
 				Damage(4);
 			}
 		}
@@ -124,11 +126,9 @@ void Base::Damage(int dmg)
 
 void Base::Die()
 {
-	//Create explosion
-	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x + 2.0f, globalPosition.y);
-	//Gameover
-	Game::GetInstance()->Gameover();
-	//Destroy self
-	GameObject* ptr = this;
-	ptr->~GameObject();
+	if (!Game::GetInstance()->gameover)
+	{
+		//Gameover
+		Game::GetInstance()->Gameover();
+	}
 }

@@ -129,7 +129,7 @@ void BossShield::Die()
 	//Create scoreNotifier
 	Game::GetInstance()->InstanceObject(new ScoreNotifier(killScore), globalPosition.x, globalPosition.y);
 	//Destroy self
-	delete this;
+	Destroy();
 }
 
 //MOVEMENT

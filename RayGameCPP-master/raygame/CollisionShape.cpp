@@ -115,3 +115,21 @@ bool CollisionShape::CheckMask(int layer, int mask)
 	}
 	return false;
 }
+
+
+void CollisionShape::Destroy()
+{
+	GameObject::Destroy();
+
+	GameObject* ptr = this;
+	auto iter = Game::GetInstance()->collisionShapes.begin();
+	for (int i = 0; i < Game::GetInstance()->collisionShapes.size(); i++)
+	{
+		if (Game::GetInstance()->collisionShapes[i] == ptr)
+		{
+			Game::GetInstance()->collisionShapes.erase(iter);
+			break;
+		}
+		iter++;
+	}
+}
