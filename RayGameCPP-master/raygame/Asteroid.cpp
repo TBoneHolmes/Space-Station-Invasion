@@ -78,6 +78,19 @@ void Asteroid::Start()
 	//Set rotation and torque
 	localRotation = GetRandomValue(0, 359);
 	torque = (GetRandomValue(-5, 5) * 0.1);
+
+	//Ensure the asteroid is not in the 'enemies' array (fix for a weird bug)
+	GameObject* ptr = this;
+	auto iter = Game::GetInstance()->enemies.begin();
+	while (iter != Game::GetInstance()->enemies.end())
+	{
+		if (*iter == ptr) //The position of self was found in the list
+		{
+			Game::GetInstance()->enemies.erase(iter);
+			break;
+		}
+		iter++;
+	}
 }
 
 void Asteroid::Draw()

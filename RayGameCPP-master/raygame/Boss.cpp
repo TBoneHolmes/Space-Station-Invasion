@@ -160,6 +160,7 @@ void Boss::Damage(int dmg)
 
 void Boss::Die()
 {
+	Game::GetInstance()->killCount += 1;
 	Game::GetInstance()->screenshake = 10;
 	Game::GetInstance()->freeze = 0.12;
 	PlaySound(Game::GetInstance()->sfx_explodeEnemy);

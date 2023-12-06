@@ -49,6 +49,7 @@ public:
 	Vector2 worldTileSize;
 	Vector2 center; //Center of the world
 	Vector2 playerSpawn;
+	bool isGameRunning;
 	bool gameover;
 	bool menuOpen;
 	bool gamePaused;
@@ -72,6 +73,7 @@ public:
 	float bossTextTimer;
 	//Stats
 	int score;
+	int killCount;
 	//Textures
 	Texture2D spr_title;
 	Texture2D spr_background;
@@ -123,6 +125,8 @@ public:
 	Sound sfx_bossApproach;
 	//Font
 	Font fnt_gameover;
+	//Icon
+	Image icon;
 	//For debugging
 	bool drawCollisions;
 	//Waves
@@ -160,9 +164,6 @@ public:
 	int CountLargeAsteroids();
 	//Waves
 	void WaveIncrease();
-	//Loading/unloading
-	void LoadSfx(Sound, const char*, float);
-	void UnloadSounds();
 	//Helpful stuff
 	bool InCamera(Vector2);
 

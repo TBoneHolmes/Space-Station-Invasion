@@ -30,15 +30,15 @@ GameObject::~GameObject()
 			children[i]->Destroy();
 		}
 	}
-	cout << name << endl;
+	//cout << name << endl;
 	GameObject* ptr = this;
 	//Remove self from the game's 'scene' list
 	if (parent == nullptr)
 	{
 		auto iter = Game::GetInstance()->scene.begin();
-		for (int i = 0; i < Game::GetInstance()->scene.size(); i++)
+		while (iter != Game::GetInstance()->scene.end())
 		{
-			if (Game::GetInstance()->scene[i] == ptr) //The position of self was found in the list
+			if (*iter == ptr) //The position of self was found in the list
 			{
 				Game::GetInstance()->scene.erase(iter);
 				break;
@@ -46,11 +46,11 @@ GameObject::~GameObject()
 			iter++;
 		}
 	}
-	else if (!parent->destroyed) { //Remove self from parent's 'children' list
+	else if (parent->Vector2Right.x == 1 && !parent->destroyed) { //Remove self from parent's 'children' list
 		auto iter = parent->children.begin();
-		for (int i = 0; i < parent->children.size(); i++)
+		while (iter != parent->children.end())
 		{
-			if (parent->children[i] == ptr) //The position of self was found in the list
+			if (*iter == ptr) //The position of self was found in the list
 			{
 				parent->children.erase(iter);
 				break;

@@ -146,6 +146,7 @@ void EnemyDefault::Damage(int dmg)
 	if (hp <= 0)
 	{
 		Game::GetInstance()->score += killScore;
+		Game::GetInstance()->killCount += 1;
 		Die();
 	}
 	else

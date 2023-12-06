@@ -13,6 +13,7 @@ Game::Game()
 {
 	//Set camera/screen size
 	cameraSize.x = 1280; cameraSize.y = 720;
+	isGameRunning = true;
 }
 
 Game* Game::GetInstance()
@@ -92,6 +93,10 @@ void Game::Start()
 	//Load font
 	fnt_gameover = LoadFont("..//Assets//Fonts//gameover.ttf");
 
+	//Set game icon
+	icon = LoadImage("..//Assets//title.png");
+	SetWindowIcon(icon);
+
 
 
 	//Set game variables
@@ -99,12 +104,13 @@ void Game::Start()
 	worldSize.x = worldTileSize.x * 32; worldSize.y = worldTileSize.y * 32;
 	center.x = worldSize.x / 2; center.y = worldSize.y / 2;
 	score = 0;
+	killCount = 0;
 	drawCollisions = false; //For debugging; Change to 'true' to draw collision shapes
-	//Set player spawn pos
+	//Player spawn pos
 	playerSpawn.x = center.x; playerSpawn.y = center.y + 128;
-	//Set camera variables
+	//Camera position
 	cameraPosition.x = 0; cameraPosition.y = 0;
-	//Set player spawn time
+	//Player spawn time
 	playerSpawnTime = 3;
 	playerSpawnTimer = 0;
 	//Set instruction time
@@ -130,8 +136,7 @@ void Game::Start()
 	}
 
 	//Powerup stuff
-	powerupSpawnRange.x = 5; powerupSpawnRange.y = 10;
-	powerupSpawn = 1; //The number of medium sized asteroids you have to destroy before a powerup spawns
+	powerupSpawnRange.x = 6; powerupSpawnRange.y = 12;
 
 	menuOpen = true;
 	gameover = false;
@@ -180,6 +185,9 @@ void Game::Draw()
 		text = (char*)"SCORE: %06i";
 		textWidth = MeasureText(TextFormat(text, score), 32);
 		DrawText(TextFormat(text, score), (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2 - 32, 32, GREEN);
+		text = (char*)"KILLS: % 00i";
+		textWidth = MeasureText(TextFormat(text, killCount), 32);
+		DrawText(TextFormat(text, killCount), (cameraSize.x / 2) - (textWidth / 2) - 45, cameraSize.y / 2, 32, GREEN);
 	}
 
 	//Draw pause
@@ -252,6 +260,7 @@ void Game::Update()
 
 	//Clamp score
 	score = Clamp(score, 0, 999999);
+	killCount = Clamp(killCount, 0, 999);
 	
 	
 	//Manage boss spawning
@@ -395,6 +404,14 @@ void Game::Inputs()
 	{
 		PlaySound(sfx_buttonClick);
 		ToggleFullscreen();
+	}
+
+	//Clamp mouse position
+	if (!gamePaused && !menuOpen && !gameover)
+	{
+		SetMousePosition(
+		Clamp(GetMousePosition().x, 0, cameraSize.x),
+		Clamp(GetMousePosition().y, 0, cameraSize.y));
 	}
 }
 
@@ -560,7 +577,8 @@ void Game::WaveIncrease()
 	if (wave % bossWave != 0)
 	{
 		//Change enemies per spawn
-		if ((wave + 1) % 4 == 0)
+		if (enemiesPerSpawn < 4
+			&& (wave + 1) % 4 == 0)
 		{ enemiesPerSpawn += 1; }
 
 		//Change enemy spawn time
@@ -591,7 +609,7 @@ void Game::WaveIncrease()
 //Create a root object
 void Game::InstanceObject(GameObject* newObj, int posX, int posY)
 {
-	//cout << newObj << endl; //DEBUG
+	newObj->parent = nullptr;
 	//Add object to scene list
 	scene.push_back(newObj);
 	//Set object position
@@ -638,9 +656,9 @@ void Game::Gameover()
 	enemySpawnTimer = 0;
 
 	//Create restart button
-	InstanceObject(new Button("RESTART", 160, 48), cameraSize.x / 2, (cameraSize.y / 2) + 64);
+	InstanceObject(new Button("RESTART", 160, 48), cameraSize.x / 2, (cameraSize.y / 2) + 80);
 	//Create quit button
-	InstanceObject(new Button("QUIT", 160, 48), cameraSize.x / 2, (cameraSize.y / 2) + 128);
+	InstanceObject(new Button("QUIT", 160, 48), cameraSize.x / 2, (cameraSize.y / 2) + 144);
 }
 
 void Game::StartGame()
@@ -649,11 +667,14 @@ void Game::StartGame()
 	menuOpen = false;
 	gameover = false;
 	score = 0;
+	killCount = 0;
 	//Reset wave
 	wave = 1;
 	enemiesPerWave = 2; //The number of enemies that spawn for each wave before the next wave triggers
 	enemiesPerSpawn = 1; //The number of enemies that spawn at once
 	enemiesToSpawn = enemiesPerWave; //The number of enemies still left to spawn before a wave increase
+	bossSpawned = false;
+	powerupSpawn = 1; //The number of medium sized asteroids you have to destroy before a powerup spawns
 
 	//Destroy all objects
 	while (scene.size() > 0)
@@ -705,13 +726,6 @@ bool Game::InCamera(Vector2 pos)
 	return
 		(pos.x > cameraPosition.x && pos.x < cameraPosition.x + cameraSize.x &&
 		pos.y > cameraPosition.y && pos.y < cameraPosition.y + cameraSize.y);
-}
-
-
-void LoadSfx(Sound soundToLoad, const char* filepath, float volume)
-{
-	soundToLoad = LoadSound(filepath);
-	SetSoundVolume(soundToLoad, volume);
 }
 
 

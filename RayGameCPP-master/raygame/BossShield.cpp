@@ -87,12 +87,12 @@ void BossShield::ManageTimers()
 	{
 		shootRestTimer -= GetFrameTime();
 
-		//Timeout
-		if (shootRestTimer <= 0)
-		{
-			shootRestTimer = shootRest;
-			Shoot();
-		}
+//Timeout
+if (shootRestTimer <= 0)
+{
+	shootRestTimer = shootRest;
+	Shoot();
+}
 	}
 
 
@@ -142,21 +142,24 @@ void BossShield::Damage(int dmg)
 
 void BossShield::Die()
 {
+	Game::GetInstance()->killCount += 1;
 	//Set killscore to 1 and play sfx if an individual shield is destroyed
 	Boss* bossParent = (Boss*)parent;
 	if (bossParent->hp > 0)
 	{
-		killScore = 1;
+		/*killScore = 1;
 		Game::GetInstance()->screenshake = 5;
-		PlaySound(Game::GetInstance()->sfx_explodeEnemy);
+		PlaySound(Game::GetInstance()->sfx_explodeEnemy);*/
 	}
-	Game::GetInstance()->score += killScore;
+	else {
+		Game::GetInstance()->score += killScore;
+		//Create scoreNotifier
+		Game::GetInstance()->InstanceObject(new ScoreNotifier(killScore), globalPosition.x, globalPosition.y);
+	}
 
 	Game::GetInstance()->freeze = 0.12;
 	//Create explosion
 	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x, globalPosition.y);
-	//Create scoreNotifier
-	Game::GetInstance()->InstanceObject(new ScoreNotifier(killScore), globalPosition.x, globalPosition.y);
 	//Destroy self
 	Destroy();
 }
@@ -173,7 +176,9 @@ void BossShield::ApplyMovement()
 	targetAngle += speed * GetFrameTime();
 	//Clamp angle
 	if (targetAngle > 360)
-	{ targetAngle -= 360; }
+	{
+		targetAngle -= 360;
+	}
 
 	//Apply sprite rotation
 	localRotation += rotationSpeed * GetFrameTime();

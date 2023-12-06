@@ -34,7 +34,7 @@ int main()
 	//--------------------------------------------------------------------------------------
 
 	// Main game loop
-	while (!WindowShouldClose())    // Detect window close button or ESC key
+	while (!WindowShouldClose() && game->isGameRunning)    // Detect window close button or ESC key
 	{
 		// Update
 		game->Update();

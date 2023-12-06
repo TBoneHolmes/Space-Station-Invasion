@@ -114,7 +114,7 @@ void Button::Clicked()
 	}
 	else if (text == "QUIT")
 	{
-		CloseWindow();
+		Game::GetInstance()->isGameRunning = false;
 	}
 	else if (text == "FULLSCREEN")
 	{
