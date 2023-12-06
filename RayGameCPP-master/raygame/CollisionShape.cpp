@@ -83,7 +83,7 @@ vector<CollisionShape*> CollisionShape::GetOverlappingColliders()
 	//The list that will return at the end
 	vector<CollisionShape*> returnVector;
 	//Check for collisions
-	if (enabled)
+	if (enabled && parent != nullptr && !parent->destroyed)
 	{
 		for (int i = 0; i < Game::GetInstance()->collisionShapes.size(); i++)
 		{

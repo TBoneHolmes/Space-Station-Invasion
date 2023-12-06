@@ -66,3 +66,9 @@ void Explosion::ManageAnimation()
 		}
 	}
 }
+
+void Explosion::Destroy()
+{
+	GameObject::Destroy();
+	//delete this;
+}

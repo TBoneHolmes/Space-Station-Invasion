@@ -35,7 +35,7 @@ void Base::Start()
 	cs = (CollisionShape*)children.back();
 
 	//Damage
-	maxHp = 3;
+	maxHp = 300;
 	hp = maxHp;
 	damageRest = 0.1;
 	hitNotifyTime = 1;
@@ -100,7 +100,13 @@ void Base::CollisionCheck()
 				cs->GetOverlappingColliders()[i]->parent->Destroy();//~GameObject();
 				Damage(1);
 			}
-			else if (cs->GetOverlappingColliders()[i]->parent->name == "EnemyDefault") //Hit by enemy body
+			//Hit by boss
+			else if (cs->GetOverlappingColliders()[i]->parent->name == "Boss")
+			{
+				Die();
+			}
+			//Hit by enemy body
+			else if (cs->GetOverlappingColliders()[i]->parent->name == "EnemyDefault")
 			{
 				//Create explosion for the enemy that hit
 				Game::GetInstance()->InstanceObject(new Explosion(), cs->GetOverlappingColliders()[0]->parent->globalPosition.x, cs->GetOverlappingColliders()[0]->parent->globalPosition.y);

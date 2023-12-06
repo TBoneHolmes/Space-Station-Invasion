@@ -43,6 +43,8 @@ void Game::Start()
 	rect_enemyDefault = Rectangle(); rect_enemyDefault.x = 0; rect_enemyDefault.y = 0; rect_enemyDefault.width = spr_enemyDefault.width; rect_enemyDefault.height = spr_enemyDefault.height;
 	spr_boss = LoadTexture("..//Assets//Sprites//boss.png");
 	rect_boss = Rectangle(); rect_boss.x = 0; rect_boss.y = 0; rect_boss.width = spr_boss.width; rect_boss.height = spr_boss.height;
+	spr_bossShield = LoadTexture("..//Assets//Sprites//bossShield.png");
+	rect_bossShield = Rectangle(); rect_bossShield.x = 0; rect_bossShield.y = 0; rect_bossShield.width = spr_bossShield.width; rect_bossShield.height = spr_bossShield.height;
 	spr_explosion = LoadTexture("..//Assets//Sprites//explosion_spritesheet.png");
 	frames_explosion = 3; //The number of frames in this spritesheet
 	rect_explosion = Rectangle(); rect_explosion.x = 0; rect_explosion.y = 0; rect_explosion.width = spr_explosion.width / frames_explosion; rect_explosion.height = spr_explosion.height;
@@ -74,6 +76,8 @@ void Game::Start()
 	sfx_unpause = LoadSound("..//Assets//Sounds//unpause.wav");
 	sfx_gameover = LoadSound("..//Assets//Sounds//gameover.wav");
 	sfx_powerup = LoadSound("..//Assets//Sounds//powerup.wav");
+	sfx_bossApproach = LoadSound("..//Assets//Sounds//bossApproach.wav");
+	SetSoundVolume(sfx_bossApproach, 0.5);
 
 	//Load font
 	fnt_gameover = LoadFont("..//Assets//Fonts//gameover.ttf");
@@ -95,8 +99,13 @@ void Game::Start()
 	playerSpawnTimer = 0;
 	//Set instruction time
 	instructionTime = 12;
-	//Set wave size
-	enemiesPerWave = 5;
+	//Boss text timer
+	bossTextTimer = 0;
+	//Set up waves
+	wave = 1;
+	enemiesPerWave = 2;
+	bossWave = 4; //If the wave is divisible by bossWave, a boss will appear
+	bossSpawned = false; //A boss has been spawned for the current wave
 	//Set chunks
 	for (int col = 0; col < 4; col++)
 	{
@@ -121,8 +130,6 @@ void Game::Start()
 	freeze = 0;
 
 	StartMenu();
-
-	//ToggleFullscreen();
 
 }
 
@@ -194,7 +201,8 @@ void Game::Update()
 {
 	//DEBUG
 	//cout << scene.size() << endl;
-	cout << enemies.size() << endl;
+	//cout << enemies.size() << endl;
+	//cout << wave << endl;
 
 	Draw();
 
@@ -203,6 +211,7 @@ void Game::Update()
 		ManageTimers();
 		CameraPosition();
 	}
+	Inputs();
 
 	//Update scene objects
 	if (!freeze)
@@ -230,36 +239,25 @@ void Game::Update()
 		}
 	}
 
+	ClearGarbageCollection();
+
 	//Clamp score
 	score = Clamp(score, 0, 999999);
-
-
-	//Toggle pause
-	if (IsKeyPressed(KEY_ENTER) && !gameover && !menuOpen)
+	
+	
+	//Manage boss spawning
+	if (wave % bossWave == 0 && enemies.size() == 0 && !bossSpawned)
 	{
-		gamePaused = !gamePaused;
-		//Play sound
-		if (gamePaused)
-		{ PlaySound(sfx_pause); }
-		else
-		{ PlaySound(sfx_unpause); }
+		SpawnEnemy(true);
 	}
-	//Toggle fullscren key
-	if (IsKeyPressed(KEY_F11))
-	{
-		PlaySound(sfx_buttonClick);
-		ToggleFullscreen();
-	}
-
-	ClearGarbageCollection();
 }
 
 void Game::ManageTimers()
 {
-	//cout <<"Wave " << wave << " : " << enemySpawnTimer << endl;
+	cout << "Wave " << wave << " : " << enemySpawnTime << endl;
 
 	//Enemy spawn tick down
-	if (enemySpawnTimer > 0)
+	if (enemySpawnTimer > 0 && wave % bossWave != 0)
 	{
 		enemySpawnTimer -= GetFrameTime();
 
@@ -297,6 +295,16 @@ void Game::ManageTimers()
 			enemySpawnTimer = enemySpawnTime;
 			SpawnEnemy(false);
 		}
+	}
+
+	//Boss text timer
+	if (bossTextTimer > 0)
+	{
+		bossTextTimer -= GetFrameTime();
+
+		//Timeout
+		if (bossTextTimer <= 0)
+		{ bossTextTimer = 0; }
 	}
 
 	//Game freeze
@@ -340,12 +348,29 @@ void Game::CameraPosition()
 	cameraPosition.y = Clamp(cameraPosition.y, 0, worldSize.y - (cameraSize.y));
 }
 
-
-
-
-
-
-
+void Game::Inputs()
+{
+	//Toggle pause
+	if (IsKeyPressed(KEY_ENTER) && !gameover && !menuOpen)
+	{
+		gamePaused = !gamePaused;
+		//Play sound
+		if (gamePaused)
+		{
+			PlaySound(sfx_pause);
+		}
+		else
+		{
+			PlaySound(sfx_unpause);
+		}
+	}
+	//Toggle fullscren key
+	if (IsKeyPressed(KEY_F11))
+	{
+		PlaySound(sfx_buttonClick);
+		ToggleFullscreen();
+	}
+}
 
 
 void Game::ClearGarbageCollection()
@@ -353,8 +378,7 @@ void Game::ClearGarbageCollection()
 	//Garbage collection
 	if (garbageCollection.size() > 0)
 	{
-		cout << garbageCollection.size() << endl;
-		for (int i = 0; i < garbageCollection.size() - 1; i++)
+		for (int i = 0; i < garbageCollection.size(); i++)
 		{
 			delete garbageCollection[i];
 		}
@@ -410,16 +434,22 @@ void Game::SpawnEnemy(bool boss)
 	if (!boss)
 	{
 		InstanceObject(new EnemyDefault(), spawnPos.x, spawnPos.y);
-		//Manage waves
-		enemiesToSpawn -= 1;
-		if (enemiesToSpawn <= 0)
+		//Manage wave increase
+		if (wave % bossWave != 0)
 		{
-			WaveIncrease();
+			enemiesToSpawn -= 1;
+			if (enemiesToSpawn <= 0)
+			{
+				WaveIncrease();
+			}
 		}
 	}
 	else
 	{
 		InstanceObject(new Boss(), spawnPos.x, spawnPos.y);
+		bossSpawned = true;
+		bossTextTimer = 1.8;
+		PlaySound(sfx_bossApproach);
 	}
 }
 
@@ -508,12 +538,17 @@ int Game::CountLargeAsteroids()
 void Game::WaveIncrease()
 {
 	wave += 1;
-	//Reset spawn count
-	enemiesToSpawn = enemiesPerWave;
-	//Reset spawn timer
-	if (enemySpawnTime > 2)
-	{ enemySpawnTime -= 1; }
-	enemySpawnTimer = enemySpawnTime;
+	bossSpawned = false;
+	//Regular wave
+	if (wave % bossWave != 0)
+	{
+		//Reset spawn count
+		enemiesToSpawn = enemiesPerWave;
+		//Reset spawn timer
+		if (enemySpawnTime > 2)
+		{ enemySpawnTime -= 1; }
+		enemySpawnTimer = enemySpawnTime;
+	}
 
 	//Destroy small asteroids
 	for (int a = 0; a < asteroids.size(); a++)
@@ -567,9 +602,10 @@ void Game::Gameover()
 
 	garbageCollection.clear();
 	//Destroy everything
-	for (GameObject* obj : scene)
+	for (int i = 0; i < scene.size(); i++)
 	{
-		obj->Destroy();
+		if (!scene[i]->destroyed)
+		scene[i]->Destroy();
 	}
 
 	//Set references to null
@@ -623,9 +659,6 @@ void Game::StartGame()
 		}
 	}
 
-	SpawnEnemy(true);
-	SpawnEnemy(false);
-
 	//Set start timer
 	instructionTimer = instructionTime;
 
@@ -640,6 +673,15 @@ void Game::StartMenu()
 	InstanceObject(new Button("QUIT", 160, 48), cameraSize.x / 2, (cameraSize.y / 2) + 96);
 	//Create fullscreen button
 	InstanceObject(new Button("FULLSCREEN", 0.2, 96, 48), cameraSize.x - 96, cameraSize.y - 64);
+}
+
+
+//Returns true if the given vector2 position is within camera range
+bool Game::InCamera(Vector2 pos)
+{
+	return
+		(pos.x > cameraPosition.x && pos.x < cameraPosition.x + cameraSize.x &&
+		pos.y > cameraPosition.y && pos.y < cameraPosition.y + cameraSize.y);
 }
 
 

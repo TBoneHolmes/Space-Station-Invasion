@@ -161,7 +161,7 @@ void Asteroid::ApplyVelocity()
 void Asteroid::CollisionCheck()
 {
 	//Check collision
-	if (cs->GetOverlappingColliders().size() > 0)
+	if (!destroyed && cs->GetOverlappingColliders().size() > 0)
 	{
 		for (int i = 0; i < cs->GetOverlappingColliders().size(); i++)
 		{
@@ -169,7 +169,7 @@ void Asteroid::CollisionCheck()
 			if (cs->GetOverlappingColliders()[i]->parent->name == "Bullet" && damageRestTimer == 0)
 			{
 				//Destroy bullet
-				cs->GetOverlappingColliders()[i]->parent->~GameObject();
+				delete cs->GetOverlappingColliders()[i]->parent;
 				//Damage self
 				Damage(1);
 				if (hp <= 0)
@@ -220,7 +220,7 @@ void Asteroid::Damage(int dmg)
 
 void Asteroid::Die()
 {
-	/*
+	
 	//Create new asteroids
 	if (size > 1)
 	{
@@ -232,7 +232,7 @@ void Asteroid::Die()
 			Game::GetInstance()->InstanceObject(new Asteroid(size - 1, newCreator), globalPosition.x + (spawnPos.x * (sprite->width / 4)), globalPosition.y + (spawnPos.y * (sprite->width / 4)));
 			spawnPos = Vector2Scale(spawnPos, -1);
 		}
-	}*/
+	}
 
 	//Chance to drop powerup
 	if (size == 2)// && Game::GetInstance()->wave >= 2)
@@ -262,7 +262,6 @@ void Asteroid::Destroy()
 {
 	GameObject::Destroy();
 
-	
 	GameObject* ptr = this;
 	auto iter = Game::GetInstance()->asteroids.begin();
 	for (int i = 0; i < Game::GetInstance()->asteroids.size(); i++)
@@ -274,4 +273,6 @@ void Asteroid::Destroy()
 		}
 		iter++;
 	}
+
+	//delete this;
 }

@@ -75,7 +75,7 @@ void Powerup::ManageTimers()
 	//Alpha
 	if (vanishTimer <= 0)
 	{
-		alpha -= GetFrameTime() * 300;
+		alpha -= 300 * GetFrameTime();
 
 		if (alpha <= 0)
 		{
@@ -89,7 +89,7 @@ void Powerup::CollisionCheck()
 {
 
 	//Check for player
-	if (cs->GetOverlappingColliders().size() > 0)
+	if (!destroyed && cs->GetOverlappingColliders().size() > 0)
 	{
 		Collect();
 	}

@@ -45,13 +45,22 @@ void UI::Draw()
 	Color enemyColor; enemyColor.r = 255; enemyColor.g = 0; enemyColor.b = 0; enemyColor.a = 180;
 	for (int i = 0; i < Game::GetInstance()->enemies.size(); i++)
 	{
-		DrawRectangle((Game::GetInstance()->enemies[i]->globalPosition.x / 32) + offset.x - mapScale, (Game::GetInstance()->enemies[i]->globalPosition.y / 32) + offset.y - mapScale, mapScale * 2, mapScale * 2, enemyColor);
+		float sizeMult = (Game::GetInstance()->enemies[i]->name == "EnemyDefault") ? 2 : 3; //Scale of the indicator on the minimap
+		DrawRectangle((Game::GetInstance()->enemies[i]->globalPosition.x / 32) + offset.x - mapScale, (Game::GetInstance()->enemies[i]->globalPosition.y / 32) + offset.y - mapScale, mapScale * sizeMult, mapScale * sizeMult, enemyColor);
 	}
 	//Draw player
 	Color playerColor; playerColor.r = 0; playerColor.g = 255; playerColor.b = 0; playerColor.a = 180;
 	if (Game::GetInstance()->player != nullptr)
 	{ DrawRectangle((Game::GetInstance()->player->globalPosition.x / 32) + offset.x - mapScale, (Game::GetInstance()->player->globalPosition.y / 32) + offset.y - mapScale, mapScale * 2, mapScale * 2, playerColor); }
 	
+	//Boss text
+	if (Game::GetInstance()->bossTextTimer > 0)
+	{
+		char* text = (char*)"!!! BOSS APPROACHING !!!";
+		int textWidth = MeasureText(text, 64);
+		DrawText(text, (Game::GetInstance()->cameraSize.x / 2) - (textWidth / 2), Game::GetInstance()->cameraSize.y / 2 - 128, 64, RED);
+	}
+
 	//DEBUG Draw asteroids on minimap
 	//for (int i = 0; i < Game::GetInstance()->asteroids.size(); i++)
 	//{

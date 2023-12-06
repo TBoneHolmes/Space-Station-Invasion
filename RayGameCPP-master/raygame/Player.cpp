@@ -50,8 +50,8 @@ void Player::Start()
 
 
 	//Set movement values
-	maxSpeed = 8;
-	acceleration = 0.4;
+	maxSpeed = 448;
+	acceleration = 16;
 	decceleration = 1;
 
 	//Set key binds
@@ -239,7 +239,7 @@ void Player::ManagePowerup()
 
 void Player::ApplyVelocity()
 {
-	localPosition = Vector2Add(localPosition, velocity);
+	localPosition = Vector2Add(localPosition, Vector2Scale(velocity, GetFrameTime()));
 	//Clamp position
 	localPosition.x = Clamp(localPosition.x, -32, Game::GetInstance()->worldSize.x + 32);
 	localPosition.y = Clamp(localPosition.y, -32, Game::GetInstance()->worldSize.y + 32);
@@ -325,7 +325,7 @@ void Player::CollisionCheck()
 		//Hit by bullet
 		if (cs->GetOverlappingColliders()[0]->parent->name == "Bullet")
 		{
-			cs->GetOverlappingColliders()[0]->parent->~GameObject();
+			delete cs->GetOverlappingColliders()[0]->parent;
 			Damage(1);
 		}
 		else //Hit by enemy body
@@ -350,6 +350,7 @@ void Player::Damage(int dmg)
 	}
 }
 
+
 void Player::Die()
 {
 	Game::GetInstance()->screenshake = 20;
@@ -369,4 +370,5 @@ void Player::Destroy()
 
 	Game::GetInstance()->player = nullptr;
 	Game::GetInstance()->cameraOwner = nullptr;
+	//delete this;
 }

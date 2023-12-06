@@ -42,7 +42,7 @@ void Bullet::Start()
 	spriteOffset = Vector2(); spriteOffset.x = sprite->height / 2; spriteOffset.y = sprite->width / 2;
 
 	//Set movement values
-	speed = 14;
+	speed = 672;
 
 	//Create collision shape
 	InstanceObject(new CollisionShape(6, colLayer, 0), 0, 0);
@@ -70,7 +70,7 @@ void Bullet::Update()
 void Bullet::ApplyVelocity()
 {
 	//Set velocity
-	velocity = Vector2Scale(moveDirection, speed);
+	velocity = Vector2Scale(moveDirection, speed * GetFrameTime());
 	//Apply velocity
 	localPosition = Vector2Add(localPosition, velocity);
 }

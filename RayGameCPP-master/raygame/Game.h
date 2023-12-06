@@ -68,6 +68,8 @@ public:
 	//Start timer
 	float instructionTime;
 	float instructionTimer;
+	//Boss text timer
+	float bossTextTimer;
 	//Stats
 	int score;
 	//Textures
@@ -85,6 +87,8 @@ public:
 	Rectangle rect_enemyDefault;
 	Texture2D spr_boss;
 	Rectangle rect_boss;
+	Texture2D spr_bossShield;
+	Rectangle rect_bossShield;
 	Texture2D spr_explosion;
 	Rectangle rect_explosion;
 	int frames_explosion;
@@ -115,14 +119,17 @@ public:
 	Sound sfx_unpause;
 	Sound sfx_gameover;
 	Sound sfx_powerup;
+	Sound sfx_bossApproach;
 	//Font
 	Font fnt_gameover;
 	//For debugging
 	bool drawCollisions;
 	//Waves
 	int wave;
+	int bossWave;
 	int enemiesToSpawn;
 	int enemiesPerWave;
+	bool bossSpawned;
 	//Asteroid spawning
 	Rectangle chunk[16];
 	//Powerup spawning
@@ -140,6 +147,7 @@ public:
 	void Gameover();
 	void StartGame();
 	void StartMenu();
+	void Inputs();
 	//Spawning
 	void InstanceObject(GameObject*, int, int);
 	void SpawnEnemy(bool);
@@ -151,7 +159,7 @@ public:
 	//Waves
 	void WaveIncrease();
 	//Helpful stuff
-	void ShuffleArray(int[], int);
+	bool InCamera(Vector2);
 
 	//Singleton operator override
 	void operator = (const Game&) = delete;

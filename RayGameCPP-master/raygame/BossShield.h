@@ -5,7 +5,7 @@ class BossShield : public GameObject
 {
 public:
 	//-CONSTRUCTOR-
-	BossShield();
+	BossShield(float);
 
 	//-VARIABLES-
 	//Sprite
@@ -20,10 +20,10 @@ public:
 	float damageRest;
 	float damageRestTimer;
 	//Movement
-	Vector2 velocity;
-	Vector2 playerTargetOffset;
-	float maxSpeed;
-	float acceleration;
+	float targetAngle;
+	int targetDist;
+	float speed;
+	float rotationSpeed;
 	//Shoot
 	float shootRest;
 	float shootRestTimer;
@@ -39,11 +39,10 @@ public:
 	void Damage(int);
 	void Die();
 	void CollisionCheck();
-	//Movement
-	void MoveToPoint();
-	void Accelerate();
-	void ApplyVelocity();
 	//Shoot
 	void Shoot();
+	//Movement
+	void SetPosition();
+	void ApplyMovement();
 };
 

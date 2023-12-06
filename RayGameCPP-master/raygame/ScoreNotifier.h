@@ -14,7 +14,7 @@ public:
 
 	//-VARIABLES-
 	int score;
-	float fontSize;
+	int fontSize;
 	int alpha;
 
 	//-FUNCTIONS-

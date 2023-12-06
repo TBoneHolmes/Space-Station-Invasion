@@ -1,4 +1,6 @@
 #include "Boss.h"
+#include "BossShield.h"
+#include "EnemyDefault.h"
 #include "ScoreNotifier.h"
 #include "Game.h"
 #include "raylib.h"
@@ -35,12 +37,35 @@ void Boss::Start()
 	//Cache collision shape
 	cs = (CollisionShape*)children.back();
 
+	//Create shield bots
+	InstanceObject(new BossShield(0), 0, 0);
+	InstanceObject(new BossShield(30), 0, 0);
+	InstanceObject(new BossShield(60), 0, 0);
+	InstanceObject(new BossShield(90), 0, 0);
+	InstanceObject(new BossShield(120), 0, 0);
+	InstanceObject(new BossShield(150), 0, 0);
+	InstanceObject(new BossShield(180), 0, 0);
+	InstanceObject(new BossShield(210), 0, 0);
+	InstanceObject(new BossShield(240), 0, 0);
+	InstanceObject(new BossShield(270), 0, 0);
+	//InstanceObject(new BossShield(300), 0, 0);
+	//InstanceObject(new BossShield(330), 0, 0);
+
+	//Create enemy homies
+	for (int i = 0; i < Game::GetInstance()->wave / Game::GetInstance()->bossWave; i++)
+	{
+		float spawnAngle = GetRandomValue(0, 360);
+		Vector2 spawnDist = Vector2Zero(); spawnDist.x = 96;
+		Vector2 spawnPos = Vector2Add(localPosition, Vector2Rotate(spawnDist, spawnAngle));
+		Game::GetInstance()->InstanceObject(new EnemyDefault(), spawnPos.x, spawnPos.y);
+	}
+
 	//Set HP
 	hp = 10;
 	damageRest = 0.1;
 
 	//Set movement values
-	maxSpeed = 2;
+	maxSpeed = (60) + Game::GetInstance()->wave;
 	acceleration = 4;
 
 	//Set shoot values
@@ -67,11 +92,21 @@ void Boss::Draw()
 void Boss::Update()
 {
 	GameObject::Update();
+	if (hp > 0)
+	{
 
-	ManageTimers();
-	CollisionCheck();
-	MoveToPoint();
-	ApplyVelocity();
+		ManageTimers();
+		CollisionCheck();
+		MoveToPoint();
+		ApplyVelocity();
+	}
+
+	//Die if hp is 0 and no shield objects exist
+	if (hp <= 0 && children.size() <= 1)
+	{
+		Game::GetInstance()->score += killScore;
+		Die();
+	}
 }
 
 void Boss::ManageTimers()
@@ -108,33 +143,34 @@ void Boss::CollisionCheck()
 
 void Boss::Damage(int dmg)
 {
-	Game::GetInstance()->screenshake = 5;
 	hp -= dmg;
 	//Set invulnerability timer
 	damageRestTimer = damageRest;
-	//Die when hp reaches 0
+
 	if (hp <= 0)
 	{
-		Game::GetInstance()->score += killScore;
-		Die();
+
 	}
 	else
 	{
+		Game::GetInstance()->screenshake = 5;
 		PlaySound(Game::GetInstance()->sfx_hitEnemy);
 	}
 }
 
 void Boss::Die()
 {
+	Game::GetInstance()->screenshake = 10;
 	Game::GetInstance()->freeze = 0.12;
 	PlaySound(Game::GetInstance()->sfx_explodeEnemy);
 	//Create explosion
 	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x, globalPosition.y);
 	//Create scoreNotifier
 	Game::GetInstance()->InstanceObject(new ScoreNotifier(killScore), globalPosition.x, globalPosition.y);
+	//Go to next wave
+	Game::GetInstance()->WaveIncrease();
 	//Destroy self
-	GameObject* ptr = this;
-	ptr->~GameObject();
+	Destroy();
 }
 
 //MOVEMENT
@@ -161,7 +197,7 @@ void Boss::Accelerate()
 //Apply velocity to the object's position
 void Boss::ApplyVelocity()
 {
-	localPosition = Vector2Add(localPosition, velocity);
+	localPosition = Vector2Add(localPosition, Vector2Scale(velocity, GetFrameTime()));
 	//Clamp position
 	localPosition.x = Clamp(localPosition.x, -32, Game::GetInstance()->worldSize.x + 32);
 	localPosition.y = Clamp(localPosition.y, -32, Game::GetInstance()->worldSize.y + 32);
@@ -179,5 +215,22 @@ void Boss::Shoot()
 		Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, globalRotation), 8), bulletSpawnPos.x, bulletSpawnPos.y);
 		//Play sfx
 		PlaySound(Game::GetInstance()->sfx_shootEnemy);
+	}
+}
+
+void Boss::Destroy()
+{
+	GameObject::Destroy();
+
+	GameObject* ptr = this;
+	auto iter = Game::GetInstance()->enemies.begin();
+	for (int i = 0; i < Game::GetInstance()->enemies.size(); i++)
+	{
+		if (Game::GetInstance()->enemies[i] == ptr)
+		{
+			Game::GetInstance()->enemies.erase(iter);
+			break;
+		}
+		iter++;
 	}
 }

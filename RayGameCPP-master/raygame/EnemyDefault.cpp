@@ -41,8 +41,8 @@ void EnemyDefault::Start()
 
 	//Set movement values
 	targetPoint = Game::GetInstance()->center;
-	maxSpeed = GetRandomValue(3, 6);
-	acceleration = GetRandomValue(4, 8);
+	maxSpeed = GetRandomValue(180, 280);
+	acceleration = 4;
 
 	//Set shoot values
 	shootRest = 1;
@@ -130,7 +130,7 @@ void EnemyDefault::CollisionCheck()
 	if (damageRestTimer == 0 && cs->GetOverlappingColliders().size() > 0)
 	{
 		//Destroy bullet
-		cs->GetOverlappingColliders()[0]->parent->~GameObject();
+		delete cs->GetOverlappingColliders()[0]->parent;
 		//Damage self
 		Damage(1);
 	}
@@ -188,7 +188,7 @@ void EnemyDefault::Accelerate()
 //Apply velocity to the object's position
 void EnemyDefault::ApplyVelocity()
 {
-	localPosition = Vector2Add(localPosition, velocity);
+	localPosition = Vector2Add(localPosition, Vector2Scale(velocity, GetFrameTime()));
 	//Clamp position
 	localPosition.x = Clamp(localPosition.x, -32, Game::GetInstance()->worldSize.x + 32);
 	localPosition.y = Clamp(localPosition.y, -32, Game::GetInstance()->worldSize.y + 32);
@@ -212,6 +212,8 @@ void EnemyDefault::Shoot()
 
 void EnemyDefault::Destroy()
 {
+	GameObject::Destroy();
+
 	GameObject* ptr = this;
 	auto iter = Game::GetInstance()->enemies.begin();
 	for (int i = 0; i < Game::GetInstance()->enemies.size(); i++)
@@ -223,6 +225,4 @@ void EnemyDefault::Destroy()
 		}
 		iter++;
 	}
-
-	GameObject::Destroy();
 }

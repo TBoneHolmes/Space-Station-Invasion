@@ -26,6 +26,7 @@ public:
 	int drawOrder;
 	bool pauseIgnore;
 	bool gameoverIgnore;
+	bool destroyed;
 
 	//Functions
 	void virtual Start();

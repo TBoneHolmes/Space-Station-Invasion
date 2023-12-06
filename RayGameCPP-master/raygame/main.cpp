@@ -51,6 +51,20 @@ int main()
 
 	// De-Initialization
 	//--------------------------------------------------------------------------------------   
+	UnloadTexture(Game::GetInstance()->spr_title);
+	UnloadTexture(Game::GetInstance()->spr_background);
+	UnloadTexture(Game::GetInstance()->spr_player);
+	UnloadTexture(Game::GetInstance()->spr_playerBooster);
+	UnloadTexture(Game::GetInstance()->spr_bullet);
+	UnloadTexture(Game::GetInstance()->spr_enemyDefault);
+	UnloadTexture(Game::GetInstance()->spr_boss);
+	UnloadTexture(Game::GetInstance()->spr_bossShield);
+	UnloadTexture(Game::GetInstance()->spr_explosion);
+	UnloadTexture(Game::GetInstance()->spr_base);
+	UnloadTexture(Game::GetInstance()->spr_asteroidS);
+	UnloadTexture(Game::GetInstance()->spr_asteroidM);
+	UnloadTexture(Game::GetInstance()->spr_asteroidL);
+	UnloadTexture(Game::GetInstance()->spr_powerup);
 
 	UnloadSound(Game::GetInstance()->sfx_boostPlayer);
 	UnloadSound(Game::GetInstance()->sfx_shootPlayer);
@@ -68,6 +82,7 @@ int main()
 	UnloadSound(Game::GetInstance()->sfx_unpause);
 	UnloadSound(Game::GetInstance()->sfx_gameover);
 	UnloadSound(Game::GetInstance()->sfx_powerup);
+	UnloadSound(Game::GetInstance()->sfx_bossApproach);
 	CloseAudioDevice();
 
 	CloseWindow();        // Close window and OpenGL context

@@ -8,9 +8,10 @@
 using namespace std;
 
 //Constructor
-BossShield::BossShield()
+BossShield::BossShield(float startAngle)
 {
 	GameObject::name = "BossShield";
+	targetAngle = startAngle;
 }
 
 void BossShield::Start()
@@ -21,30 +22,37 @@ void BossShield::Start()
 	drawOrder = 2;
 
 	//Set sprite
-	sprite = &Game::GetInstance()->spr_boss;
-	spriteSize = &Game::GetInstance()->rect_boss;
-	destination = Game::GetInstance()->rect_boss;
+	sprite = &Game::GetInstance()->spr_bossShield;
+	spriteSize = &Game::GetInstance()->rect_bossShield;
+	destination = Game::GetInstance()->rect_bossShield;
 	spriteOffset = Vector2(); spriteOffset.x = sprite->height / 2; spriteOffset.y = sprite->width / 2;
 
 	//Create collision shape
-	InstanceObject(new CollisionShape(24, 2, 4), 0, 0);
+	InstanceObject(new CollisionShape(12, 2, 4), 0, 0);
 	//Cache collision shape
 	cs = (CollisionShape*)children.back();
 
 	//Set HP
-	hp = 10;
+	hp = 3;
 	damageRest = 0.1;
 
 	//Set movement values
-	maxSpeed = 2;
-	acceleration = 4;
+	//speed = 40;
+	//targetAngle = 
+	//maxSpeed = 2;
+	//acceleration = 4;
 
 	//Set shoot values
-	shootRest = 1;
-	shootRestTimer = 0;
+	shootRest = 7;
+	shootRestTimer = GetRandomValue(0, shootRest);
 
 	//Set score
-	killScore = 500;
+	killScore = 10;
+
+	//Position/movement values
+	targetDist = 64;
+	speed = 160;
+	rotationSpeed = 400; //For sprite rotation
 }
 
 void BossShield::Draw()
@@ -64,21 +72,35 @@ void BossShield::Update()
 {
 	GameObject::Update();
 
+	SetPosition();
+	ApplyMovement();
 	ManageTimers();
 	CollisionCheck();
-	MoveToPoint();
-	ApplyVelocity();
+
+	//Kill if parent is dead
+	Boss* bossParent = (Boss*)parent;
+	if (bossParent->hp <= 0)
+	{ Die(); }
 }
 
 void BossShield::ManageTimers()
 {
 	//Tick down timer
-	if (shootRestTimer > 0)
+	if (shootRestTimer > 0
+		&& Game::GetInstance()->player != nullptr //Player exists
+		&& Game::GetInstance()->InCamera(globalPosition)) //This shield piece is within camera bounds
+		//&& Vector2Length(Vector2Subtract(Game::GetInstance()->player->globalPosition, globalPosition)) < 384) //Player is in range
 	{
 		shootRestTimer -= GetFrameTime();
+
+		//Timeout
+		if (shootRestTimer <= 0)
+		{
+			shootRestTimer = shootRest;
+			Shoot();
+		}
 	}
-	//Clamp timer to 0
-	else { shootRestTimer = 0; }
+
 
 	//Tick down damage rest timer
 	if (damageRestTimer > 0)
@@ -102,28 +124,41 @@ void BossShield::CollisionCheck()
 	}
 }
 
+
+
+
+
+
 void BossShield::Damage(int dmg)
 {
-	Game::GetInstance()->screenshake = 5;
 	hp -= dmg;
 	//Set invulnerability timer
 	damageRestTimer = damageRest;
 	//Die when hp reaches 0
 	if (hp <= 0)
 	{
-		Game::GetInstance()->score += killScore;
 		Die();
 	}
 	else
 	{
+		Game::GetInstance()->screenshake = 3;
 		PlaySound(Game::GetInstance()->sfx_hitEnemy);
 	}
 }
 
 void BossShield::Die()
 {
+	//Set killscore to 1 and play sfx if an individual shield is destroyed
+	Boss* bossParent = (Boss*)parent;
+	if (bossParent->hp > 0)
+	{
+		killScore = 1;
+		Game::GetInstance()->screenshake = 5;
+		PlaySound(Game::GetInstance()->sfx_explodeEnemy);
+	}
+	Game::GetInstance()->score += killScore;
+
 	Game::GetInstance()->freeze = 0.12;
-	PlaySound(Game::GetInstance()->sfx_explodeEnemy);
 	//Create explosion
 	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x, globalPosition.y);
 	//Create scoreNotifier
@@ -133,46 +168,31 @@ void BossShield::Die()
 }
 
 //MOVEMENT
-//Enemy moves toward the base/center
-void BossShield::MoveToPoint()
+void BossShield::SetPosition()
 {
-	//Get the angle to point to
-	float targetDirection = Vector2Angle(Vector2Subtract(globalPosition, Game::GetInstance()->cameraPosition), Vector2Subtract(Game::GetInstance()->center, Game::GetInstance()->cameraPosition));
-	//Set rotation
-	localRotation = targetDirection;
-
-	Accelerate();
+	Vector2 pos; pos.x = targetDist; pos.y = 0;
+	localPosition = Vector2Rotate(pos, targetAngle);
 }
 
-//Apply acceleration to the velocity
-void BossShield::Accelerate()
+void BossShield::ApplyMovement()
 {
-	if (Vector2Length(Vector2Add(velocity, Vector2Rotate(Vector2Right, globalRotation))) < maxSpeed)
-	{
-		velocity = Vector2Lerp(velocity, Vector2Scale(Vector2Rotate(Vector2Right, globalRotation), maxSpeed), acceleration * 0.01);
-	}
-}
+	targetAngle += speed * GetFrameTime();
+	//Clamp angle
+	if (targetAngle > 360)
+	{ targetAngle -= 360; }
 
-//Apply velocity to the object's position
-void BossShield::ApplyVelocity()
-{
-	localPosition = Vector2Add(localPosition, velocity);
-	//Clamp position
-	localPosition.x = Clamp(localPosition.x, -32, Game::GetInstance()->worldSize.x + 32);
-	localPosition.y = Clamp(localPosition.y, -32, Game::GetInstance()->worldSize.y + 32);
+	//Apply sprite rotation
+	localRotation += rotationSpeed * GetFrameTime();
 }
 
 //SHOOT
 void BossShield::Shoot()
 {
-	//Shoot
-	if (shootRestTimer == 0)
-	{
-		shootRestTimer = shootRest;
-		//Spawn bullet
-		Vector2 bulletSpawnPos = Vector2Add(globalPosition, Vector2Rotate(Vector2Scale(Vector2Right, sprite->width / 2), globalRotation));
-		Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, globalRotation), 8), bulletSpawnPos.x, bulletSpawnPos.y);
-		//Play sfx
-		PlaySound(Game::GetInstance()->sfx_shootEnemy);
-	}
+	//Spawn bullet
+	int positionRandom = 64; //The amount of random position variation from the player position to shoot towards
+	Vector2 targetPosition; targetPosition.x = GetRandomValue(-positionRandom, positionRandom); targetPosition.y = GetRandomValue(-positionRandom, positionRandom);
+	float targetDirection = Vector2Angle(globalPosition, Vector2Add(Game::GetInstance()->player->globalPosition, targetPosition));
+	Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, targetDirection), 8), globalPosition.x, globalPosition.y);
+	//Play sfx
+	PlaySound(Game::GetInstance()->sfx_shootEnemy);
 }

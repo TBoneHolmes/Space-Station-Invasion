@@ -13,6 +13,7 @@ GameObject::GameObject()
 	drawOrder = 0; //The order that this object is drawn in
 	pauseIgnore = false; //If true, this object still updates while game is paused
 	gameoverIgnore = false; //If true, this object still updates when gameover is true
+	parent = nullptr;
 }
 
 //Deconstructor
@@ -20,12 +21,16 @@ GameObject::~GameObject()
 {
 
 	//Delete all children
-	auto childIter = children.begin();
-	for (int i = 0; i < children.size(); i++)
+	if (children.size() > 0)
 	{
-		//children[i]->~GameObject();
-		delete children[i];
+		auto childIter = children.begin();
+		for (int i = 0; i < children.size(); i++)
+		{
+			//children[i]->~GameObject();
+			children[i]->Destroy();
+		}
 	}
+	cout << name << endl;
 	GameObject* ptr = this;
 	//Remove self from the game's 'scene' list
 	if (parent == nullptr)
@@ -41,7 +46,7 @@ GameObject::~GameObject()
 			iter++;
 		}
 	}
-	else { //Remove self from parent's 'children' list
+	else if (!parent->destroyed) { //Remove self from parent's 'children' list
 		auto iter = parent->children.begin();
 		for (int i = 0; i < parent->children.size(); i++)
 		{
@@ -59,48 +64,53 @@ GameObject::~GameObject()
 void GameObject::Start()
 {
 	Vector2Right.x = 1.0f; Vector2Right.y = 0.0f;
+	destroyed = false;
 }
 
 void GameObject::Draw()
 {
-	//Draw child objects
-	for (GameObject* obj : children)
+	if (!destroyed)
 	{
-		obj->Draw();
+		//Draw child objects
+		for (GameObject* obj : children)
+		{
+			obj->Draw();
+		}
 	}
 }
 
 void GameObject::Update()
 {
-	//Destroy on gameover
-	if (Game::GetInstance()->gameover && name != "Button")
+	if (!destroyed)
 	{
-		Destroy();
-	}
-	
-	//Update position and rotation
-	if (parent == nullptr) //Object is a root object
-	{
-		globalPosition = localPosition;
-		globalRotation = localRotation;
-	}
-	else { //Object is child of another object
-		globalPosition = Vector2Add(parent->globalPosition, Vector2Rotate(localPosition, parent->globalRotation));//parent->globalPosition.x + localPosition.x; globalPosition.y = parent->globalPosition.y + localPosition.y;
-		globalRotation = parent->globalRotation + localRotation;
-	}
-	//Clamp rotation
-	if (localRotation >= 360) { localRotation -= 360; }
-	else if (localRotation < 0) { localRotation += 360; }
+		//Destroy on gameover
+		if (Game::GetInstance()->gameover && name != "Button")
+		{
+			Destroy();
+		}
 
+		//Update position and rotation
+		if (parent == nullptr) //Object is a root object
+		{
+			globalPosition = localPosition;
+			globalRotation = localRotation;
+		}
+		else { //Object is child of another object
+			globalPosition = Vector2Add(parent->globalPosition, Vector2Rotate(localPosition, parent->globalRotation));//parent->globalPosition.x + localPosition.x; globalPosition.y = parent->globalPosition.y + localPosition.y;
+			globalRotation = parent->globalRotation + localRotation;
+		}
+		//Clamp rotation
+		if (localRotation >= 360) { localRotation -= 360; }
+		else if (localRotation < 0) { localRotation += 360; }
 
-	//Draw
-	//Draw();
+		//Draw
+		//Draw();
 
-
-	//Update child obejcts
-	for (GameObject* obj : children)
-	{
-		obj->Update();
+		//Update child obejcts
+		for (GameObject* obj : children)
+		{
+			obj->Update();
+		}
 	}
 }
 
@@ -129,4 +139,5 @@ void GameObject::InstanceObject(GameObject* newObj, int posX, int posY)
 void GameObject::Destroy()
 {
 	Game::GetInstance()->garbageCollection.push_back(this);
+	destroyed = true;
 }
