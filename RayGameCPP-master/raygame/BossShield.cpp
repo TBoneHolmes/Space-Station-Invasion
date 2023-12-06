@@ -36,12 +36,6 @@ void BossShield::Start()
 	hp = 3;
 	damageRest = 0.1;
 
-	//Set movement values
-	//speed = 40;
-	//targetAngle = 
-	//maxSpeed = 2;
-	//acceleration = 4;
-
 	//Set shoot values
 	shootRest = 7;
 	shootRestTimer = GetRandomValue(0, shootRest);

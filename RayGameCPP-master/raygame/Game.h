@@ -103,6 +103,7 @@ public:
 	Texture2D spr_powerup;
 	Rectangle rect_powerup;
 	//Sounds
+	vector<Sound*> sounds;
 	Sound sfx_boostPlayer;
 	Sound sfx_shootPlayer;
 	Sound sfx_shootEnemy;
@@ -128,6 +129,7 @@ public:
 	int wave;
 	int bossWave;
 	int enemiesToSpawn;
+	int enemiesPerSpawn;
 	int enemiesPerWave;
 	bool bossSpawned;
 	//Asteroid spawning
@@ -158,6 +160,9 @@ public:
 	int CountLargeAsteroids();
 	//Waves
 	void WaveIncrease();
+	//Loading/unloading
+	void LoadSfx(Sound, const char*, float);
+	void UnloadSounds();
 	//Helpful stuff
 	bool InCamera(Vector2);
 

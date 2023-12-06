@@ -53,7 +53,7 @@ void Asteroid::Start()
 	if (size == 3)
 	{ csSize += 16; }
 
-	InstanceObject(new CollisionShape(csSize, 2, 2 + 4), 0, 0);
+	InstanceObject(new CollisionShape(csSize, 2, 2 + 4 + 8), 0, 0);
 	//Cache collision shape
 	cs = (CollisionShape*)children.back();
 
@@ -235,7 +235,7 @@ void Asteroid::Die()
 	}
 
 	//Chance to drop powerup
-	if (size == 2)// && Game::GetInstance()->wave >= 2)
+	if (size >= 2)
 	{
 		Game::GetInstance()->powerupSpawn -= 1;
 		if (Game::GetInstance()->powerupSpawn <= 0)

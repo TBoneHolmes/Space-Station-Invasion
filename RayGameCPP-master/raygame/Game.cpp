@@ -62,20 +62,30 @@ void Game::Start()
 	//Load sounds
 	sfx_boostPlayer = LoadSound("..//Assets//Sounds//boost_player.wav");
 	sfx_shootPlayer = LoadSound("..//Assets//Sounds//shoot_player.wav");
+	SetSoundVolume(sfx_shootPlayer, 0.5);
 	sfx_shootEnemy = LoadSound("..//Assets//Sounds//shoot_enemy.wav");
+	SetSoundVolume(sfx_shootEnemy, 0.5);
 	sfx_hitPlayer = LoadSound("..//Assets//Sounds//hit_player.wav");
+	SetSoundVolume(sfx_hitPlayer, 0.7);
 	sfx_hitEnemy = LoadSound("..//Assets//Sounds//hit_enemy.wav");
+	SetSoundVolume(sfx_hitEnemy, 0.7);
 	sfx_hitAsteroid = LoadSound("..//Assets//Sounds//hit_asteroid.wav");
+	SetSoundVolume(sfx_hitAsteroid, 0.7);
 	sfx_hitBase = LoadSound("..//Assets//Sounds//hit_base.wav");
 	sfx_explodePlayer = LoadSound("..//Assets//Sounds//explode_player.wav");
 	sfx_explodeEnemy = LoadSound("..//Assets//Sounds//explode_enemy.wav");
 	sfx_explodeAsteroid = LoadSound("..//Assets//Sounds//explode_asteroid.wav");
 	sfx_buttonHover = LoadSound("..//Assets//Sounds//buttonHover.wav");
+	SetSoundVolume(sfx_buttonHover, 0.7);
 	sfx_buttonClick = LoadSound("..//Assets//Sounds//buttonClick.wav");
+	SetSoundVolume(sfx_buttonClick, 0.7);
 	sfx_pause = LoadSound("..//Assets//Sounds//pause.wav");
+	SetSoundVolume(sfx_pause, 0.5);
 	sfx_unpause = LoadSound("..//Assets//Sounds//unpause.wav");
+	SetSoundVolume(sfx_unpause, 0.5);
 	sfx_gameover = LoadSound("..//Assets//Sounds//gameover.wav");
 	sfx_powerup = LoadSound("..//Assets//Sounds//powerup.wav");
+	SetSoundVolume(sfx_powerup, 0.5);
 	sfx_bossApproach = LoadSound("..//Assets//Sounds//bossApproach.wav");
 	SetSoundVolume(sfx_bossApproach, 0.5);
 
@@ -103,7 +113,6 @@ void Game::Start()
 	bossTextTimer = 0;
 	//Set up waves
 	wave = 1;
-	enemiesPerWave = 2;
 	bossWave = 4; //If the wave is divisible by bossWave, a boss will appear
 	bossSpawned = false; //A boss has been spawned for the current wave
 	//Set chunks
@@ -121,8 +130,8 @@ void Game::Start()
 	}
 
 	//Powerup stuff
-	powerupSpawnRange.x = 3; powerupSpawnRange.y = 8;
-	powerupSpawn = GetRandomValue(powerupSpawnRange.x, powerupSpawnRange.y); //The number of medium sized asteroids you have to destroy before a powerup spawns
+	powerupSpawnRange.x = 5; powerupSpawnRange.y = 10;
+	powerupSpawn = 1; //The number of medium sized asteroids you have to destroy before a powerup spawns
 
 	menuOpen = true;
 	gameover = false;
@@ -254,7 +263,7 @@ void Game::Update()
 
 void Game::ManageTimers()
 {
-	cout << "Wave " << wave << " : " << enemySpawnTime << endl;
+	cout << "Wave " << wave << " | Spawn timer: " << enemySpawnTime << " | Per spawn: " << enemiesPerSpawn << endl;
 
 	//Enemy spawn tick down
 	if (enemySpawnTimer > 0 && wave % bossWave != 0)
@@ -265,7 +274,23 @@ void Game::ManageTimers()
 		if (enemySpawnTimer <= 0 && !gameover)
 		{
 			enemySpawnTimer = enemySpawnTime;
-			SpawnEnemy(false);
+			if (wave % bossWave != 0)
+			{
+				cout << wave << endl;
+				//Spawn enemies
+				for (int i = 0; i < enemiesPerSpawn; i++)
+				{ SpawnEnemy(false); }
+				//Manage wave increase
+				enemiesToSpawn -= 1;
+				if (wave % bossWave != 0)
+				{
+					if (enemiesToSpawn <= 0)
+					{
+						WaveIncrease();
+					}
+				}
+			}
+			
 		}
 	}
 
@@ -293,6 +318,7 @@ void Game::ManageTimers()
 			instructionTimer = 0;
 			//Set enemy spawn timer and spawn the first enemy
 			enemySpawnTimer = enemySpawnTime;
+			enemiesToSpawn -= 1;
 			SpawnEnemy(false);
 		}
 	}
@@ -434,15 +460,6 @@ void Game::SpawnEnemy(bool boss)
 	if (!boss)
 	{
 		InstanceObject(new EnemyDefault(), spawnPos.x, spawnPos.y);
-		//Manage wave increase
-		if (wave % bossWave != 0)
-		{
-			enemiesToSpawn -= 1;
-			if (enemiesToSpawn <= 0)
-			{
-				WaveIncrease();
-			}
-		}
 	}
 	else
 	{
@@ -539,14 +556,21 @@ void Game::WaveIncrease()
 {
 	wave += 1;
 	bossSpawned = false;
-	//Regular wave
+	//Non-boss wave
 	if (wave % bossWave != 0)
 	{
+		//Change enemies per spawn
+		if ((wave + 1) % 4 == 0)
+		{ enemiesPerSpawn += 1; }
+
+		//Change enemy spawn time
+		if (enemySpawnTime > 3
+			 && (wave + 2) % 4 == 0) //Increase timer each round for the first 3 rounds
+		{ enemySpawnTime -= 1; }
+
 		//Reset spawn count
 		enemiesToSpawn = enemiesPerWave;
 		//Reset spawn timer
-		if (enemySpawnTime > 2)
-		{ enemySpawnTime -= 1; }
 		enemySpawnTimer = enemySpawnTime;
 	}
 
@@ -576,9 +600,6 @@ void Game::InstanceObject(GameObject* newObj, int posX, int posY)
 	//Call the new object's start function
 	newObj->Start();
 }
-
-
-
 
 
 
@@ -630,7 +651,9 @@ void Game::StartGame()
 	score = 0;
 	//Reset wave
 	wave = 1;
-	enemiesToSpawn = enemiesPerWave;
+	enemiesPerWave = 2; //The number of enemies that spawn for each wave before the next wave triggers
+	enemiesPerSpawn = 1; //The number of enemies that spawn at once
+	enemiesToSpawn = enemiesPerWave; //The number of enemies still left to spawn before a wave increase
 
 	//Destroy all objects
 	while (scene.size() > 0)
@@ -683,6 +706,14 @@ bool Game::InCamera(Vector2 pos)
 		(pos.x > cameraPosition.x && pos.x < cameraPosition.x + cameraSize.x &&
 		pos.y > cameraPosition.y && pos.y < cameraPosition.y + cameraSize.y);
 }
+
+
+void LoadSfx(Sound soundToLoad, const char* filepath, float volume)
+{
+	soundToLoad = LoadSound(filepath);
+	SetSoundVolume(soundToLoad, volume);
+}
+
 
 
 //Deconstructor

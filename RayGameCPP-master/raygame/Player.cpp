@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Player.h"
 #include "Bullet.h"
+#include "BossShield.h"
 #include "CollisionShape.h"
 #include "raylib.h"
 #include "raymath.h"
@@ -328,8 +329,32 @@ void Player::CollisionCheck()
 			delete cs->GetOverlappingColliders()[0]->parent;
 			Damage(1);
 		}
-		else //Hit by enemy body
+		else //Hit by hazard
 		{
+			//Damage asteroid
+			if (cs->GetOverlappingColliders()[0]->parent->name == "Asteroid")
+			{
+				Asteroid* ptr = (Asteroid*)cs->GetOverlappingColliders()[0]->parent;
+				ptr->Damage(1);
+			}
+			//Damage enemy
+			else if (cs->GetOverlappingColliders()[0]->parent->name == "EnemyDefault")
+			{
+				EnemyDefault* ptr = (EnemyDefault*)cs->GetOverlappingColliders()[0]->parent;
+				ptr->Damage(1);
+			}
+			//Damage boss
+			else if (cs->GetOverlappingColliders()[0]->parent->name == "Boss")
+			{
+				Boss* ptr = (Boss*)cs->GetOverlappingColliders()[0]->parent;
+				ptr->Damage(1);
+			}
+			//Damage boss shield
+			else if (cs->GetOverlappingColliders()[0]->parent->name == "BossShield")
+			{
+				BossShield* ptr = (BossShield*)cs->GetOverlappingColliders()[0]->parent;
+				ptr->Damage(1);
+			}
 			Die();
 		}
 	}

@@ -138,6 +138,9 @@ void GameObject::InstanceObject(GameObject* newObj, int posX, int posY)
 
 void GameObject::Destroy()
 {
-	Game::GetInstance()->garbageCollection.push_back(this);
-	destroyed = true;
+	if (!destroyed)
+	{
+		Game::GetInstance()->garbageCollection.push_back(this);
+		destroyed = true;
+	}
 }
