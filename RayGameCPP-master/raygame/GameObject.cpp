@@ -30,7 +30,7 @@ GameObject::~GameObject()
 			children[i]->Destroy();
 		}
 	}
-	//cout << name << endl;
+	cout << "Deleted: " << name << endl;
 	GameObject* ptr = this;
 	//Remove self from the game's 'scene' list
 	if (parent == nullptr)

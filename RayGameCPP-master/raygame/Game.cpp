@@ -76,6 +76,7 @@ void Game::Start()
 	sfx_explodePlayer = LoadSound("..//Assets//Sounds//explode_player.wav");
 	sfx_explodeEnemy = LoadSound("..//Assets//Sounds//explode_enemy.wav");
 	sfx_explodeAsteroid = LoadSound("..//Assets//Sounds//explode_asteroid.wav");
+	sfx_explodeBoss = LoadSound("..//Assets//Sounds//explode_boss.wav");
 	sfx_buttonHover = LoadSound("..//Assets//Sounds//buttonHover.wav");
 	SetSoundVolume(sfx_buttonHover, 0.7);
 	sfx_buttonClick = LoadSound("..//Assets//Sounds//buttonClick.wav");
@@ -220,6 +221,8 @@ void Game::Update()
 	//cout << scene.size() << endl;
 	//cout << enemies.size() << endl;
 	//cout << wave << endl;
+	cout << wave << " | " << enemySpawnTime << " | " << enemiesPerWave << endl;
+
 
 	Draw();
 
@@ -272,7 +275,8 @@ void Game::Update()
 
 void Game::ManageTimers()
 {
-	cout << "Wave " << wave << " | Spawn timer: " << enemySpawnTime << " | Per spawn: " << enemiesPerSpawn << endl;
+	//DEBUG Print wave info to console
+	//cout << "Wave " << wave << " | Spawn timer: " << enemySpawnTime << " | Per spawn: " << enemiesPerSpawn << endl;
 
 	//Enemy spawn tick down
 	if (enemySpawnTimer > 0 && wave % bossWave != 0)
@@ -285,7 +289,7 @@ void Game::ManageTimers()
 			enemySpawnTimer = enemySpawnTime;
 			if (wave % bossWave != 0)
 			{
-				cout << wave << endl;
+				//cout << wave << endl;
 				//Spawn enemies
 				for (int i = 0; i < enemiesPerSpawn; i++)
 				{ SpawnEnemy(false); }
@@ -582,7 +586,7 @@ void Game::WaveIncrease()
 		{ enemiesPerSpawn += 1; }
 
 		//Change enemy spawn time
-		if (enemySpawnTime > 3
+		if (enemySpawnTime > 4
 			 && (wave + 2) % 4 == 0) //Increase timer each round for the first 3 rounds
 		{ enemySpawnTime -= 1; }
 

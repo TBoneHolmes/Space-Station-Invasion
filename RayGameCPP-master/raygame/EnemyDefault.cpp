@@ -155,7 +155,7 @@ void EnemyDefault::Damage(int dmg)
 
 void EnemyDefault::Die()
 {
-	Game::GetInstance()->freeze = 0.12;
+	Game::GetInstance()->freeze = 0.10;
 	PlaySound(Game::GetInstance()->sfx_explodeEnemy);
 	//Create explosion
 	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x + 2.0f, globalPosition.y);

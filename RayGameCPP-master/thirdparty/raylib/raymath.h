@@ -424,6 +424,7 @@ RMAPI Vector2 Vector2Reflect(Vector2 v, Vector2 normal)
     return result;
 }
 
+
 // Rotate vector by angle
 RMAPI Vector2 Vector2Rotate(Vector2 v, float degs)
 {

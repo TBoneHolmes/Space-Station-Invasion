@@ -25,7 +25,7 @@ void Explosion::Start()
 	spriteOffset = Vector2(); spriteOffset.x = sprite->height / 2; spriteOffset.y = (sprite->width / spriteFrames) / 2;
 	//Animation
 	frame = 0;
-	animationSpeed = 20;
+	animationSpeed = 18;
 	animationTimer = 1;
 	
 	drawOrder = 4;
@@ -60,7 +60,7 @@ void Explosion::ManageAnimation()
 		animationTimer = 1;
 		frame += 1;
 		//Destroy self if out of frame range
-		if (frame >= spriteFrames)
+		if (frame >= spriteFrames - 1)
 		{
 			Destroy();
 		}

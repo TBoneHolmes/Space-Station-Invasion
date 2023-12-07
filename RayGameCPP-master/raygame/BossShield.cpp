@@ -157,7 +157,8 @@ void BossShield::Die()
 		Game::GetInstance()->InstanceObject(new ScoreNotifier(killScore), globalPosition.x, globalPosition.y);
 	}
 
-	Game::GetInstance()->freeze = 0.12;
+	PlaySound(Game::GetInstance()->sfx_explodeEnemy);
+	Game::GetInstance()->freeze = 0.06;
 	//Create explosion
 	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x, globalPosition.y);
 	//Destroy self

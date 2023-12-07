@@ -76,6 +76,7 @@ int main()
 	UnloadSound(Game::GetInstance()->sfx_explodePlayer);
 	UnloadSound(Game::GetInstance()->sfx_explodeEnemy);
 	UnloadSound(Game::GetInstance()->sfx_explodeAsteroid);
+	UnloadSound(Game::GetInstance()->sfx_explodeBoss);
 	UnloadSound(Game::GetInstance()->sfx_buttonHover);
 	UnloadSound(Game::GetInstance()->sfx_buttonClick);
 	UnloadSound(Game::GetInstance()->sfx_pause);

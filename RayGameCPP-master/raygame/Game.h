@@ -116,6 +116,7 @@ public:
 	Sound sfx_explodePlayer;
 	Sound sfx_explodeEnemy;
 	Sound sfx_explodeAsteroid;
+	Sound sfx_explodeBoss;
 	Sound sfx_buttonHover;
 	Sound sfx_buttonClick;
 	Sound sfx_pause;

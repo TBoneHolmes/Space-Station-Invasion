@@ -162,8 +162,9 @@ void Boss::Die()
 {
 	Game::GetInstance()->killCount += 1;
 	Game::GetInstance()->screenshake = 10;
-	Game::GetInstance()->freeze = 0.12;
+	Game::GetInstance()->freeze = 0.10;
 	PlaySound(Game::GetInstance()->sfx_explodeEnemy);
+	PlaySound(Game::GetInstance()->sfx_explodeBoss);
 	//Create explosion
 	Game::GetInstance()->InstanceObject(new Explosion, globalPosition.x, globalPosition.y);
 	//Create scoreNotifier
