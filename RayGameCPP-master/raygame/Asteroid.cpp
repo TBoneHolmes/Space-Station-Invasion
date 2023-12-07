@@ -73,7 +73,7 @@ void Asteroid::Start()
 	speed = GetRandomValue(2, 10) * 0.1;
 	int direction = GetRandomValue(0, 359);
 	velocity.x = speed; velocity.y = 0;
-	velocity = Vector2Rotate(velocity, direction);
+	velocity = Game::GetInstance()->_Vector2Rotate(velocity, direction);
 
 	//Set rotation and torque
 	localRotation = GetRandomValue(0, 359);
@@ -238,7 +238,7 @@ void Asteroid::Die()
 	if (size > 1)
 	{
 		Vector2 spawnPos;
-		spawnPos = Vector2Normalize(Vector2Rotate(velocity, 90));
+		spawnPos = Vector2Normalize(Game::GetInstance()->_Vector2Rotate(velocity, 90));
 		for (int i = 0; i < 2; i++)
 		{ 
 			Asteroid* newCreator = (creator == nullptr) ? this : creator;

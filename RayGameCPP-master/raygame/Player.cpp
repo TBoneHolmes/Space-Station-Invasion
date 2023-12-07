@@ -254,7 +254,7 @@ void Player::Input_Rotate()
 	if (mouseDistance > 12)
 	{
 		//Get direction of mouse from player
-		float mouseDirection = Vector2Angle(Vector2Subtract(globalPosition, Game::GetInstance()->cameraPosition), GetMousePosition());
+		float mouseDirection = Game::GetInstance()->_Vector2Angle(Vector2Subtract(globalPosition, Game::GetInstance()->cameraPosition), GetMousePosition());
 		//Set player's rotation
 		localRotation = mouseDirection;
 	}
@@ -264,13 +264,13 @@ void Player::Input_Booster()
 {
 	//Player accelerate
 	if (IsMouseButtonDown(key_boost) &&
-		Vector2Length(Vector2Add(velocity, Vector2Scale(Vector2Rotate(Vector2Right, globalRotation), acceleration))) < maxSpeed)
+		Vector2Length(Vector2Add(velocity, Vector2Scale(Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation), acceleration))) < maxSpeed)
 	{
 		//Play sfx
 		if (!IsSoundPlaying(Game::GetInstance()->sfx_boostPlayer))
 		{ PlaySound(Game::GetInstance()->sfx_boostPlayer); }
 		//Set velocity
-		velocity = Vector2Add(velocity, Vector2Scale(Vector2Rotate(Vector2Right, globalRotation), acceleration));
+		velocity = Vector2Add(velocity, Vector2Scale(Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation), acceleration));
 	}
 	//Player deccelerate
 	else
@@ -286,7 +286,7 @@ void Player::Input_Shoot()
 	if (IsMouseButtonDown(key_shoot) && shootRestTimer == 0)
 	{
 		//Set bullet spawn position at the front of the player
-		Vector2 bulletSpawnPos = Vector2Add(globalPosition, Vector2Rotate(Vector2Scale(Vector2Right, sprite->width / 2), globalRotation));
+		Vector2 bulletSpawnPos = Vector2Add(globalPosition, Game::GetInstance()->_Vector2Rotate(Vector2Scale(Vector2Right, sprite->width / 2), globalRotation));
 		Color newCol = WHITE;
 		/* //ENABLE FOR RAINBOW BULLETS WHEN POWERED UP
 		if (powerupTimer > 0)
@@ -306,7 +306,7 @@ void Player::Input_Shoot()
 			{ newCol = VIOLET; }
 			bulletColor = (bulletColor < 5) ? bulletColor + 1 : 0;
 		}*/
-		Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, globalRotation), 4, newCol), bulletSpawnPos.x, bulletSpawnPos.y);
+		Game::GetInstance()->InstanceObject(new Bullet(Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation), 4, newCol), bulletSpawnPos.x, bulletSpawnPos.y);
 		//Set timer
 		shootRestTimer = shootRest;
 		//Play sfx

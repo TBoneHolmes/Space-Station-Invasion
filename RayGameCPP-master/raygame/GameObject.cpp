@@ -96,7 +96,7 @@ void GameObject::Update()
 			globalRotation = localRotation;
 		}
 		else { //Object is child of another object
-			globalPosition = Vector2Add(parent->globalPosition, Vector2Rotate(localPosition, parent->globalRotation));//parent->globalPosition.x + localPosition.x; globalPosition.y = parent->globalPosition.y + localPosition.y;
+			globalPosition = Vector2Add(parent->globalPosition, Game::GetInstance()->_Vector2Rotate(localPosition, parent->globalRotation));//parent->globalPosition.x + localPosition.x; globalPosition.y = parent->globalPosition.y + localPosition.y;
 			globalRotation = parent->globalRotation + localRotation;
 		}
 		//Clamp rotation

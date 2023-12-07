@@ -56,7 +56,7 @@ void Boss::Start()
 	{
 		float spawnAngle = GetRandomValue(0, 360);
 		Vector2 spawnDist = Vector2Zero(); spawnDist.x = 96;
-		Vector2 spawnPos = Vector2Add(localPosition, Vector2Rotate(spawnDist, spawnAngle));
+		Vector2 spawnPos = Vector2Add(localPosition, Game::GetInstance()->_Vector2Rotate(spawnDist, spawnAngle));
 		Game::GetInstance()->InstanceObject(new EnemyDefault(), spawnPos.x, spawnPos.y);
 	}
 
@@ -180,7 +180,7 @@ void Boss::Die()
 void Boss::MoveToPoint()
 {
 	//Get the angle to point to
-	float targetDirection = Vector2Angle(Vector2Subtract(globalPosition, Game::GetInstance()->cameraPosition), Vector2Subtract(Game::GetInstance()->center, Game::GetInstance()->cameraPosition));
+	float targetDirection = Game::GetInstance()->_Vector2Angle(Vector2Subtract(globalPosition, Game::GetInstance()->cameraPosition), Vector2Subtract(Game::GetInstance()->center, Game::GetInstance()->cameraPosition));
 	//Set rotation
 	localRotation = targetDirection;
 
@@ -190,9 +190,9 @@ void Boss::MoveToPoint()
 //Apply acceleration to the velocity
 void Boss::Accelerate()
 {
-	if (Vector2Length(Vector2Add(velocity, Vector2Rotate(Vector2Right, globalRotation))) < maxSpeed)
+	if (Vector2Length(Vector2Add(velocity, Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation))) < maxSpeed)
 	{
-		velocity = Vector2Lerp(velocity, Vector2Scale(Vector2Rotate(Vector2Right, globalRotation), maxSpeed), acceleration * 0.01);
+		velocity = Vector2Lerp(velocity, Vector2Scale(Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation), maxSpeed), acceleration * 0.01);
 	}
 }
 
@@ -213,8 +213,8 @@ void Boss::Shoot()
 	{
 		shootRestTimer = shootRest;
 		//Spawn bullet
-		Vector2 bulletSpawnPos = Vector2Add(globalPosition, Vector2Rotate(Vector2Scale(Vector2Right, sprite->width / 2), globalRotation));
-		Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, globalRotation), 8), bulletSpawnPos.x, bulletSpawnPos.y);
+		Vector2 bulletSpawnPos = Vector2Add(globalPosition, Game::GetInstance()->_Vector2Rotate(Vector2Scale(Vector2Right, sprite->width / 2), globalRotation));
+		Game::GetInstance()->InstanceObject(new Bullet(Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation), 8), bulletSpawnPos.x, bulletSpawnPos.y);
 		//Play sfx
 		PlaySound(Game::GetInstance()->sfx_shootEnemy);
 	}

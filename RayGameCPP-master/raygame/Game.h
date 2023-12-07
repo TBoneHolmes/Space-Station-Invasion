@@ -167,6 +167,9 @@ public:
 	void WaveIncrease();
 	//Helpful stuff
 	bool InCamera(Vector2);
+	//Math
+	float _Vector2Angle(Vector2, Vector2);
+	Vector2 _Vector2Rotate(Vector2, float);
 
 	//Singleton operator override
 	void operator = (const Game&) = delete;

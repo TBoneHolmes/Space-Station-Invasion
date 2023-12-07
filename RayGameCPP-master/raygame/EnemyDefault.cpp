@@ -170,7 +170,7 @@ void EnemyDefault::Die()
 void EnemyDefault::MoveToPoint()
 {
 	//Get the angle to point to
-	float targetDirection = Vector2Angle(Vector2Subtract(globalPosition, Game::GetInstance()->cameraPosition), Vector2Subtract(targetPoint, Game::GetInstance()->cameraPosition));
+	float targetDirection = Game::GetInstance()->_Vector2Angle(Vector2Subtract(globalPosition, Game::GetInstance()->cameraPosition), Vector2Subtract(targetPoint, Game::GetInstance()->cameraPosition));
 	//Set rotation
 	localRotation = targetDirection;
 
@@ -180,9 +180,9 @@ void EnemyDefault::MoveToPoint()
 //Apply acceleration to the velocity
 void EnemyDefault::Accelerate()
 {
-	if (Vector2Length(Vector2Add(velocity, Vector2Rotate(Vector2Right, globalRotation))) < maxSpeed)
+	if (Vector2Length(Vector2Add(velocity, Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation))) < maxSpeed)
 	{
-		velocity = Vector2Lerp(velocity, Vector2Scale(Vector2Rotate(Vector2Right, globalRotation), maxSpeed), acceleration * 0.01);
+		velocity = Vector2Lerp(velocity, Vector2Scale(Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation), maxSpeed), acceleration * 0.01);
 	}
 }
 
@@ -203,8 +203,8 @@ void EnemyDefault::Shoot()
 	{
 		shootRestTimer = shootRest;
 		//Spawn bullet
-		Vector2 bulletSpawnPos = Vector2Add(globalPosition, Vector2Rotate(Vector2Scale(Vector2Right, sprite->width / 2), globalRotation));
-		Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, globalRotation), 8), bulletSpawnPos.x, bulletSpawnPos.y);
+		Vector2 bulletSpawnPos = Vector2Add(globalPosition, Game::GetInstance()->_Vector2Rotate(Vector2Scale(Vector2Right, sprite->width / 2), globalRotation));
+		Game::GetInstance()->InstanceObject(new Bullet(Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation), 8), bulletSpawnPos.x, bulletSpawnPos.y);
 		//Play sfx
 		PlaySound(Game::GetInstance()->sfx_shootEnemy);
 	}

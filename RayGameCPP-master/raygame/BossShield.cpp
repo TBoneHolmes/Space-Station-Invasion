@@ -169,7 +169,7 @@ void BossShield::Die()
 void BossShield::SetPosition()
 {
 	Vector2 pos; pos.x = targetDist; pos.y = 0;
-	localPosition = Vector2Rotate(pos, targetAngle);
+	localPosition = Game::GetInstance()->_Vector2Rotate(pos, targetAngle);
 }
 
 void BossShield::ApplyMovement()
@@ -191,8 +191,8 @@ void BossShield::Shoot()
 	//Spawn bullet
 	int positionRandom = 64; //The amount of random position variation from the player position to shoot towards
 	Vector2 targetPosition; targetPosition.x = GetRandomValue(-positionRandom, positionRandom); targetPosition.y = GetRandomValue(-positionRandom, positionRandom);
-	float targetDirection = Vector2Angle(globalPosition, Vector2Add(Game::GetInstance()->player->globalPosition, targetPosition));
-	Game::GetInstance()->InstanceObject(new Bullet(Vector2Rotate(Vector2Right, targetDirection), 8), globalPosition.x, globalPosition.y);
+	float targetDirection = Game::GetInstance()->_Vector2Angle(globalPosition, Vector2Add(Game::GetInstance()->player->globalPosition, targetPosition));
+	Game::GetInstance()->InstanceObject(new Bullet(Game::GetInstance()->_Vector2Rotate(Vector2Right, targetDirection), 8), globalPosition.x, globalPosition.y);
 	//Play sfx
 	PlaySound(Game::GetInstance()->sfx_shootEnemy);
 }
