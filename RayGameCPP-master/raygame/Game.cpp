@@ -33,7 +33,7 @@ void Game::Start()
 	spr_title = LoadTexture("..//Assets//Sprites//title.png");
 	spr_background = LoadTexture("..//Assets//Sprites//background.png");
 	rect_background = Rectangle(); rect_background.x = 0; rect_background.y = 0; rect_background.width = spr_background.width; rect_background.height = spr_background.height;
-	spr_player = LoadTexture("..//Assets//Sprites//player.png");
+	spr_player = LoadTexture("..//Assets//Sprites//baldToad.png");
 	rect_player = Rectangle(); rect_player.x = 0; rect_player.y = 0; rect_player.width = spr_player.width; rect_player.height = spr_player.height;
 	spr_playerBooster = LoadTexture("..//Assets//Sprites//player_booster.png");
 	frames_playerBooster = 2; //The number of frames in this spritesheet
