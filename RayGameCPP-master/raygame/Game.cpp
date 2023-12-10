@@ -221,7 +221,7 @@ void Game::Update()
 	//cout << scene.size() << endl;
 	//cout << enemies.size() << endl;
 	//cout << wave << endl;
-	cout << wave << " | " << enemySpawnTime << " | " << enemiesPerWave << " | " << enemies.size() << endl;
+	cout << wave << " | " << enemySpawnTimer << " | " << enemies.size() << " | " << bossSpawned << endl;
 
 
 	Draw();
