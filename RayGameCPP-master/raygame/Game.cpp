@@ -672,6 +672,7 @@ void Game::StartGame()
 	gameover = false;
 	score = 0;
 	killCount = 0;
+	enemies.clear();
 	//Reset wave
 	wave = 1;
 	enemiesPerWave = 2; //The number of enemies that spawn for each wave before the next wave triggers
