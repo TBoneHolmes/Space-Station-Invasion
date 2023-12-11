@@ -30,72 +30,72 @@ void Game::Start()
 {
 	
 	//Load textures
-	spr_title = LoadTexture("..//Assets//Sprites//title.png");
-	spr_background = LoadTexture("..//Assets//Sprites//background.png");
+	spr_title = LoadTexture("Assets//Sprites//title.png");
+	spr_background = LoadTexture("Assets//Sprites//background.png");
 	rect_background = Rectangle(); rect_background.x = 0; rect_background.y = 0; rect_background.width = spr_background.width; rect_background.height = spr_background.height;
-	spr_player = LoadTexture("..//Assets//Sprites//player.png");
+	spr_player = LoadTexture("Assets//Sprites//player.png");
 	rect_player = Rectangle(); rect_player.x = 0; rect_player.y = 0; rect_player.width = spr_player.width; rect_player.height = spr_player.height;
-	spr_playerBooster = LoadTexture("..//Assets//Sprites//player_booster.png");
+	spr_playerBooster = LoadTexture("Assets//Sprites//player_booster.png");
 	frames_playerBooster = 2; //The number of frames in this spritesheet
 	rect_playerBooster = Rectangle(); rect_playerBooster.x = 0; rect_playerBooster.y = 0; rect_playerBooster.width = spr_playerBooster.width / frames_playerBooster; rect_playerBooster.height = spr_playerBooster.height;
-	spr_bullet = LoadTexture("..//Assets//Sprites//bullet.png");
+	spr_bullet = LoadTexture("Assets//Sprites//bullet.png");
 	rect_bullet = Rectangle(); rect_bullet.x = 0; rect_bullet.y = 0; rect_bullet.width = spr_bullet.width; rect_bullet.height = spr_bullet.height;
-	spr_enemyDefault = LoadTexture("..//Assets//Sprites//enemyDefault.png");
+	spr_enemyDefault = LoadTexture("Assets//Sprites//enemyDefault.png");
 	rect_enemyDefault = Rectangle(); rect_enemyDefault.x = 0; rect_enemyDefault.y = 0; rect_enemyDefault.width = spr_enemyDefault.width; rect_enemyDefault.height = spr_enemyDefault.height;
-	spr_boss = LoadTexture("..//Assets//Sprites//boss.png");
+	spr_boss = LoadTexture("Assets//Sprites//boss.png");
 	rect_boss = Rectangle(); rect_boss.x = 0; rect_boss.y = 0; rect_boss.width = spr_boss.width; rect_boss.height = spr_boss.height;
-	spr_bossShield = LoadTexture("..//Assets//Sprites//bossShield.png");
+	spr_bossShield = LoadTexture("Assets//Sprites//bossShield.png");
 	rect_bossShield = Rectangle(); rect_bossShield.x = 0; rect_bossShield.y = 0; rect_bossShield.width = spr_bossShield.width; rect_bossShield.height = spr_bossShield.height;
-	spr_explosion = LoadTexture("..//Assets//Sprites//explosion_spritesheet.png");
+	spr_explosion = LoadTexture("Assets//Sprites//explosion_spritesheet.png");
 	frames_explosion = 3; //The number of frames in this spritesheet
 	rect_explosion = Rectangle(); rect_explosion.x = 0; rect_explosion.y = 0; rect_explosion.width = spr_explosion.width / frames_explosion; rect_explosion.height = spr_explosion.height;
-	spr_base = LoadTexture("..//Assets//Sprites//base.png");
+	spr_base = LoadTexture("Assets//Sprites//base.png");
 	rect_base = Rectangle(); rect_base.x = 0; rect_base.y = 0; rect_base.width = spr_base.width; rect_base.height = spr_base.height;
-	spr_asteroidS = LoadTexture("..//Assets//Sprites//asteroid_s.png");
+	spr_asteroidS = LoadTexture("Assets//Sprites//asteroid_s.png");
 	rect_asteroidS = Rectangle(); rect_asteroidS.x = 0; rect_asteroidS.y = 0; rect_asteroidS.width = spr_asteroidS.width; rect_asteroidS.height = spr_asteroidS.height;
-	spr_asteroidM = LoadTexture("..//Assets//Sprites//asteroid_m.png");
+	spr_asteroidM = LoadTexture("Assets//Sprites//asteroid_m.png");
 	rect_asteroidM = Rectangle(); rect_asteroidM.x = 0; rect_asteroidM.y = 0; rect_asteroidM.width = spr_asteroidM.width; rect_asteroidM.height = spr_asteroidM.height;
-	spr_asteroidL = LoadTexture("..//Assets//Sprites//asteroid_l.png");
+	spr_asteroidL = LoadTexture("Assets//Sprites//asteroid_l.png");
 	rect_asteroidL = Rectangle(); rect_asteroidL.x = 0; rect_asteroidL.y = 0; rect_asteroidL.width = spr_asteroidL.width; rect_asteroidL.height = spr_asteroidL.height;
-	spr_powerup = LoadTexture("..//Assets//Sprites//powerup.png");
+	spr_powerup = LoadTexture("Assets//Sprites//powerup.png");
 	rect_powerup = Rectangle(); rect_powerup.x = 0; rect_powerup.y = 0; rect_powerup.width = spr_powerup.width; rect_powerup.height = spr_powerup.height;
 
 	//Load sounds
-	sfx_boostPlayer = LoadSound("..//Assets//Sounds//boost_player.wav");
-	sfx_shootPlayer = LoadSound("..//Assets//Sounds//shoot_player.wav");
+	sfx_boostPlayer = LoadSound("Assets//Sounds//boost_player.wav");
+	sfx_shootPlayer = LoadSound("Assets//Sounds//shoot_player.wav");
 	SetSoundVolume(sfx_shootPlayer, 0.5);
-	sfx_shootEnemy = LoadSound("..//Assets//Sounds//shoot_enemy.wav");
+	sfx_shootEnemy = LoadSound("Assets//Sounds//shoot_enemy.wav");
 	SetSoundVolume(sfx_shootEnemy, 0.5);
-	sfx_hitPlayer = LoadSound("..//Assets//Sounds//hit_player.wav");
+	sfx_hitPlayer = LoadSound("Assets//Sounds//hit_player.wav");
 	SetSoundVolume(sfx_hitPlayer, 0.7);
-	sfx_hitEnemy = LoadSound("..//Assets//Sounds//hit_enemy.wav");
+	sfx_hitEnemy = LoadSound("Assets//Sounds//hit_enemy.wav");
 	SetSoundVolume(sfx_hitEnemy, 0.7);
-	sfx_hitAsteroid = LoadSound("..//Assets//Sounds//hit_asteroid.wav");
+	sfx_hitAsteroid = LoadSound("Assets//Sounds//hit_asteroid.wav");
 	SetSoundVolume(sfx_hitAsteroid, 0.7);
-	sfx_hitBase = LoadSound("..//Assets//Sounds//hit_base.wav");
-	sfx_explodePlayer = LoadSound("..//Assets//Sounds//explode_player.wav");
-	sfx_explodeEnemy = LoadSound("..//Assets//Sounds//explode_enemy.wav");
-	sfx_explodeAsteroid = LoadSound("..//Assets//Sounds//explode_asteroid.wav");
-	sfx_explodeBoss = LoadSound("..//Assets//Sounds//explode_boss.wav");
-	sfx_buttonHover = LoadSound("..//Assets//Sounds//buttonHover.wav");
+	sfx_hitBase = LoadSound("Assets//Sounds//hit_base.wav");
+	sfx_explodePlayer = LoadSound("Assets//Sounds//explode_player.wav");
+	sfx_explodeEnemy = LoadSound("Assets//Sounds//explode_enemy.wav");
+	sfx_explodeAsteroid = LoadSound("Assets//Sounds//explode_asteroid.wav");
+	sfx_explodeBoss = LoadSound("Assets//Sounds//explode_boss.wav");
+	sfx_buttonHover = LoadSound("Assets//Sounds//buttonHover.wav");
 	SetSoundVolume(sfx_buttonHover, 0.7);
-	sfx_buttonClick = LoadSound("..//Assets//Sounds//buttonClick.wav");
+	sfx_buttonClick = LoadSound("Assets//Sounds//buttonClick.wav");
 	SetSoundVolume(sfx_buttonClick, 0.7);
-	sfx_pause = LoadSound("..//Assets//Sounds//pause.wav");
+	sfx_pause = LoadSound("Assets//Sounds//pause.wav");
 	SetSoundVolume(sfx_pause, 0.5);
-	sfx_unpause = LoadSound("..//Assets//Sounds//unpause.wav");
+	sfx_unpause = LoadSound("Assets//Sounds//unpause.wav");
 	SetSoundVolume(sfx_unpause, 0.5);
-	sfx_gameover = LoadSound("..//Assets//Sounds//gameover.wav");
-	sfx_powerup = LoadSound("..//Assets//Sounds//powerup.wav");
+	sfx_gameover = LoadSound("Assets//Sounds//gameover.wav");
+	sfx_powerup = LoadSound("Assets//Sounds//powerup.wav");
 	SetSoundVolume(sfx_powerup, 0.5);
-	sfx_bossApproach = LoadSound("..//Assets//Sounds//bossApproach.wav");
+	sfx_bossApproach = LoadSound("Assets//Sounds//bossApproach.wav");
 	SetSoundVolume(sfx_bossApproach, 0.5);
 
 	//Load font
-	fnt_gameover = LoadFont("..//Assets//Fonts//gameover.ttf");
+	fnt_gameover = LoadFont("Assets//Fonts//gameover.ttf");
 
 	//Set game icon
-	icon = LoadImage("..//Assets//title.png");
+	icon = LoadImage("Assets//Sprites//bossShield.png");
 	SetWindowIcon(icon);
 
 
@@ -220,8 +220,7 @@ void Game::Update()
 	//DEBUG
 	//cout << scene.size() << endl;
 	//cout << enemies.size() << endl;
-	//cout << wave << endl;
-	cout << wave << " | " << enemySpawnTimer << " | " << enemies.size() << " | " << bossSpawned << endl;
+	//cout << wave << " | " << enemySpawnTimer << " | " << enemies.size() << " | " << bossSpawned << endl;
 
 
 	Draw();

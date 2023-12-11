@@ -114,4 +114,109 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Sprites\asteroid_l.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Sprites\asteroid_m.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Sprites\asteroid_s.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Sprites\background.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Sprites\base.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Sprites\boss.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Sprites\bossShield.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Sprites\bullet.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Sprites\enemyDefault.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Sprites\explosion_spritesheet.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Sprites\player.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Sprites\player_booster.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Sprites\powerup.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Sprites\title.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Assets\Sounds\gameover.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\hit_asteroid.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\hit_base.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\hit_enemy.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\hit_player.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\pause.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\powerup.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\shoot_enemy.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\shoot_player.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\unpause.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\boost_player.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\bossApproach.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\buttonClick.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\buttonHover.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\explode_asteroid.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\explode_boss.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\explode_enemy.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\explode_player.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Assets\Fonts\gameover.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+  </ItemGroup>
 </Project>

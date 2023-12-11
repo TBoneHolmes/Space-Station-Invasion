@@ -50,13 +50,13 @@ void Button::Draw()
 	else if (mouseInteract == 1)
 	{ colShade = 160;}
 	//Button colow
-	Color buttonCol; buttonCol.r = colShade; buttonCol.g = colShade; buttonCol.b = colShade;
+	Color buttonCol; buttonCol.r = colShade; buttonCol.g = colShade; buttonCol.b = colShade; buttonCol.a = 255;
 	//Outline color
 	int outlineShade = (colShade - 70 < 0) ? 0 : colShade - 70;
-	Color outlineCol; outlineCol.r = outlineShade; outlineCol.g = outlineShade; outlineCol.b = outlineShade;
+	Color outlineCol; outlineCol.r = outlineShade; outlineCol.g = outlineShade; outlineCol.b = outlineShade; outlineCol.a = 255;
 	//Font color
 	int fontShade = (colShade - 140 < 0) ? 0 : colShade - 140;
-	Color fontCol; fontCol.r = fontShade; fontCol.g = fontShade; fontCol.b = fontShade;
+	Color fontCol; fontCol.r = fontShade; fontCol.g = fontShade; fontCol.b = fontShade; fontCol.a = 255;
 	//Draw outline
 	int outlineSize = (size.x + size.y) / 64;
 	DrawRectangle(globalPosition.x - (size.x / 2) - outlineSize, globalPosition.y - (size.y / 2) - outlineSize, size.x + (outlineSize * 2), size.y + (outlineSize * 2), outlineCol);

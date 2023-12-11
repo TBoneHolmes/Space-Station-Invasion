@@ -71,6 +71,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>Space Station Invasion</TargetName>
+    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
+    <CopyLocalProjectReference>true</CopyLocalProjectReference>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -181,6 +183,111 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Sprites\asteroid_l.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="Assets\Sprites\asteroid_m.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="Assets\Sprites\asteroid_s.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="Assets\Sprites\background.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="Assets\Sprites\base.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="Assets\Sprites\boss.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="Assets\Sprites\bossShield.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="Assets\Sprites\bullet.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="Assets\Sprites\enemyDefault.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="Assets\Sprites\explosion_spritesheet.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="Assets\Sprites\player.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="Assets\Sprites\player_booster.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="Assets\Sprites\powerup.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="Assets\Sprites\title.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Assets\Sounds\boost_player.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\bossApproach.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\buttonClick.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\buttonHover.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\explode_asteroid.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\explode_boss.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\explode_enemy.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\explode_player.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\gameover.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\hit_asteroid.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\hit_base.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\hit_enemy.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\hit_player.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\pause.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\powerup.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\shoot_enemy.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\shoot_player.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="Assets\Sounds\unpause.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Assets\Fonts\gameover.ttf">
+      <DeploymentContent>true</DeploymentContent>
+    </Font>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
