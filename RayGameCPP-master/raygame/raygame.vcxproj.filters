@@ -157,6 +157,9 @@
     <Image Include="Assets\Sprites\title.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\Assets\Sprites\cursor.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="Assets\Sounds\gameover.wav">

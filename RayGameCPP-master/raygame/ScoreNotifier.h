@@ -14,8 +14,8 @@ public:
 
 	//-VARIABLES-
 	int score;
-	int fontSize;
-	int alpha;
+	float fontSize;
+	float alpha;
 
 	//-FUNCTIONS-
 	void Start();

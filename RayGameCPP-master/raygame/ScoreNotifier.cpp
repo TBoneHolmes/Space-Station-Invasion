@@ -57,16 +57,16 @@ void ScoreNotifier::Update()
 	
 	
 	//Drift upward
-	localPosition.y -= 80 * GetFrameTime();
+	localPosition.y -= 60 * GetFrameTime();
 	
 	
 	//Shrink text size
 	if (fontSize > 16)
-	{ fontSize = Lerp(fontSize, 16, 0.2); }
+	{ fontSize = Lerp(fontSize, 16, 10 * GetFrameTime()); }
 	
 	
 	//Fade text out
-	if (fontSize <= 18) { alpha -= 1000 * GetFrameTime(); }
+	if (fontSize <= 18) { alpha -= 2000 * GetFrameTime(); }
 	//Destroy
 	if (alpha <= 0)
 	{

@@ -38,6 +38,11 @@ GameObject::~GameObject()
 	//Remove self from the game's 'scene' list
 	if (parent == nullptr)
 	{
+		//Remove self reference from all children
+		for (int i = 0; i < children.size(); i++)
+		{ children[i]->parent = nullptr; }
+
+		//Find and remove self reference from the game scene
 		auto iter = Game::GetInstance()->scene.begin();
 		while (iter != Game::GetInstance()->scene.end())
 		{

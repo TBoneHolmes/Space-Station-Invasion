@@ -82,7 +82,7 @@ void BossShield::ManageTimers()
 	//Tick down timer
 	if (shootRestTimer > 0
 		&& Game::GetInstance()->player != nullptr //Player exists
-		&& Game::GetInstance()->InCamera(globalPosition)) //This shield piece is within camera bounds
+		&& Game::GetInstance()->InCamera(globalPosition, 0)) //This shield piece is within camera bounds
 		//&& Vector2Length(Vector2Subtract(Game::GetInstance()->player->globalPosition, globalPosition)) < 384) //Player is in range
 	{
 		shootRestTimer -= GetFrameTime();
@@ -192,6 +192,7 @@ void BossShield::Shoot()
 	int positionRandom = 64; //The amount of random position variation from the player position to shoot towards
 	Vector2 targetPosition; targetPosition.x = GetRandomValue(-positionRandom, positionRandom); targetPosition.y = GetRandomValue(-positionRandom, positionRandom);
 	float targetDirection = Game::GetInstance()->_Vector2Angle(globalPosition, Vector2Add(Game::GetInstance()->player->globalPosition, targetPosition));
+	//Create bullet
 	Game::GetInstance()->InstanceObject(new Bullet(Game::GetInstance()->_Vector2Rotate(Vector2Right, targetDirection), 8), globalPosition.x, globalPosition.y);
 	//Play sfx
 	PlaySound(Game::GetInstance()->sfx_shootEnemy);

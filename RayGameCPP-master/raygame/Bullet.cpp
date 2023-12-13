@@ -14,6 +14,8 @@ Bullet::Bullet(Vector2 direction, int layer)
 	moveDirection = direction;
 	//Set collisionLayer
 	colLayer = layer;
+	velocityPlus = Vector2Zero();
+
 	bulletCol = WHITE;
 }
 Bullet::Bullet(Vector2 direction, int layer, Color col)
@@ -70,18 +72,18 @@ void Bullet::Update()
 void Bullet::ApplyVelocity()
 {
 	//Set velocity
-	velocity = Vector2Scale(moveDirection, speed * GetFrameTime());
+	velocity = Vector2Scale(moveDirection, speed);
+	velocity = Vector2Add(velocity, velocityPlus);
+	//Clamp velocity
+	velocity = Vector2Scale(Vector2Normalize(velocity), speed);
 	//Apply velocity
-	localPosition = Vector2Add(localPosition, velocity);
+	localPosition = Vector2Add(localPosition, Vector2Scale(velocity, GetFrameTime()));
 }
 
 void Bullet::DestroyCheck()
 {
 	//Destroy when outside of camera range
-	if (globalPosition.x < Game::GetInstance()->cameraPosition.x
-		|| globalPosition.x > Game::GetInstance()->cameraPosition.x + Game::GetInstance()->cameraSize.x
-		|| globalPosition.y < Game::GetInstance()->cameraPosition.y
-		|| globalPosition.y > Game::GetInstance()->cameraPosition.y + Game::GetInstance()->cameraSize.y)
+	if (!Game::GetInstance()->InCamera(globalPosition, 64))
 	{
 		//Destroy self
 		Destroy();

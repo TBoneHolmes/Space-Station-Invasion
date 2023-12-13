@@ -70,14 +70,14 @@ void Asteroid::Start()
 	hp = size;
 
 	//Set speed and direction
-	speed = GetRandomValue(2, 10) * 0.1;
+	speed = GetRandomValue(10, 30);
 	int direction = GetRandomValue(0, 359);
 	velocity.x = speed; velocity.y = 0;
 	velocity = Game::GetInstance()->_Vector2Rotate(velocity, direction);
 
 	//Set rotation and torque
 	localRotation = GetRandomValue(0, 359);
-	torque = (GetRandomValue(-5, 5) * 0.1);
+	torque = GetRandomValue(-10, 10);
 
 	//Ensure the asteroid is not in the 'enemies' array (fix for a weird bug)
 	GameObject* ptr = this;
@@ -162,10 +162,10 @@ void Asteroid::ManageTimers()
 void Asteroid::ApplyVelocity()
 {
 	//Apply velocity
-	localPosition = Vector2Add(localPosition, velocity);
+	localPosition = Vector2Add(localPosition, Vector2Scale(velocity, GetFrameTime()));
 
 	//Apply torque
-	localRotation += torque;
+	localRotation += torque * GetFrameTime();
 }
 
 

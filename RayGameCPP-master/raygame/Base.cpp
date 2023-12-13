@@ -67,7 +67,7 @@ void Base::Update()
 	ManageTimers();
 	CollisionCheck();
 	//Apply torque
-	localRotation += 0.1;
+	localRotation += 6 * GetFrameTime();
 }
 
 void Base::ManageTimers()

@@ -57,12 +57,16 @@ void Explosion::ManageAnimation()
 	//Timeout
 	if (animationTimer <= 0)
 	{
-		animationTimer = 1;
-		frame += 1;
 		//Destroy self if out of frame range
 		if (frame >= spriteFrames - 1)
 		{
 			Destroy();
+		}
+		else
+		{
+			animationTimer = 1;
+			frame += 1;
+			frame = Clamp(frame, 0, spriteFrames - 1);
 		}
 	}
 }

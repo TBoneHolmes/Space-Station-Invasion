@@ -76,6 +76,7 @@ public:
 	int killCount;
 	//Textures
 	Texture2D spr_title;
+	Texture2D spr_cursor;
 	Texture2D spr_background;
 	Rectangle rect_background;
 	Texture2D spr_player;
@@ -147,14 +148,15 @@ public:
 	void Start();
 	void Draw();
 	void Update();
-	void ManageTimers();
-	void CameraPosition();
-	void ClearGarbageCollection();
 	//Game
 	void Gameover();
 	void StartGame();
 	void StartMenu();
 	void Inputs();
+	void ManageCursor();
+	void ManageTimers();
+	void CameraPosition();
+	void ClearGarbageCollection();
 	//Spawning
 	void InstanceObject(GameObject*, int, int);
 	void SpawnEnemy(bool);
@@ -166,7 +168,7 @@ public:
 	//Waves
 	void WaveIncrease();
 	//Helpful stuff
-	bool InCamera(Vector2);
+	bool InCamera(Vector2, int);
 	//Math
 	float _Vector2Angle(Vector2, Vector2);
 	Vector2 _Vector2Rotate(Vector2, float);

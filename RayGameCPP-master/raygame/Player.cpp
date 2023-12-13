@@ -52,8 +52,8 @@ void Player::Start()
 
 	//Set movement values
 	maxSpeed = 448;
-	acceleration = 16;
-	decceleration = 1;
+	acceleration = 800;
+	decceleration = 0.6;
 
 	//Set key binds
 	key_boost = MOUSE_RIGHT_BUTTON;
@@ -68,7 +68,7 @@ void Player::Start()
 	shootRest = 0.3;
 	shootRestTimer = 0;
 	//Set invincible timer
-	invTime = 1;
+	invTime = 1.8;
 	invTimer = invTime;
 	//Set powerup timer
 	powerupTime = 20;
@@ -92,7 +92,7 @@ void Player::Draw()
 	//Repsawn invinciblility color
 	if (invTimer > 0 && powerupTimer == 0)
 	{
-		drawCol.a = 180;
+		drawCol.a = 140;
 	}
 	//Damaged color
 	else if (damageRestTimer > 0)
@@ -242,8 +242,8 @@ void Player::ApplyVelocity()
 {
 	localPosition = Vector2Add(localPosition, Vector2Scale(velocity, GetFrameTime()));
 	//Clamp position
-	localPosition.x = Clamp(localPosition.x, -32, Game::GetInstance()->worldSize.x + 32);
-	localPosition.y = Clamp(localPosition.y, -32, Game::GetInstance()->worldSize.y + 32);
+	localPosition.x = Clamp(localPosition.x, -8, Game::GetInstance()->worldSize.x + 8);
+	localPosition.y = Clamp(localPosition.y, -8, Game::GetInstance()->worldSize.y + 8);
 }
 
 
@@ -264,20 +264,20 @@ void Player::Input_Booster()
 {
 	//Player accelerate
 	if (IsMouseButtonDown(key_boost) &&
-		Vector2Length(Vector2Add(velocity, Vector2Scale(Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation), acceleration))) < maxSpeed)
+		Vector2Length(Vector2Add(velocity, Vector2Scale(Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation), acceleration * GetFrameTime()))) < maxSpeed)
 	{
 		//Play sfx
 		if (!IsSoundPlaying(Game::GetInstance()->sfx_boostPlayer))
 		{ PlaySound(Game::GetInstance()->sfx_boostPlayer); }
 		//Set velocity
-		velocity = Vector2Add(velocity, Vector2Scale(Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation), acceleration));
+		velocity = Vector2Add(velocity, Vector2Scale(Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation), acceleration * GetFrameTime()));
 	}
 	//Player deccelerate
 	else
 	{
 		//Set velocity
-		velocity.x = Lerp(velocity.x, 0.0f, decceleration * 0.01f);
-		velocity.y = Lerp(velocity.y, 0.0f, decceleration * 0.01f);
+		velocity.x = Lerp(velocity.x, 0.0f, decceleration * GetFrameTime());
+		velocity.y = Lerp(velocity.y, 0.0f, decceleration * GetFrameTime());
 	}
 }
 
@@ -306,7 +306,8 @@ void Player::Input_Shoot()
 			{ newCol = VIOLET; }
 			bulletColor = (bulletColor < 5) ? bulletColor + 1 : 0;
 		}*/
-		Game::GetInstance()->InstanceObject(new Bullet(Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation), 4, newCol), bulletSpawnPos.x, bulletSpawnPos.y);
+		float rot = Game::GetInstance()->_Vector2Angle(Vector2Subtract(globalPosition, Game::GetInstance()->cameraPosition), Vector2Add(GetMousePosition(), Vector2Scale(velocity, 0.5)));
+		Game::GetInstance()->InstanceObject(new Bullet(Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation), 4), bulletSpawnPos.x, bulletSpawnPos.y);
 		//Set timer
 		shootRestTimer = shootRest;
 		//Play sfx

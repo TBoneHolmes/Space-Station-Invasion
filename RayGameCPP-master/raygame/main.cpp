@@ -29,7 +29,7 @@ int main()
 
 	InitAudioDevice();
 
-	SetTargetFPS(60);
+	//SetTargetFPS(60);
 	game->Start();
 	//--------------------------------------------------------------------------------------
 
@@ -52,6 +52,7 @@ int main()
 	// De-Initialization
 	//--------------------------------------------------------------------------------------   
 	UnloadTexture(Game::GetInstance()->spr_title);
+	UnloadTexture(Game::GetInstance()->spr_cursor);
 	UnloadTexture(Game::GetInstance()->spr_background);
 	UnloadTexture(Game::GetInstance()->spr_player);
 	UnloadTexture(Game::GetInstance()->spr_playerBooster);

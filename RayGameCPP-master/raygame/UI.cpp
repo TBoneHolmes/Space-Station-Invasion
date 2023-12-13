@@ -33,14 +33,34 @@ void UI::Draw()
 {
 
 	//DRAW MINIMAP
+	
 	//Draw background
 	Color backColor; backColor.r = 255; backColor.g = 255; backColor.b = 255; backColor.a = 60;
 	DrawRectangle(offset.x, offset.y, mapSize.x * mapScale, mapSize.y * mapScale, backColor);
+
+	/*
+	//Draw camera view
+	Color camColor = WHITE; camColor.a = 20;
+	//Top border
+	DrawLine((Game::GetInstance()->cameraPosition.x / 32) + offset.x, (Game::GetInstance()->cameraPosition.y / 32) + offset.y,
+		((Game::GetInstance()->cameraPosition.x + Game::GetInstance()->cameraSize.x) / 32) + offset.x, (Game::GetInstance()->cameraPosition.y / 32) + offset.y, camColor);
+	//Right border
+	DrawLine(((Game::GetInstance()->cameraPosition.x + Game::GetInstance()->cameraSize.x) / 32) + offset.x, (Game::GetInstance()->cameraPosition.y / 32) + offset.y,
+		((Game::GetInstance()->cameraPosition.x + Game::GetInstance()->cameraSize.x) / 32) + offset.x, ((Game::GetInstance()->cameraPosition.y + Game::GetInstance()->cameraSize.y) / 32) + offset.y, camColor);
+	//Bottomr border
+	DrawLine((Game::GetInstance()->cameraPosition.x / 32) + offset.x - 1, ((Game::GetInstance()->cameraPosition.y + Game::GetInstance()->cameraSize.y) / 32) + offset.y,
+		((Game::GetInstance()->cameraPosition.x + Game::GetInstance()->cameraSize.x) / 32) + offset.x, ((Game::GetInstance()->cameraPosition.y + Game::GetInstance()->cameraSize.y) / 32) + offset.y, camColor);
+	//Left border
+	DrawLine((Game::GetInstance()->cameraPosition.x) / 32 + offset.x, (Game::GetInstance()->cameraPosition.y / 32) + offset.y,
+		(Game::GetInstance()->cameraPosition.x) / 32 + offset.x, ((Game::GetInstance()->cameraPosition.y + Game::GetInstance()->cameraSize.y) / 32) + offset.y, camColor);
+	*/
+
 	//Draw base
 	if (Game::GetInstance()->base != nullptr)
 	{
 		DrawRectangle(mapSize.x / 2 + offset.x - mapScale, mapSize.y / 2 + offset.y - mapScale, mapScale * 2, mapScale * 2, YELLOW);
 	}
+	
 	//Draw enemies
 	Color enemyColor; enemyColor.r = 255; enemyColor.g = 0; enemyColor.b = 0; enemyColor.a = 180;
 	for (int i = 0; i < Game::GetInstance()->enemies.size(); i++)
@@ -48,11 +68,15 @@ void UI::Draw()
 		float sizeMult = (Game::GetInstance()->enemies[i]->name == "EnemyDefault") ? 2 : 3; //Scale of the indicator on the minimap
 		DrawRectangle((Game::GetInstance()->enemies[i]->globalPosition.x / 32) + offset.x - mapScale, (Game::GetInstance()->enemies[i]->globalPosition.y / 32) + offset.y - mapScale, mapScale * sizeMult, mapScale * sizeMult, enemyColor);
 	}
+	
 	//Draw player
 	Color playerColor; playerColor.r = 0; playerColor.g = 255; playerColor.b = 0; playerColor.a = 180;
 	if (Game::GetInstance()->player != nullptr)
 	{ DrawRectangle((Game::GetInstance()->player->globalPosition.x / 32) + offset.x - mapScale, (Game::GetInstance()->player->globalPosition.y / 32) + offset.y - mapScale, mapScale * 2, mapScale * 2, playerColor); }
 	
+
+
+
 	//Boss text
 	if (Game::GetInstance()->bossTextTimer > 0)
 	{
@@ -115,6 +139,13 @@ void UI::Draw()
 		text = (char*)"Protect the BASE in the center of the map";
 		textWidth = MeasureText(text, 32);
 		DrawText(text, (Game::GetInstance()->cameraSize.x / 2) - (textWidth / 2), Game::GetInstance()->cameraSize.y / 2 - 160, 32, RED);
+	}
+
+	//Draw cursor
+	if (IsCursorHidden)
+	{
+		Texture2D* spr = &Game::GetInstance()->spr_cursor;
+		DrawTexture(*spr, GetMousePosition().x - (spr->width / 2), GetMousePosition().y - (spr->height / 2), WHITE);
 	}
 
 	GameObject::Draw();

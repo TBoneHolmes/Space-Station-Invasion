@@ -31,6 +31,7 @@ void Game::Start()
 	
 	//Load textures
 	spr_title = LoadTexture("Assets//Sprites//title.png");
+	spr_cursor = LoadTexture("Assets//Sprites//cursor.png");
 	spr_background = LoadTexture("Assets//Sprites//background.png");
 	rect_background = Rectangle(); rect_background.x = 0; rect_background.y = 0; rect_background.width = spr_background.width; rect_background.height = spr_background.height;
 	spr_player = LoadTexture("Assets//Sprites//player.png");
@@ -202,7 +203,6 @@ void Game::Draw()
 		DrawText(text, (cameraSize.x / 2) - (textWidth / 2), cameraSize.y / 2, 32, WHITE);
 	}
 
-
 	//DEBUG Draw chunk grid
 	//for (int i = 0; i < sizeof(chunk) / sizeof(int); i++)
 	//{
@@ -231,6 +231,7 @@ void Game::Update()
 		CameraPosition();
 	}
 	Inputs();
+	ManageCursor();
 
 	//Update scene objects
 	if (!freeze)
@@ -269,6 +270,19 @@ void Game::Update()
 	if (wave % bossWave == 0 && enemies.size() == 0 && !bossSpawned)
 	{
 		SpawnEnemy(true);
+	}
+}
+
+void Game::ManageCursor()
+{
+	//Hide/show default cursor
+	if (!gameover && !menuOpen && !gamePaused) {
+		if (!IsCursorHidden())
+			HideCursor();
+	}
+	else {
+		if (IsCursorHidden())
+			ShowCursor();
 	}
 }
 
@@ -725,11 +739,11 @@ void Game::StartMenu()
 
 
 //Returns true if the given vector2 position is within camera range
-bool Game::InCamera(Vector2 pos)
+bool Game::InCamera(Vector2 pos, int buffer)
 {
 	return
-		(pos.x > cameraPosition.x && pos.x < cameraPosition.x + cameraSize.x &&
-		pos.y > cameraPosition.y && pos.y < cameraPosition.y + cameraSize.y);
+		(pos.x > cameraPosition.x - buffer && pos.x < cameraPosition.x + cameraSize.x + buffer &&
+		pos.y > cameraPosition.y - buffer && pos.y < cameraPosition.y + cameraSize.y + buffer);
 }
 
 

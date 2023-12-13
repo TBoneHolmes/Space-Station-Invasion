@@ -21,6 +21,7 @@ public:
 	Color bulletCol;
 	//Movement
 	Vector2 velocity;
+	Vector2 velocityPlus;
 	Vector2 moveDirection;
 	float speed;
 	//Collision
