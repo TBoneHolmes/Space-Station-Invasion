@@ -23,7 +23,6 @@ public:
 	Vector2 spriteBoosterOffset;
 	int spriteFrames;
 	int frame;
-	float animationSpeed;
 	float animationTimer;
 	//Collision Shape
 	CollisionShape* cs;
@@ -32,19 +31,13 @@ public:
 	int key_shoot;
 	//Movement
 	Vector2 velocity;
-	float maxSpeed;
-	float acceleration;
-	float decceleration;
 	//Damage
-	int maxHp;
 	int hp;
-	float damageRest;
 	float damageRestTimer;
 	//Shoot
 	float shootRest;
 	float shootRestTimer;
 	//Invincibility
-	float invTime;
 	float invTimer;
 	//Powerup
 	float powerupTime;

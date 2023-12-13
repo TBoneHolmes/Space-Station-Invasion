@@ -17,18 +17,11 @@ public:
 	CollisionShape* cs;
 	//Damage
 	int hp;
-	float damageRest;
 	float damageRestTimer;
 	//Movement
 	float targetAngle;
-	int targetDist;
-	float speed;
-	float rotationSpeed;
 	//Shoot
-	float shootRest;
 	float shootRestTimer;
-	//Score
-	int killScore;
 
 	//-FUNCTIONS-
 	void Start();

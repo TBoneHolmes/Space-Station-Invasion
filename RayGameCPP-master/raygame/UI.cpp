@@ -6,6 +6,8 @@
 #include <string>
 using namespace std;
 
+const float mapScale = 1.0f;
+
 //Constructor
 UI::UI()
 {
@@ -26,7 +28,6 @@ void UI::Start()
 	//Set map size
 	mapSize.x = Game::GetInstance()->worldTileSize.x;
 	mapSize.y = Game::GetInstance()->worldTileSize.y;
-	mapScale = 1;
 }
 
 void UI::Draw()

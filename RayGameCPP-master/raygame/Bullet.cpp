@@ -6,6 +6,10 @@
 #include <string>
 using namespace std;
 
+
+//MOVEMENT
+const float speed = 700;
+
 //Constructor
 Bullet::Bullet(Vector2 direction, int layer)
 {
@@ -42,9 +46,6 @@ void Bullet::Start()
 	spriteSize = &Game::GetInstance()->rect_bullet;
 	destination = Game::GetInstance()->rect_bullet;
 	spriteOffset = Vector2(); spriteOffset.x = sprite->height / 2; spriteOffset.y = sprite->width / 2;
-
-	//Set movement values
-	speed = 700;
 
 	//Create collision shape
 	InstanceObject(new CollisionShape(6, colLayer, 0), 0, 0);

@@ -9,6 +9,18 @@
 #include <string>
 using namespace std;
 
+//DAMAGE
+const float damageRest = 0.1;
+
+//MOVEMENT
+const float acceleration = 4.0f;
+
+//SHOOT
+const float shootRest = 1.0f;
+
+//SCORE
+const float killScore = 500.0f;
+
 //Constructor
 Boss::Boss()
 {
@@ -62,18 +74,12 @@ void Boss::Start()
 
 	//Set HP
 	hp = 10;
-	damageRest = 0.1;
+
+	//Timer
+	shootRestTimer = 0;
 
 	//Set movement values
 	maxSpeed = (60) + Game::GetInstance()->wave;
-	acceleration = 4;
-
-	//Set shoot values
-	shootRest = 1;
-	shootRestTimer = 0;
-
-	//Set score
-	killScore = 500;
 }
 
 void Boss::Draw()
@@ -203,21 +209,6 @@ void Boss::ApplyVelocity()
 	//Clamp position
 	localPosition.x = Clamp(localPosition.x, -32, Game::GetInstance()->worldSize.x + 32);
 	localPosition.y = Clamp(localPosition.y, -32, Game::GetInstance()->worldSize.y + 32);
-}
-
-//SHOOT
-void Boss::Shoot()
-{
-	//Shoot
-	if (shootRestTimer == 0)
-	{
-		shootRestTimer = shootRest;
-		//Spawn bullet
-		Vector2 bulletSpawnPos = Vector2Add(globalPosition, Game::GetInstance()->_Vector2Rotate(Vector2Scale(Vector2Right, sprite->width / 2), globalRotation));
-		Game::GetInstance()->InstanceObject(new Bullet(Game::GetInstance()->_Vector2Rotate(Vector2Right, globalRotation), 8), bulletSpawnPos.x, bulletSpawnPos.y);
-		//Play sfx
-		PlaySound(Game::GetInstance()->sfx_shootEnemy);
-	}
 }
 
 void Boss::Destroy()

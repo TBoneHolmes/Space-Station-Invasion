@@ -17,18 +17,12 @@ public:
 	CollisionShape* cs;
 	//Damage
 	int hp;
-	float damageRest;
 	float damageRestTimer;
 	//Movement
 	Vector2 velocity;
 	Vector2 playerTargetOffset;
 	float maxSpeed;
-	float acceleration;
-	//Shoot
-	float shootRest;
 	float shootRestTimer;
-	//Score
-	int killScore;
 
 	//-FUNCTIONS-
 	void Start();
@@ -44,7 +38,5 @@ public:
 	void MoveToPoint();
 	void Accelerate();
 	void ApplyVelocity();
-	//Shoot
-	void Shoot();
 };
 

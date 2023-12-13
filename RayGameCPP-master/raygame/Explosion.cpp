@@ -6,6 +6,9 @@
 #include <string>
 using namespace std;
 
+//ANIMATION
+const float animationSpeed = 18.0f;
+
 //Constructor
 Explosion::Explosion()
 {
@@ -25,7 +28,6 @@ void Explosion::Start()
 	spriteOffset = Vector2(); spriteOffset.x = sprite->height / 2; spriteOffset.y = (sprite->width / spriteFrames) / 2;
 	//Animation
 	frame = 0;
-	animationSpeed = 18;
 	animationTimer = 1;
 	
 	drawOrder = 4;

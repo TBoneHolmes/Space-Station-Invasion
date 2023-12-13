@@ -9,6 +9,19 @@
 #include <string>
 using namespace std;
 
+
+//MOVEMENT
+const float maxSpeed = 448;
+const float acceleration = 800;
+const float decceleration = 0.6;
+//HP
+const float maxHp = 3;
+//ANIMATION
+const float animationSpeed = 15;
+//TIMERS
+const float damageRest = 0.1f; //The time of invincibility when damaged
+const float invTime = 1.8; //The time of invincibility when respawned
+
 //Constructor
 Player::Player()
 {
@@ -41,7 +54,6 @@ void Player::Start()
 	//Animation
 	spriteFrames = Game::GetInstance()->frames_playerBooster;
 	frame = 0;
-	animationSpeed = 15;
 	animationTimer = 1;
 
 	//Create collision shape
@@ -50,36 +62,24 @@ void Player::Start()
 	cs = (CollisionShape*)children.back();
 
 
-	//Set movement values
-	maxSpeed = 448;
-	acceleration = 800;
-	decceleration = 0.6;
-
 	//Set key binds
 	key_boost = MOUSE_RIGHT_BUTTON;
 	key_shoot = MOUSE_LEFT_BUTTON;
 
 	//Set HP
-	maxHp = 3;
 	hp = maxHp;
-	damageRest = 0.1;
+
+	powerupTime = 20.0f;
 
 	//Set shoot timer
-	shootRest = 0.3;
+	shootRest = 0.3f;
 	shootRestTimer = 0;
 	//Set invincible timer
-	invTime = 1.8;
 	invTimer = invTime;
 	//Set powerup timer
-	powerupTime = 20;
 	powerupTimer = 0;
 	powerupColor = 0;
 	powerupColorChanged = false;
-
-
-	//DESTROY SELF
-	//GameObject* ptr = this;
-	//ptr->~GameObject();
 }
 
 void Player::Draw()

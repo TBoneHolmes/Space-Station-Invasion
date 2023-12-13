@@ -7,6 +7,20 @@
 #include <string>
 using namespace std;
 
+//DAMAGE
+const float damageRest = 0.1f;
+
+//MOVEMENT
+const float rotationSpeed = 400.0f; //For sprite rotation
+const float targetDist = 64.0f; //The distance away from the the boss that owns this shield piece
+const float speed = 160.0f; //The movement speed rotating around the boss that owns this
+
+//SHOOT
+const float shootRest = 7.0f;
+
+//SCORE
+const float killScore = 10.0f;
+
 //Constructor
 BossShield::BossShield(float startAngle)
 {
@@ -34,19 +48,9 @@ void BossShield::Start()
 
 	//Set HP
 	hp = 3;
-	damageRest = 0.1;
 
 	//Set shoot values
-	shootRest = 7;
 	shootRestTimer = GetRandomValue(0, shootRest);
-
-	//Set score
-	killScore = 10;
-
-	//Position/movement values
-	targetDist = 64;
-	speed = 160;
-	rotationSpeed = 400; //For sprite rotation
 }
 
 void BossShield::Draw()

@@ -6,6 +6,10 @@
 #include <string>
 using namespace std;
 
+//DAMAGE
+const float damageRest = 0.1;
+const float hitNotifyTime = 1;
+
 //Constructor
 Base::Base()
 {
@@ -37,8 +41,6 @@ void Base::Start()
 	//Damage
 	maxHp = 43;
 	hp = maxHp;
-	damageRest = 0.1;
-	hitNotifyTime = 1;
 	hitNotifyTimer = 0;
 }
 

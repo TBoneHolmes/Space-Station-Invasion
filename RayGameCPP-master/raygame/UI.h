@@ -15,7 +15,6 @@ public:
 	//-VARIABLES-
 	Vector2 offset;
 	Vector2 mapSize;
-	float mapScale;
 
 	//-FUNCTIONS-
 	void Start();

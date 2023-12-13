@@ -21,7 +21,6 @@ public:
 	Vector2 spriteOffset;
 	int spriteFrames;
 	//Animation
-	float animationSpeed;
 	float animationTimer;
 	int frame;
 

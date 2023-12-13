@@ -6,6 +6,8 @@
 #include <string>
 using namespace std;
 
+const float vanishTime = 10.0f;
+
 //Constructor
 Powerup::Powerup()
 {
@@ -32,7 +34,6 @@ void Powerup::Start()
 	cs = (CollisionShape*)children.back();
 
 	//Vanish
-	vanishTime = 10;
 	vanishTimer = vanishTime;
 	alpha = 255;
 }

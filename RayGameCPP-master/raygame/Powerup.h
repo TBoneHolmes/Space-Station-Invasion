@@ -21,7 +21,6 @@ public:
 	//Collision
 	CollisionShape* cs;
 	//Vanish
-	float vanishTime;
 	float vanishTimer;
 	float alpha;
 

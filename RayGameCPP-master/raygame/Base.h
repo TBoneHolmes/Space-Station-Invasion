@@ -24,9 +24,7 @@ public:
 	//Damage
 	int maxHp;
 	int hp;
-	float damageRest;
 	float damageRestTimer;
-	float hitNotifyTime;
 	float hitNotifyTimer;
 
 	//-FUNCTIONS-

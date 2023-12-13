@@ -100,14 +100,16 @@ void Game::Start()
 	SetWindowIcon(icon);
 
 
-
-	//Set game variables
+	//World values
+	//Dear Rob: DON'T CHANGE THESE GRRRRRR
 	worldTileSize.x = 128; worldTileSize.y = 128;
 	worldSize.x = worldTileSize.x * 32; worldSize.y = worldTileSize.y * 32;
 	center.x = worldSize.x / 2; center.y = worldSize.y / 2;
+
+	//Set game variables
 	score = 0;
 	killCount = 0;
-	drawCollisions = false; //For debugging; Change to 'true' to draw collision shapes
+	drawCollisions = false; //For debugging. Change to 'true' to draw collision shapes
 	//Player spawn pos
 	playerSpawn.x = center.x; playerSpawn.y = center.y + 128;
 	//Camera position

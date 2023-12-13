@@ -23,11 +23,9 @@ public:
 	CollisionShape* cs;
 	//Damage
 	int hp;
-	float damageRest;
 	float damageRestTimer;
 	//Breaking
 	int size;
-	int killScore;
 	Asteroid* creator;
 	//Movement
 	Vector2 velocity;

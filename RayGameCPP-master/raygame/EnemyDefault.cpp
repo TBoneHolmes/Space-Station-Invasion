@@ -7,6 +7,19 @@
 #include <string>
 using namespace std;
 
+//Hp
+const float damageRest = 0.1f;
+
+//Movement
+const float acceleration = 4.0f;
+
+//Shoot
+const float shootRest = 1.0f;
+const float shootRestTimer = 0.0f;
+
+//Score
+const float killScore = 50.0f;
+
 //Constructor
 EnemyDefault::EnemyDefault()
 {
@@ -37,19 +50,10 @@ void EnemyDefault::Start()
 
 	//Set HP
 	hp = 2;
-	damageRest = 0.1;
 
 	//Set movement values
 	targetPoint = Game::GetInstance()->center;
 	maxSpeed = GetRandomValue(180, 280);
-	acceleration = 4;
-
-	//Set shoot values
-	shootRest = 1;
-	shootRestTimer = 0;
-	
-	//Set score
-	killScore = 50;
 }
 
 void EnemyDefault::Draw()

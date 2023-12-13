@@ -8,6 +8,12 @@
 #include <string>
 using namespace std;
 
+//Set score
+const float killScore = 1;
+
+//Set damage timer
+const float damageRest = 0.1;
+
 //Constructor
 Asteroid::Asteroid()
 {
@@ -57,14 +63,10 @@ void Asteroid::Start()
 	//Cache collision shape
 	cs = (CollisionShape*)children.back();
 
-	//Set score
-	killScore = 1;
-
-	//Set damage timer
-	damageRest = 0.1;
+	//Damage timer
 	damageRestTimer = 0;
 
-	//Set bounce timer
+	//Bounce timer
 	bounceTimer = 0;
 
 	hp = size;
